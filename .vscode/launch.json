@@ -1,0 +1,48 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "opba_app - FRONTEND",
+            "cwd": "opba_app - FRONTEND",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "opba_app - FRONTEND (profile mode)",
+            "cwd": "opba_app - FRONTEND",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "opba_app - FRONTEND (release mode)",
+            "cwd": "opba_app - FRONTEND",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "lib",
+            "cwd": "opba_app - FRONTEND\\lib",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "lib (profile mode)",
+            "cwd": "opba_app - FRONTEND\\lib",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "lib (release mode)",
+            "cwd": "opba_app - FRONTEND\\lib",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
