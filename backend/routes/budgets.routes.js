@@ -1,3 +1,9 @@
+/**
+ * Bu dosya, kullanıcının aylık bütçe yönetimini yapar.
+ * Kategori bazlı bütçe tanımlanır.
+ * Ay içinde ne kadar harcandığını hesaplanır.
+ * %80 uyarı ve %100 aşım durumları belirlenir.
+ */
 const router = require("express").Router();
 const { z } = require("zod");
 const mongoose = require("mongoose");
@@ -6,6 +12,8 @@ const Budget = require("../models/Budget");
 const Transaction = require("../models/Transaction");
 
 // Kategori label map (TR/EN)
+// Kategoriler DB'de sabit key olarak tutulur (market, food vs.)
+// Frontend'de dil seçimine göre (TR / EN) label gösterilir.
 const categoryLabels = {
   tr: {
     market: "Market",
@@ -30,14 +38,16 @@ const categoryLabels = {
 };
 
 function getMonthRange(year, month) {
-  // month: 1-12
+  
   const start = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0));
-  const end = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999)); // month end
+  const end = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999)); 
   return { start, end };
 }
 
-// 1) Bütçe oluştur / güncelle (upsert) - aylık
+// 1) Bütçe oluşturma / güncelleme (upsert) 
 // POST /budgets
+// Aynı ay + kategori için tekrar çağrılırsa günceller (upsert).
+// Yoksa yeni bütçe oluşturur.
 router.post("/", requireAuth, async (req, res) => {
   const schema = z.object({
     category: z.enum([
@@ -51,7 +61,7 @@ router.post("/", requireAuth, async (req, res) => {
       "other",
     ]),
     limit: z.number().min(0),
-    // opsiyonel: hangi ay için bütçe
+    
     month: z.number().min(1).max(12).optional(),
     year: z.number().min(2000).max(2100).optional(),
     period: z.literal("monthly").optional(),
@@ -74,8 +84,9 @@ router.post("/", requireAuth, async (req, res) => {
   res.status(201).json({ ok: true, budget: doc });
 });
 
-// 2) Bütçeleri listele
-// GET /budgets?month=12&year=2025&lang=tr|en
+// 2) Bütçeleri listeleme
+// GET /budgets
+// Seçilen ay ve yıla ait tüm bütçeleri listeler.
 router.get("/", requireAuth, async (req, res) => {
   const schema = z.object({
     month: z.string().optional(),
@@ -111,8 +122,8 @@ router.get("/", requireAuth, async (req, res) => {
   });
 });
 
-// 3) Bütçe progress (spent/remaining/%/status)
-// GET /budgets/progress?month=12&year=2025&lang=tr|en
+// 3) Bütçe progress
+// Bütçe - harcama karşılaştırmasını yapar.
 router.get("/progress", requireAuth, async (req, res) => {
   const schema = z.object({
     month: z.string().optional(),
@@ -133,7 +144,7 @@ router.get("/progress", requireAuth, async (req, res) => {
   // Bu ayın bütçeleri
   const budgets = await Budget.find({ userId, month: m, year: y });
 
-  // Bu ayın harcamalarını kategori bazlı topla
+  // Bu ayın harcamalarını kategori bazlı toplama
   const spendRows = await Transaction.aggregate([
     {
       $match: {
@@ -171,7 +182,7 @@ router.get("/progress", requireAuth, async (req, res) => {
       spent,
       remaining,
       percentUsed,
-      status, // ok | warn | exceeded
+      status, 
     };
   });
 

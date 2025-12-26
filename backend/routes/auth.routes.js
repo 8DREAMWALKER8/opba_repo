@@ -1,3 +1,10 @@
+/**
+ * Bu dosya, kullanıcı kimlik doğrulama işlemlerini yönetir.
+ * Kullanıcı kayıt olur.
+ * 2 aşamalı giriş (şifre + güvenlik sorusu)
+ * JWT token üretilir.
+ */
+
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -7,20 +14,19 @@ const User = require("../models/User");
 const { SECURITY_QUESTIONS, getQuestionText } = require("../utils/securityQuestions");
 const { PASSWORD_REGEX } = require("../utils/validators");
 
-// Zod hatasını güvenli mesajla döndürmek için helper
+
 function zodErrorMessage(err) {
-  // ZodError ise err.issues gelir (zod v3)
   if (err && Array.isArray(err.issues) && err.issues.length > 0) {
     return err.issues[0].message;
   }
-  // Bazı projelerde err.errors şeklinde de gelebiliyor
   if (err && Array.isArray(err.errors) && err.errors.length > 0) {
     return err.errors[0].message;
   }
   return null;
 }
 
-// Dropdown için güvenlik sorularını frontend'e döndür
+// Frontend'deki dropdown için güvenlik sorularını döndürür.
+// Sadece id ve görünen metin (TR) gönderilir.
 router.get("/security-questions", (req, res) => {
   res.json({
     ok: true,
@@ -32,6 +38,8 @@ router.get("/security-questions", (req, res) => {
 });
 
 // REGISTER
+// POST /auth/register
+// Yeni kullanıcı oluşturur.
 router.post("/register", async (req, res) => {
   const schema = z
     .object({
@@ -58,7 +66,6 @@ router.post("/register", async (req, res) => {
     return res.status(400).json({ ok: false, message: msg || "Geçersiz istek" });
   }
 
-  // güçlü şifre kontrolü
   if (!PASSWORD_REGEX.test(data.password)) {
     return res.status(400).json({
       ok: false,
@@ -67,7 +74,7 @@ router.post("/register", async (req, res) => {
     });
   }
 
-  // güvenlik sorusu id geçerli mi?
+
   const qText = getQuestionText(data.securityQuestionId, "tr");
   if (!qText) {
     return res.status(400).json({ ok: false, message: "Invalid securityQuestionId" });
@@ -98,7 +105,9 @@ router.post("/register", async (req, res) => {
   return res.status(201).json({ ok: true, userId: user._id });
 });
 
-// LOGIN STEP-1
+  // Login(Şifre Kontrolü)
+  // POST /auth/login
+  // Kullanıcı adı + şifre doğru mu kontrol edilir.
 router.post("/login", async (req, res) => {
   const schema = z.object({
     email: z.string().email("Geçerli bir e-posta girin"),
@@ -143,7 +152,9 @@ router.post("/login", async (req, res) => {
   });
 });
 
-// LOGIN STEP-2
+ // Login(Güvenlik Sorusu)
+ // POST /auth/login/verify-question
+ // Güvenlik sorusu cevabı doğrulanır.
 router.post("/login/verify-question", async (req, res) => {
   const schema = z.object({
     challengeToken: z.string().min(1, "challengeToken gerekli"),

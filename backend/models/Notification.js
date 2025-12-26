@@ -1,3 +1,7 @@
+/**
+ * Notification modeli
+ * Kullanıcıya gösterilecek bildirimleri tutar.
+ */
 const mongoose = require("mongoose");
 
 const notificationSchema = new mongoose.Schema(
@@ -10,21 +14,21 @@ const notificationSchema = new mongoose.Schema(
       index: true,
     },
 
-    // Kartın içinde gözükecek ana metin
+    // Bildirim kartında görünen metinler
     title: {
       type: String,
       required: true,
       trim: true,
     },
 
-    // Detay metin (opsiyonel)
+    // Detay metin
     body: {
       type: String,
       trim: true,
       default: "",
     },
 
-    // Bildirim tipi
+    // Bildirimin türü (bütçe aşıldı, özet, genel vs.)
     type: {
       type: String,
       enum: ["monthly_summary", "limit_exceeded", "goal_reached", "general"],
@@ -32,7 +36,7 @@ const notificationSchema = new mongoose.Schema(
       index: true,
     },
 
-    // Okundu mu?
+    // Okundu / okunmadı bilgisi
     isRead: {
       type: Boolean,
       default: false,

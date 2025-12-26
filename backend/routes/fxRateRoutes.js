@@ -1,8 +1,14 @@
+/**
+ * Bu dosya giriş yapmış kullanıcının;
+ * kendi bilgilerini görmesini,
+ * ayarlarını değiştirmesini,
+ * profilini düzenlemesini,
+ * şifresini değiştirmesini sağlar.
+ */
 const express = require("express");
 const router = express.Router();
 const FxRate = require("../models/FxRate");
 
-// YYYY-MM-DD (UTC) -> [startUTC, endUTC)
 function utcDayRange(dateStr) {
   const [y, m, d] = dateStr.split("-").map(Number);
   const start = new Date(Date.UTC(y, m - 1, d, 0, 0, 0, 0));
@@ -10,7 +16,6 @@ function utcDayRange(dateStr) {
   return { start, end };
 }
 
-// Server saatine göre "bugün" yerine UTC "bugün" kullan
 function todayUTCString() {
   const now = new Date();
   const y = now.getUTCFullYear();
@@ -18,11 +23,11 @@ function todayUTCString() {
   const d = String(now.getUTCDate()).padStart(2, "0");
   return `${y}-${m}-${d}`;
 }
-
-// GET /api/fx/today  -> bugünün (UTC) USD/EUR/TRY
+// Günlük döviz kurlarını getirir (UTC bazlı)
+// GET /api/fx/today
 router.get("/today", async (req, res) => {
   const dateStr = req.query.date || todayUTCString();
-  const currency = req.query.currency; // 👈 EKLENDİ
+  const currency = req.query.currency; 
 
   const { start, end } = utcDayRange(dateStr);
 
@@ -48,7 +53,8 @@ router.get("/today", async (req, res) => {
   res.json(rows);
 });
 
-// GET /api/fx/latest -> en güncel tarihteki kur seti
+ // Sistemdeki en güncel döviz kur setini getirir.
+ // GET /api/fx/latest
 router.get("/latest", async (req, res) => {
   const latest = await FxRate.findOne().sort({ date: -1 }).lean();
   if (!latest) return res.json([]);

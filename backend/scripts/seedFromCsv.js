@@ -1,3 +1,5 @@
+// Bu dosya, sandbox CSV dosyalarındaki verileri MongoDB veritabanına test (seed) verisi olark otomatik şekilde eklemek için kullanılır.
+
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "../../.env") });
 
@@ -6,6 +8,8 @@ const csv = require("csv-parser");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 
+
+// Kullanılan MongoDB modelleri
 const User = require("../models/User");
 const UserProfile = require("../models/UserProfile");
 const BankAccount = require("../models/BankAccount");
@@ -15,7 +19,8 @@ console.log("=== SEED DOSYASI ÇALIŞTI ===");
 console.log("Node:", process.version);
 console.log("MONGO_URI:", process.env.MONGO_URI ? "VAR" : "YOK");
 
-// Daha sağlam CSV okuyucu (dosya yoksa direkt hata verir)
+// CSV Okuma Fonksiyonu
+// Verilen CSV dosyasını satır satır okuyup array olarak geri döndürür.
 function readCsv(filePath) {
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(filePath)) {
@@ -30,21 +35,22 @@ function readCsv(filePath) {
       .on("end", () => resolve(rows));
   });
 }
-
+// SHA256 Hash Fonksiyonu
 function sha256(text) {
   return crypto.createHash("sha256").update(String(text)).digest("hex");
 }
 
-// demo iban
+//  BankAccount modelinde; userId + iban unique olduğu için her hesap için farklı IBAN üretmek zorundayız.
 function fakeIbanTR(userId, bankName, idx = 1) {
   const base =
     String(userId).padStart(6, "0") +
     sha256(bankName).slice(0, 10) +
-    String(idx).padStart(2, "0");
+    String(idx).padStart(4, "0"); // 2 yerine 4 hane daha güvenli
 
   return "TR" + "00" + base.replace(/[a-f]/g, "1").slice(0, 24);
 }
 
+// Hesap Adı Belirleme
 function pickAccountName(currency) {
   if (currency === "USD") return "Vadesiz USD";
   if (currency === "EUR") return "Vadesiz EUR";
@@ -63,8 +69,13 @@ function randomDesc(paymentType) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+// Ana seed fonksiyonu
 async function main() {
   console.log("=== main başladı ===");
+
+  if (!process.env.MONGO_URI) {
+    throw new Error("MONGO_URI .env içinde yok!");
+  }
 
   console.log("=== MongoDB'ye bağlanılıyor... ===");
   await mongoose.connect(process.env.MONGO_URI, {
@@ -94,11 +105,10 @@ async function main() {
   const txCsvAll = await readCsv(txPath);
   console.log("txCsvAll:", txCsvAll.length);
 
-  // İlk testte takılmasın diye limit (istersen sonra arttırırız)
   const txCsv = txCsvAll.slice(0, 5000);
   console.log("txCsv limited:", txCsv.length);
 
-  console.log("Koleksiyonlar temizleniyor...");
+  console.log("=== Koleksiyonlar temizleniyor... ===");
   await Promise.all([
     UserProfile.deleteMany({}),
     BankAccount.deleteMany({}),
@@ -107,7 +117,7 @@ async function main() {
   ]);
   console.log("Temizlendi");
 
-  // 1) UserProfile bas (CSV)
+  // 1) User Profile 
   console.log("UserProfile insertMany...");
   const userProfiles = usersCsv.map((u) => ({
     userId: Number(u.user_id),
@@ -128,7 +138,8 @@ async function main() {
   await UserProfile.insertMany(userProfiles);
   console.log("UserProfile basıldı");
 
-  // 2) Auth User oluştur (required alanlar mock)
+  // 2) Auth User oluşturma
+  //  Login sistemi için gerekli User kayıtları mock bilgilerle oluşturulur.
   console.log("Auth User oluşturuluyor...");
   const userIdToMongoId = new Map();
 
@@ -136,7 +147,6 @@ async function main() {
     const csvUserId = Number(u.user_id);
     const username = u.username;
 
-    // Unique email fix: ad.soyad@sandbox.opba.com => ad.soyad+123@sandbox.opba.com
     const baseEmail = u.email;
     const email = baseEmail.replace("@", `+${csvUserId}@`);
 
@@ -162,22 +172,32 @@ async function main() {
   }
   console.log("Auth User basıldı:", userIdToMongoId.size);
 
-  // 3) BankAccount bas (iban + accountName required)
+
   console.log("BankAccount basılıyor...");
+
+  // Bank Account
   const userMongoToAccountIds = new Map();
+
+  const ibanCounter = new Map();
 
   for (const a of accCsv) {
     const csvUserId = Number(a.user_id);
     const mongoUserId = userIdToMongoId.get(csvUserId);
     if (!mongoUserId) continue;
 
+    const bankName = a.bank_name;
     const currency = a.currency || "TRY";
     const accountName = pickAccountName(currency);
-    const iban = fakeIbanTR(csvUserId, a.bank_name, 1);
+
+    const counterKey = `${mongoUserId}-${bankName}`;
+    const nextIdx = (ibanCounter.get(counterKey) || 0) + 1;
+    ibanCounter.set(counterKey, nextIdx);
+
+    const iban = fakeIbanTR(csvUserId, bankName, nextIdx);
 
     const createdAcc = await BankAccount.create({
       userId: mongoUserId,
-      bankName: a.bank_name,
+      bankName,
       accountName,
       iban,
       currency,
@@ -189,9 +209,9 @@ async function main() {
     if (!userMongoToAccountIds.has(key)) userMongoToAccountIds.set(key, []);
     userMongoToAccountIds.get(key).push(createdAcc._id);
   }
-  console.log("BankAccount basıldı");
+  console.log("BankAccount basıldı:", accCsv.length);
 
-  // 4) Transaction bas (accountId required) — batch insert
+  // 4) Transaction 
   console.log("Transaction hazırlanıyor...");
   const txDocs = [];
   const now = Date.now();
@@ -209,7 +229,9 @@ async function main() {
 
     const type = Math.random() < 0.85 ? "expense" : "income";
     const description = randomDesc(t.payment_type);
-    const occurredAt = new Date(now - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000);
+    const occurredAt = new Date(
+      now - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000
+    );
 
     txDocs.push({
       userId: mongoUserId,

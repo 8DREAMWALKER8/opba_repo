@@ -1,9 +1,13 @@
+/**
+ * Transaction modeli kullanıcının tüm finansal işlemlerini tutar.
+ * Gelir ve giderler bu tablo üzerinden yönetilir.
+ */
 const mongoose = require("mongoose");
 
 const TransactionSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
-    accountId: { type: mongoose.Schema.Types.ObjectId, ref: "BankAccount", required: true, index: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true }, // işlemi yapan kullanıcı
+    accountId: { type: mongoose.Schema.Types.ObjectId, ref: "BankAccount", required: true, index: true }, // işlemin bağlı olduğu banka hesabı
 
     type: { type: String, enum: ["expense", "income"], required: true },
     amount: { type: Number, required: true },
@@ -16,7 +20,7 @@ const TransactionSchema = new mongoose.Schema(
       index: true
     },
 
-    description: { type: String, required: true, trim: true }, // Migros, Starbucks...
+    description: { type: String, required: true, trim: true }, 
     occurredAt: { type: Date, required: true, index: true },
 
     source: { type: String, enum: ["manual", "mock", "bank"], default: "manual" }

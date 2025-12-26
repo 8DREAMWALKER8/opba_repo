@@ -1,9 +1,19 @@
+/**
+ * Bu dosya, kullanıcıya ait bildirimleri yönetir.
+ * Bildirimleri listeler.
+ * Okundu / okunmadı durumunu yönetir.
+ * Uyarı ve bilgilendirme mesajlarını gösterir.
+ */
+
 const router = require("express").Router();
 const { z } = require("zod");
 const { requireAuth } = require("../middleware/auth");
 const Notification = require("../models/Notification");
 
-// GET /notifications?isRead=true|false&page=1&limit=20
+// Bildirim Listeleme
+// Kullanıcının tüm bildirimlerini listeler.
+// isRead parametresi ile okundu / okunmadı filtrelenebilir.
+// page & limit ile sayfalama yapılır.
 router.get("/", requireAuth, async (req, res) => {
   const { isRead, page = "1", limit = "20" } = req.query;
 
@@ -30,8 +40,9 @@ router.get("/", requireAuth, async (req, res) => {
     items,
   });
 });
-
+// Tek Bildirimi Okundu Yapma
 // PATCH /notifications/:id/read
+// Seçilen bildirimi okundu olarak işaretler.
 router.patch("/:id/read", requireAuth, async (req, res) => {
   const { id } = req.params;
 
@@ -47,8 +58,9 @@ router.patch("/:id/read", requireAuth, async (req, res) => {
 
   res.json({ ok: true, notification: updated });
 });
-
+// Tüm Bildirimleri Okundu Yapma
 // PATCH /notifications/mark-all/read
+// Kullanıcının tüm okunmamış bildirimlerini okundu yapar.
 router.patch("/mark-all/read", requireAuth, async (req, res) => {
   const result = await Notification.updateMany(
     { userId: req.user.userId, isRead: false },
@@ -61,8 +73,9 @@ router.patch("/mark-all/read", requireAuth, async (req, res) => {
     modified: result.modifiedCount ?? result.nModified,
   });
 });
-
+//Test Amaçlı Bildirim Oluşturma
 // POST /notifications  (TEST için bildirim oluşturma)
+// Test ve geliştirme amaçlı manuel bildirim ekler.
 router.post("/", requireAuth, async (req, res) => {
   const schema = z.object({
     title: z.string().min(2),

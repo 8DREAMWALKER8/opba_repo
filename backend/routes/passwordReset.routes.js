@@ -1,3 +1,9 @@
+/**
+ * Bu dosya şifremi unuttum sürecini yönetir.
+ * 1) E-posta ile doğrulama kodu üret.
+ * 2) Kod doğrulanır → kısa süreli reset token verilir.
+ * 3) Yeni şifre belirlenir.
+ */
 const router = require("express").Router();
 const { z } = require("zod");
 const crypto = require("crypto");
@@ -42,8 +48,9 @@ function sha256(text) {
   return crypto.createHash("sha256").update(text).digest("hex");
 }
 
-// 1) Şifremi unuttum → kod üret
-// POST /auth/forgot-password?lang=tr|en
+// 1) Şifremi unuttum 
+// POST /auth/forgot-password
+// Kullanıcı e-postası ile 6 haneli doğrulama kodu oluşturur.
 router.post("/forgot-password", async (req, res) => {
   const lang = getLang(req);
 
@@ -72,8 +79,9 @@ router.post("/forgot-password", async (req, res) => {
   });
 });
 
-// 2) Kod doğrula → resetToken üret
-// POST /auth/verify-reset-code?lang=tr|en
+// 2) Kod doğrulama
+// POST /auth/verify-reset-code
+// Kullanıcının girdiği kodu kontrol eder.
 router.post("/verify-reset-code", async (req, res) => {
   const lang = getLang(req);
 
@@ -121,8 +129,9 @@ router.post("/verify-reset-code", async (req, res) => {
   return res.json({ ok: true, resetToken });
 });
 
-// 3) Şifre sıfırla (passwordHash güncellenir)
-// POST /auth/reset-password?lang=tr|en
+// 3) Şifre sıfırlama
+// POST /auth/reset-password
+// Yeni şifre belirlenir ve passwordHash güncellenir.
 router.post("/reset-password", async (req, res) => {
   const lang = getLang(req);
 
@@ -138,7 +147,7 @@ router.post("/reset-password", async (req, res) => {
 try {
   ({ resetToken, password, passwordConfirm } = schema.parse(req.body));
 } catch (err) {
-  // Zod validation hatası
+
   return res.status(400).json({
     ok: false,
     message:

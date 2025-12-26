@@ -13,6 +13,8 @@ const budgetsRoutes = require("./routes/budgets.routes");
 const passwordResetRoutes = require("./routes/passwordReset.routes");
 const notificationsRoutes = require("./routes/notifications.routes");
 const fxRateRoutes = require("./routes/fxRateRoutes");
+const interestRatesRoutes = require("./routes/interestRates.routes");
+const loanCalcRoutes = require("./routes/loanCalc.routes");
 
 const app = express();
 
@@ -29,6 +31,8 @@ app.use("/budgets", budgetsRoutes);
 app.use("/auth", passwordResetRoutes);
 app.use("/notifications", notificationsRoutes);
 app.use("/api/fx", fxRateRoutes);
+app.use("/api/interest-rates", interestRatesRoutes);
+app.use("/api/loan", loanCalcRoutes);
 
 app.get("/health", (req, res) => {
   res.json({ ok: true, service: "opba-backend", time: new Date().toISOString() });

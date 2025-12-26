@@ -1,3 +1,9 @@
+ /** 
+ * Bu dosya, kullanıcıların gelir-gider işlemlerini yönetir:
+ * İşlem listesi ekranı (filtreleme + arama + sayfalama)
+ * Manuel gelir/gider ekleme ekranı
+ *nHarcama özeti ekranı (donut chart / kategori dağılımı)
+*/
 const router = require("express").Router();
 const { z } = require("zod");
 const mongoose = require("mongoose");
@@ -6,6 +12,7 @@ const Transaction = require("../models/Transaction");
 const BankAccount = require("../models/BankAccount");
 
 // Kategori label map (TR/EN)
+// Kategori anahtarlarını kullanıcıya diline göre gösterilebilir label'a çeviriyoruz. DB tarafında key sabit kalıyor, UI tarafında label değişiyor.
 const categoryLabels = {
   tr: {
     market: "Market",
@@ -29,7 +36,9 @@ const categoryLabels = {
   },
 };
 
-// Listeleme + filtreleme
+// İşlem Listeleme (Filtre + Arama + Sayfalama)
+// GET /transactions. Bu endpoint işlem listesi ekranını doldurur.
+//  Query parametreleri ile filtreleme yapıyoruz.
 router.get("/", requireAuth, async (req, res) => {
   const {
     accountId,
@@ -50,12 +59,13 @@ router.get("/", requireAuth, async (req, res) => {
   if (type) filter.type = type;
   if (category) filter.category = category;
 
+// Tarih filtresi
   if (from || to) {
     filter.occurredAt = {};
     if (from) filter.occurredAt.$gte = new Date(from);
     if (to) filter.occurredAt.$lte = new Date(to);
   }
-
+// Tutar filtresi
   if (min || max) {
     filter.amount = {};
     if (min) filter.amount.$gte = Number(min);
@@ -77,6 +87,7 @@ router.get("/", requireAuth, async (req, res) => {
 });
 
 // Manuel işlem ekleme
+// POST /transactions/manual. Kullanıcı manuel gelir/gider eklediğinde burası çalışır. 
 router.post("/manual", requireAuth, async (req, res) => {
   const schema = z.object({
     accountId: z.string().min(1),
@@ -100,7 +111,7 @@ router.post("/manual", requireAuth, async (req, res) => {
   });
 
   const data = schema.parse(req.body);
-
+  // Account kontrolü
   const acc = await BankAccount.findOne({
     _id: data.accountId,
     userId: req.user.userId,
@@ -123,8 +134,8 @@ router.post("/manual", requireAuth, async (req, res) => {
   res.status(201).json({ ok: true, transaction: tx });
 });
 
-// Harcama özeti (donut + liste için)
-// GET /transactions/spendings-summary?from=YYYY-MM-DD&to=YYYY-MM-DD&accountId=...&top=10&lang=tr|en
+// Harcama Özeti (Donut Chart / Kategori Dağılımı)
+// GET /transactions/spendings-summary. Harcamalar ekranındaki donut grafiği için.
 router.get("/spendings-summary", requireAuth, async (req, res) => {
   const schema = z.object({
     from: z.string().optional(),
@@ -142,7 +153,7 @@ router.get("/spendings-summary", requireAuth, async (req, res) => {
     userId: new mongoose.Types.ObjectId(req.user.userId),
     type: "expense",
   };
-
+// accountId ile filtre istenirse eklenir
   if (accountId) match.accountId = new mongoose.Types.ObjectId(accountId);
 
   if (from || to) {
@@ -154,7 +165,10 @@ router.get("/spendings-summary", requireAuth, async (req, res) => {
       match.occurredAt.$lte = end;
     }
   }
-
+  // MongoDB aggregate:
+  // 1) match -> filtre
+  // 2) group -> category bazlı toplama
+  // 3) sort -> en çok harcanan üstte
   const rows = await Transaction.aggregate([
     { $match: match },
     {
@@ -170,7 +184,7 @@ router.get("/spendings-summary", requireAuth, async (req, res) => {
 
   let byCategory = rows.map((r) => ({
     categoryKey: r._id, // key
-    label: categoryLabels[locale]?.[r._id] || r._id, // dil bazlı label
+    label: categoryLabels[locale]?.[r._id] || r._id, 
     amount: Math.round(r.amount * 100) / 100,
   }));
 

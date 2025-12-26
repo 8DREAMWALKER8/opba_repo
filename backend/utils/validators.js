@@ -1,4 +1,9 @@
-// utils/validators.js
+/**
+ * Bu dosya uygulama genelinde kullanılan doğrulama (validation) yardımcılarını içerir.
+ * Geçerli para birimi ve dil kontrolü
+ * Şifre güvenliği için regex tanımı
+ * Frontend'den gelen verileri standart hale getirmek
+ */
 
 const ALLOWED_CURRENCIES = ["TRY", "USD", "EUR"];
 const ALLOWED_LANGUAGES = ["tr", "en"];
@@ -10,7 +15,6 @@ const PASSWORD_REGEX =
 function normalizeCurrency(input) {
   if (!input) return input;
   const v = String(input).trim().toUpperCase();
-  // Bazı yerlerde TR gönderiliyor; TRY'ye çekelim
   if (v === "TR") return "TRY";
   return v;
 }

@@ -1,10 +1,14 @@
+/** Bu dosya kullanıcının banka hesaplarıyla ilgili tüm işlemlerini yönetir.(listeleme, hesap ekleme, toplam bakiye hesaplama)
+ * Tarihi UTC bazında gün başlangıcına çekmek için kullanılır.
+ */
+
 const router = require("express").Router();
 const { z } = require("zod");
 const { requireAuth } = require("../middleware/auth");
 const BankAccount = require("../models/BankAccount");
 const FxRate = require("../models/FxRate");
 
-// ------- helpers (dosyanın içine ek, yapı bozulmaz) -------
+
 function startOfUTCDay(d) {
   return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0));
 }
@@ -26,9 +30,10 @@ async function getRateToTRY(currency, date = new Date()) {
 
   return row?.rateToTRY ?? null;
 }
-// ---------------------------------------------------------
+// Hesap listeleme 
+// Kullanıcıya ait tüm aktif banka hesaplarını listeler.
+// Aynı zamanda her hesabın TRY karşılığı hesaplanır.
 
-// Hesap listeleme
 router.get("/", requireAuth, async (req, res) => {
   const accounts = await BankAccount.find({ userId: req.user.userId, isActive: true })
     .sort({ createdAt: -1 })
@@ -53,7 +58,10 @@ router.get("/", requireAuth, async (req, res) => {
   res.json({ ok: true, accounts: accountsWithTRY });
 });
 
-// Hesap ekleme (manual/mock)
+// Hesap ekleme 
+// Frontend’den gelen hatalı veriler engellenir.
+// Mock data mı, kullanıcı girişi mi ayrımı yapılır
+
 router.post("/", requireAuth, async (req, res) => {
   const schema = z.object({
     bankName: z.string().min(2),
@@ -80,7 +88,10 @@ router.post("/", requireAuth, async (req, res) => {
   res.status(201).json({ ok: true, account });
 });
 
-// Toplam bakiye (frontend ana sayfa için)
+// Toplam bakiye
+// Ana sayfada gösterilecek toplam bakiye için kullanılır.
+// Tüm hesaplar TRY'ye çevrilerek toplanır.
+
 router.get("/total-balance", requireAuth, async (req, res) => {
   const accounts = await BankAccount.find({ userId: req.user.userId, isActive: true }).lean();
   const today = new Date();
@@ -96,7 +107,7 @@ router.get("/total-balance", requireAuth, async (req, res) => {
 
   const totalTRY = converted.reduce((sum, a) => sum + (a.balanceTRY || 0), 0);
 
-  // kur bulunamayan hesap var mı? (mesela GBP gibi)
+  // GBP varsa ve sistemde kuru yoksa frontend uyarı verebilir.
   const missingRates = converted
     .filter((a) => a.rateToTRY == null)
     .map((a) => ({ _id: a._id, currency: a.currency, iban: a.iban }));
@@ -105,7 +116,7 @@ router.get("/total-balance", requireAuth, async (req, res) => {
     ok: true,
     currency: "TRY",
     total: totalTRY,
-    missingRates, // boşsa sorun yok
+    missingRates, 
   });
 });
 

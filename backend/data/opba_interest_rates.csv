@@ -1,0 +1,16 @@
+bank_name,loan_type,currency,term_months,monthly_rate,annual_effective_rate,as_of_month,source
+Akbank,consumer,TRY,3,0.03136,0.44858,12,mock
+Akbank,consumer,TRY,6,0.03142,0.44945,12,mock
+Akbank,consumer,TRY,12,0.03162,0.45293,12,mock
+Akbank,consumer,TRY,24,0.03298,0.47609,12,mock
+Akbank,consumer,TRY,36,0.03382,0.49053,12,mock
+DenizBank,consumer,TRY,3,0.03281,0.47318,12,mock
+DenizBank,consumer,TRY,6,0.03473,0.50635,12,mock
+DenizBank,consumer,TRY,12,0.03422,0.49744,12,mock
+DenizBank,consumer,TRY,24,0.03414,0.49602,12,mock
+DenizBank,consumer,TRY,36,0.0362,0.5323,12,mock
+Garanti,consumer,TRY,3,0.03087,0.44034,12,mock
+Garanti,consumer,TRY,6,0.03083,0.43959,12,mock
+Garanti,consumer,TRY,12,0.03293,0.47525,12,mock
+Garanti,consumer,TRY,24,0.03238,0.46582,12,mock
+Garanti,consumer,TRY,36,0.03252,0.4682,12,mock
