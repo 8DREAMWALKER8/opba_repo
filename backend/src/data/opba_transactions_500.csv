@@ -1,0 +1,501 @@
+_id,userId,accountId,amount,currency,type,category,description,date,isRecurring
+{'$oid': '352fd329aad06bdc53b89c81'},{'$oid': '909c8724416f6d9384d2eedd'},{'$oid': '6a49c561313c4fc330ecc40a'},2606.61,EUR,expense,Yemek,Starbucks,{'$date': '2025-12-01T19:27:08.014000Z'},True
+{'$oid': '7815849a835fdc2c34ac1252'},{'$oid': '734e428e161f43097fa019c7'},{'$oid': '3ae77887dce441fddfc5048c'},2177.55,EUR,income,Maaş,Salary Payment,{'$date': '2025-11-09T08:45:08.014000Z'},False
+{'$oid': '9e6ba80f58021eaa611c67bd'},{'$oid': 'dbf39b26b3ee2f6e93300762'},{'$oid': '8c28ec056c0cd2fa730addd8'},4946.82,EUR,expense,Sağlık,Florence Nightingale,{'$date': '2025-12-16T09:03:08.014000Z'},False
+{'$oid': '842a644f39c982b39e6cd18c'},{'$oid': 'c970305faaf820db7df8c09f'},{'$oid': '75dc55ca8e97817293fd0bb7'},331.76,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-12-05T05:12:08.014000Z'},False
+{'$oid': '80b568ae863c67f04a65c285'},{'$oid': '0eff0798420a0da1dc37280d'},{'$oid': 'd2ec3cd1f6443cad73a95a10'},3368.95,EUR,expense,Sağlık,Eczane,{'$date': '2025-12-18T20:27:08.014000Z'},True
+{'$oid': 'a0fcbeb6badfdc56eb5ac59e'},{'$oid': 'f5735309b4602dd75fb7fc81'},{'$oid': '6a8ee367e14fa7fe84cf31f3'},1523.42,USD,expense,Faturalar,Doğalgaz Faturası,{'$date': '2025-10-31T22:50:08.014000Z'},True
+{'$oid': '5f7660faae4ae520c7075f99'},{'$oid': '80b092b653690a1b0941f5d9'},{'$oid': '382967cda1b2bc33ce9b8289'},3897.55,TRY,expense,Eğlence,Netflix,{'$date': '2025-11-24T11:14:08.014000Z'},False
+{'$oid': '717c544248e324fcf531158c'},{'$oid': '0c916301de2484846800c3b5'},{'$oid': '74ae9456c269e940604d7dfd'},4523.47,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-23T04:20:08.014000Z'},False
+{'$oid': '31f4af74a4f2698491a0350e'},{'$oid': 'f5735309b4602dd75fb7fc81'},{'$oid': '6a8ee367e14fa7fe84cf31f3'},3158.8,USD,expense,Transfer,IBAN Transferi,{'$date': '2025-12-17T15:04:08.014000Z'},False
+{'$oid': 'f9eb292e11298527688b616e'},{'$oid': 'ef7e33fba410b2048dcfd06d'},{'$oid': 'd01c6c5c80265ae5039084b1'},3426.01,EUR,expense,Faturalar,Elektrik Faturası,{'$date': '2025-10-27T22:04:08.014000Z'},False
+{'$oid': 'b62909f6163055d9885f3d76'},{'$oid': '9c7c3e050403c718d9a6591d'},{'$oid': '521e6624a467502340b5d097'},4897.1,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-01T20:13:08.014000Z'},False
+{'$oid': 'c1862dde9351d35921f041b2'},{'$oid': '1ba7ae457b29aae842ff0ca7'},{'$oid': '3aa60a83b255e43568be9aa2'},4816.94,EUR,expense,Diğer,Amazon,{'$date': '2025-11-13T22:27:08.014000Z'},True
+{'$oid': '93cec2036baa60f10595d84d'},{'$oid': '8f5da17351d8853d1771b5e2'},{'$oid': '73c55fca59e8642725e07404'},4909.85,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-07T08:13:08.014000Z'},False
+{'$oid': '374d27aeb1e8e4d9c81110a1'},{'$oid': 'c95629cdf40439c41dcabb61'},{'$oid': 'c26dd1001fcd63d202333faa'},3242.45,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-07T16:36:08.014000Z'},True
+{'$oid': '14f1873ca9e5e807164a357e'},{'$oid': '0de88e6b73a2331c15626204'},{'$oid': '197258d1d8c4aec68571342b'},1670.57,USD,expense,Eğlence,Steam,{'$date': '2025-12-18T04:37:08.014000Z'},False
+{'$oid': 'ec0372efda6dabcabb15ea3d'},{'$oid': '4616aec9f7ecbc06edf6de29'},{'$oid': '55710f8d435ea21f588d1711'},1493.37,TRY,expense,Yemek,Kahve Dünyası,{'$date': '2025-12-16T03:13:08.014000Z'},False
+{'$oid': '3b9769c2a259a13f642001c2'},{'$oid': 'a8b1bb53d1127dbe883b454e'},{'$oid': 'd76bd2a0989ea8ec9b172f46'},3993.18,TRY,expense,Market,Şok,{'$date': '2025-11-19T22:12:08.014000Z'},True
+{'$oid': 'ac25d925cd4273edd62bbd6e'},{'$oid': '8c75f1f30425b45cfe7286a7'},{'$oid': 'b69744b1fd0082ee3bfeca3a'},308.25,USD,income,Transfer,Para Transferi,{'$date': '2025-12-03T14:28:08.014000Z'},True
+{'$oid': 'e85b4b8a02a25ce859b6b28b'},{'$oid': 'dbf39b26b3ee2f6e93300762'},{'$oid': 'ab73c81a9a079913f5942f1a'},4194.73,TRY,income,Transfer,IBAN Transferi,{'$date': '2025-11-29T18:15:08.014000Z'},False
+{'$oid': 'd06d84e751d9b4131e2ee08f'},{'$oid': '565d70edfb389535c545b073'},{'$oid': 'fd35072c30675586323033c0'},4951.99,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-11-01T09:48:08.014000Z'},True
+{'$oid': '5b0395ead8014e0167bceaa2'},{'$oid': 'c10c92fdb21a4596eaaf15db'},{'$oid': '125319753b85bcf7923d98c4'},698.93,TRY,expense,Eğlence,Spotify,{'$date': '2025-12-13T17:48:08.014000Z'},True
+{'$oid': 'ccfc116cffb2f468158dc677'},{'$oid': 'da891b81d22c5a7f735b9de1'},{'$oid': '45150464d9fb67c74c9fb2d8'},675.73,USD,expense,Market,Macrocenter,{'$date': '2025-12-06T17:13:08.014000Z'},False
+{'$oid': '3431bbccd3238431fbee29bf'},{'$oid': '4e615750e88a7055219dc83a'},{'$oid': 'b8ac40ba0daceb8d88d83b26'},3895.01,TRY,income,Transfer,Para Transferi,{'$date': '2025-12-15T22:18:08.014000Z'},True
+{'$oid': '1bfd3abe47d7fcd1dcd5e470'},{'$oid': '5487903badb338b54a9701df'},{'$oid': '460248031e9c6e608755150a'},2408.72,EUR,expense,Sağlık,Medicana,{'$date': '2025-12-03T16:42:08.014000Z'},False
+{'$oid': '167fad8b166f67741e58ae50'},{'$oid': 'ec602447306444bfd4ea9bc3'},{'$oid': 'ada066e2148ffeea832fa099'},4214.8,TRY,expense,Sağlık,Florence Nightingale,{'$date': '2025-12-18T05:04:08.014000Z'},False
+{'$oid': 'b88aac3b36533840fad2a449'},{'$oid': 'ec42c3b2f1af27aeacaf87c6'},{'$oid': '49690055a8d409d55e91ffef'},1501.06,USD,income,Transfer,FAST,{'$date': '2025-11-23T13:41:08.014000Z'},False
+{'$oid': 'bf4e32995b6d58ffaaf779e5'},{'$oid': '7eae0c70172c2315c2005dff'},{'$oid': '77ded2e0ab5b7ce3788cd3eb'},1024.19,TRY,expense,Transfer,EFT,{'$date': '2025-11-30T15:59:08.014000Z'},True
+{'$oid': 'e690a5f16ccc51f9d9719656'},{'$oid': '5487903badb338b54a9701df'},{'$oid': '460248031e9c6e608755150a'},4693.07,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-09T07:43:08.014000Z'},True
+{'$oid': 'b06f77ebd9a1fd69e1163d14'},{'$oid': 'aec13f4ac750915b4bbf8ecf'},{'$oid': '6e5527a43f7951970f5a73e5'},4515.04,USD,expense,Sağlık,Memorial,{'$date': '2025-12-24T12:35:08.014000Z'},False
+{'$oid': '204858b5f5f042064f89a358'},{'$oid': '045228d11d74c6f92bebd85a'},{'$oid': 'b998b6013d649ac51a202a1f'},4530.9,USD,expense,Yemek,Kahve Dünyası,{'$date': '2025-10-31T18:52:08.014000Z'},False
+{'$oid': '4486af46ef6602fcbb6c1c01'},{'$oid': '565d70edfb389535c545b073'},{'$oid': '90533974bd6b6bb2666de51c'},2683.66,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-12-18T08:30:08.014000Z'},False
+{'$oid': 'ebf7deb01a18faf30214e75f'},{'$oid': 'd82fca2682b433fd6e792592'},{'$oid': '9da09644e1f9494e281562af'},2113.36,TRY,expense,Eğlence,Spotify,{'$date': '2025-12-12T09:51:08.014000Z'},True
+{'$oid': '9930a886153d5465bb6b6c55'},{'$oid': 'e19f2674dc98cbf1faca8486'},{'$oid': '6c8e3fcf4cfd6bfdd6f0f378'},1835.6,TRY,expense,Ulaşım,İETT,{'$date': '2025-11-02T08:02:08.014000Z'},True
+{'$oid': '6a6c79216c01e2ba438d6dd7'},{'$oid': '06eb6c35cd67adbd55693116'},{'$oid': '56340605d209737c6f67d99f'},3737.95,TRY,income,Transfer,IBAN Transferi,{'$date': '2025-11-17T01:37:08.014000Z'},False
+{'$oid': '6ecb77b39648d46adbda0fb2'},{'$oid': '2ae21608990ca8725e23830a'},{'$oid': '5da072318735ed9b21099246'},4434.18,TRY,expense,Ulaşım,BP,{'$date': '2025-11-28T14:45:08.014000Z'},True
+{'$oid': '916cba376d10f40e0b184a16'},{'$oid': 'ec602447306444bfd4ea9bc3'},{'$oid': 'ada066e2148ffeea832fa099'},3632.12,TRY,expense,Yemek,Burger King,{'$date': '2025-11-10T09:10:08.014000Z'},True
+{'$oid': '36ee2fd7a9b4bf440ec46f5b'},{'$oid': 'dfd05de1212b9b197a954d73'},{'$oid': 'ae4898d3064a343979ea99a3'},2555.52,USD,expense,Eğlence,Cineverse,{'$date': '2025-10-30T16:04:08.014000Z'},True
+{'$oid': 'f9de3ab394c82bd3eac9df48'},{'$oid': '0c916301de2484846800c3b5'},{'$oid': '74ae9456c269e940604d7dfd'},2098.02,USD,expense,Sağlık,Florence Nightingale,{'$date': '2025-11-25T17:49:08.014000Z'},False
+{'$oid': 'd441ff4f0d1b7cfc3113b433'},{'$oid': '6db1f78decd18d325a6fcf19'},{'$oid': '4bf9077ff96a57395ed8847c'},4369.72,USD,expense,Faturalar,Turkcell,{'$date': '2025-11-08T16:22:08.014000Z'},False
+{'$oid': 'bf71a65a7e0b76f104fca02b'},{'$oid': 'd82fca2682b433fd6e792592'},{'$oid': '9da09644e1f9494e281562af'},134.69,TRY,expense,Yemek,Yemeksepeti,{'$date': '2025-11-20T03:32:08.014000Z'},True
+{'$oid': 'fdcc10843bd8811737ab98df'},{'$oid': '017bf2ae3f0404cf29ccf048'},{'$oid': '0abfd5baae8c3720c9dad693'},2210.07,TRY,income,Transfer,IBAN Transferi,{'$date': '2025-11-26T05:25:08.014000Z'},True
+{'$oid': '5357e44e0fc8a0dd0559c66e'},{'$oid': '44fde454fb7a712f19f94b83'},{'$oid': 'bd6452661fe9a5bf6563bffd'},2737.85,TRY,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-10T14:11:08.014000Z'},True
+{'$oid': '9ebfde5d93d6629aea99af11'},{'$oid': '54ea48d9d90b4f8133c7949b'},{'$oid': 'a52a8f0a545c9205c3aeeabb'},682.39,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-12-22T21:34:08.014000Z'},False
+{'$oid': 'ce312bee5469976c3c114618'},{'$oid': 'f937afb03d65bf479e3314e9'},{'$oid': 'c28c042343a9bc955a7434b5'},4752.38,EUR,expense,Yemek,Starbucks,{'$date': '2025-12-01T01:19:08.014000Z'},True
+{'$oid': '87e620dfb545fe84a7bd1c8d'},{'$oid': 'abe69d5a80573274e709e96f'},{'$oid': '10e9a24a19dd5adc3d775aec'},4404.78,EUR,income,Transfer,Para Transferi,{'$date': '2025-12-21T07:06:08.014000Z'},False
+{'$oid': '3d2dcefa9099a5486a3bd66d'},{'$oid': '03417abafb31686758ac3c6c'},{'$oid': '543a3c73ecb57189fc2d938e'},4647.96,EUR,expense,Eğlence,Netflix,{'$date': '2025-12-15T08:57:08.014000Z'},False
+{'$oid': '2472ca48078308680a77a572'},{'$oid': 'a1ca60b4bf21944db35e52b1'},{'$oid': '79c6b47a3886e2b84618da2e'},3014.54,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-10-31T17:35:08.014000Z'},False
+{'$oid': '3c19e6f4bc28f79a9d79d5d2'},{'$oid': '66d27677c70e1a4d43cebd5d'},{'$oid': 'e2e6cb7e3171b272e04da9f2'},4677.97,TRY,income,Transfer,EFT,{'$date': '2025-12-18T19:22:08.014000Z'},False
+{'$oid': 'a2db721f626bf9d860e888ba'},{'$oid': '0d15054f3b4af699b1c0603c'},{'$oid': 'e3e500ddd65d45d78bfa4404'},2448.41,USD,income,Transfer,EFT,{'$date': '2025-11-20T11:29:08.014000Z'},True
+{'$oid': '63f2830d3d0247e85333145e'},{'$oid': 'eba447c97c67a0c900cbd378'},{'$oid': '2dd4d141e40544c5e9258967'},4711.35,USD,expense,Alışveriş,LC Waikiki,{'$date': '2025-11-27T19:28:08.014000Z'},True
+{'$oid': '7666f0bdb6b678c7ca9c8691'},{'$oid': '300cf83dccc36cffd6f5c54d'},{'$oid': 'f97a4ffc1d1292ba982f23ac'},2021.79,EUR,income,Maaş,Salary Payment,{'$date': '2025-12-15T20:26:08.014000Z'},False
+{'$oid': '4bd025e86e8798bfd24040a9'},{'$oid': '7eae0c70172c2315c2005dff'},{'$oid': '77ded2e0ab5b7ce3788cd3eb'},4897.13,TRY,income,Transfer,IBAN Transferi,{'$date': '2025-12-17T19:05:08.014000Z'},True
+{'$oid': '1be1cde6efc002b49eda744a'},{'$oid': '5e2eb3b69878b03354f82960'},{'$oid': 'da773948a2c4486d48c6b39b'},3449.94,TRY,income,Transfer,FAST,{'$date': '2025-12-21T10:13:08.014000Z'},False
+{'$oid': 'fb02244f94eb0e04427d3ccc'},{'$oid': '1ac8e9af6c435b630db51495'},{'$oid': '0da9d5b3f54b62a58aae1f33'},4798.06,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-11-17T10:08:08.014000Z'},True
+{'$oid': 'ca400a0aae258d0bc3db5d85'},{'$oid': 'bc6d892adab9bf09fc155ce9'},{'$oid': '335395fcf274d5947fd3265a'},1959.18,TRY,expense,Alışveriş,LC Waikiki,{'$date': '2025-11-26T11:09:08.014000Z'},True
+{'$oid': '6435ef1361e2067e9639dbf1'},{'$oid': '54ea48d9d90b4f8133c7949b'},{'$oid': 'a52a8f0a545c9205c3aeeabb'},598.44,EUR,expense,Faturalar,Doğalgaz Faturası,{'$date': '2025-12-14T19:21:08.014000Z'},False
+{'$oid': 'b1f222278cb14e0a3a7dd82d'},{'$oid': '3e1e1fa13b5adfb3a41bce2a'},{'$oid': '2a8cc0066c0f8fb5a8b011ab'},4067.87,EUR,expense,Diğer,Google,{'$date': '2025-11-23T19:46:08.014000Z'},False
+{'$oid': '2bc97373c0253ce52cf1ac18'},{'$oid': 'c95629cdf40439c41dcabb61'},{'$oid': 'c26dd1001fcd63d202333faa'},280.78,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-12T18:12:08.014000Z'},True
+{'$oid': '3be1f12388d14965b4a56aad'},{'$oid': '568d140201adfd7036cc63f8'},{'$oid': '8e8edb644a27b34f8bbdf00d'},3247.24,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-03T12:11:08.014000Z'},False
+{'$oid': 'd4a54e1ea04be8bd3c88e941'},{'$oid': '7eae0c70172c2315c2005dff'},{'$oid': '77ded2e0ab5b7ce3788cd3eb'},1416.95,TRY,expense,Eğlence,PlayStation Store,{'$date': '2025-12-09T02:32:08.014000Z'},False
+{'$oid': '1bc2895d7e2d231d80dbd64a'},{'$oid': '8f5da17351d8853d1771b5e2'},{'$oid': '73c55fca59e8642725e07404'},519.93,USD,expense,Faturalar,Elektrik Faturası,{'$date': '2025-12-12T07:28:08.014000Z'},False
+{'$oid': 'ff55ff86a2fcc8a72a94c9ad'},{'$oid': 'db550a334fa5528649913437'},{'$oid': '519a6f30e90f44c1c7309a99'},957.5,EUR,expense,Ulaşım,HGS / OGS,{'$date': '2025-10-27T09:28:08.014000Z'},True
+{'$oid': 'f940078e86be0134b95511d8'},{'$oid': 'f6d20dd0efa47a2a046496ec'},{'$oid': 'f6e9b4e1260ff638b56f173e'},4433.27,TRY,expense,Eğlence,Cineverse,{'$date': '2025-11-16T13:17:08.014000Z'},True
+{'$oid': '31407e4f2b37e28c9a974a67'},{'$oid': '5e2eb3b69878b03354f82960'},{'$oid': 'da773948a2c4486d48c6b39b'},3636.1,TRY,income,Transfer,Havale,{'$date': '2025-11-28T05:04:08.014000Z'},True
+{'$oid': 'be57a73d9e91b87ee71e7875'},{'$oid': '73e9c64243699b021d9db9f2'},{'$oid': 'a7435ffb6094d8f24ab21b04'},4594.75,TRY,expense,Eğlence,Spotify,{'$date': '2025-11-15T07:24:08.014000Z'},False
+{'$oid': '7e641095aebc8350370e7fca'},{'$oid': '9fdeb1d45b64f41dec28a914'},{'$oid': '60e8977c1bc24ee97367be41'},2658.08,USD,expense,Yemek,GetirYemek,{'$date': '2025-11-29T16:01:08.014000Z'},True
+{'$oid': '5e3045b2d9bbf193cef8f5f2'},{'$oid': '87f1f5f040df74ed242c47c6'},{'$oid': 'ee39865f1ff126ae34d68bf2'},1132.6,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-12-25T00:00:08.014000Z'},False
+{'$oid': '660a523f0bb1ed9e9bc8f961'},{'$oid': '6a63393c79bdced36d747c70'},{'$oid': 'c83ded3cb6e42e68f4ce8083'},1084.63,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-06T00:11:08.014000Z'},True
+{'$oid': '04520668a261e710b4a69665'},{'$oid': '4380c301f0efee07b9faf0e7'},{'$oid': '055ecf6990643d5897387b6b'},3161.07,EUR,expense,Faturalar,Elektrik Faturası,{'$date': '2025-11-04T06:18:08.014000Z'},True
+{'$oid': '267dfd2f4a3b8049f799f77d'},{'$oid': '560b1e0c63b828d56be6856d'},{'$oid': '5bd83a1ba2420ec3f2225fc7'},350.77,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-21T09:07:08.014000Z'},True
+{'$oid': 'c933769594f0a495d77ef437'},{'$oid': 'dbcc16c8aebb46ce119b7e3f'},{'$oid': '3f0f95f38bb4f6e193a8a94c'},1643.64,USD,income,Transfer,IBAN Transferi,{'$date': '2025-10-28T20:25:08.014000Z'},True
+{'$oid': 'fb6d44604c3fc1c0c1bbc449'},{'$oid': '8ba3d9e8c4722bbb555cd833'},{'$oid': 'b1e355a8d143ddbac59bfdf8'},533.59,EUR,expense,Transfer,Havale,{'$date': '2025-11-07T01:02:08.014000Z'},False
+{'$oid': 'e9be314fd9c13c6cebad1a37'},{'$oid': 'ef536d38ded46204361b8247'},{'$oid': '94d215bd8d16818f13636c6e'},605.45,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-22T23:38:08.014000Z'},False
+{'$oid': '2e5d30847355a82cb26d0ffc'},{'$oid': 'a3d713a7af305efccf312c58'},{'$oid': 'f45c2518895e161738b14344'},2835.6,USD,expense,Diğer,Uber,{'$date': '2025-11-19T06:20:08.014000Z'},False
+{'$oid': '30029e1c83321d3eac37eed2'},{'$oid': '0653acfb0d2ee097b0936d74'},{'$oid': 'bde17535b470197ac99c5719'},3899.0,EUR,expense,Ulaşım,Opet,{'$date': '2025-12-09T20:08:08.014000Z'},False
+{'$oid': '4b739cdb7d365d6acb0f169b'},{'$oid': '9ac19681c61f40aaa63d8082'},{'$oid': '4411cb2acd6ffb54784aef37'},1067.45,USD,expense,Sağlık,Eczane,{'$date': '2025-11-28T14:12:08.014000Z'},False
+{'$oid': '5f85d994e3df7db1d3d9206d'},{'$oid': '3bd85de641b4e96265d22b4c'},{'$oid': '9859831fea827c2cb68858a6'},3548.54,TRY,expense,Faturalar,Elektrik Faturası,{'$date': '2025-11-12T23:01:08.014000Z'},True
+{'$oid': '0750da2cef01404bedbb751d'},{'$oid': '1634b873b666ccf9ec4b00d0'},{'$oid': '5058b8dd7fe394a41c5364b0'},246.91,TRY,expense,Yemek,Starbucks,{'$date': '2025-10-31T15:51:08.014000Z'},True
+{'$oid': 'ef0a9355c44ef0402aef0788'},{'$oid': '34a25da675ae4786278a5c6f'},{'$oid': 'a38d5385e28a95a6f2ff756f'},1528.55,TRY,expense,Transfer,EFT,{'$date': '2025-12-05T17:35:08.014000Z'},False
+{'$oid': '4f351f2174adfca39be6a5b0'},{'$oid': '398e689cc43790882a89f06e'},{'$oid': '4c7e5cb6c386939d38cd5a28'},3856.6,USD,income,Transfer,Havale,{'$date': '2025-12-23T13:27:08.014000Z'},True
+{'$oid': '8f2d80e048c916202bd97947'},{'$oid': '4e615750e88a7055219dc83a'},{'$oid': 'b8ac40ba0daceb8d88d83b26'},3437.77,TRY,expense,Market,CarrefourSA,{'$date': '2025-12-21T05:10:08.014000Z'},True
+{'$oid': '4e638500f2224227bfd46fd5'},{'$oid': '065ce6d0d2711a41278cdf6b'},{'$oid': 'e3e551fe20ae9986244636bc'},3879.4,EUR,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-05T13:44:08.014000Z'},True
+{'$oid': '1befda11bace0b16d69786f1'},{'$oid': '8aa3c914a0b94a47b2f65103'},{'$oid': 'bc59eb85cc25d59a78771f45'},1148.81,USD,expense,Ulaşım,Opet,{'$date': '2025-12-15T03:54:08.014000Z'},False
+{'$oid': '37deac65293dc4327377a095'},{'$oid': 'a7ebc6ea57cbdd1e94491cf0'},{'$oid': '335eddd5b2162919636ccd16'},1505.95,EUR,income,Transfer,FAST,{'$date': '2025-11-11T12:41:08.014000Z'},False
+{'$oid': '63fdfd8fd2563ce3605c7ce1'},{'$oid': '90b84a284efdf5f361bb5f00'},{'$oid': 'd473ca41e1586ca95946062f'},4143.15,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-12-21T06:53:08.014000Z'},True
+{'$oid': 'b32ba0b8568b2a9dc91f41ec'},{'$oid': '2ae21608990ca8725e23830a'},{'$oid': '5da072318735ed9b21099246'},4745.55,TRY,expense,Yemek,Kahve Dünyası,{'$date': '2025-11-01T03:31:08.014000Z'},True
+{'$oid': '77b0fbf6500eae6e364cc5cd'},{'$oid': 'd4d7a39c0a583df2a0b83c63'},{'$oid': 'cb4e748ffac512637ad651c2'},4902.32,TRY,expense,Diğer,Amazon,{'$date': '2025-12-06T10:24:08.014000Z'},True
+{'$oid': '730a4d78937c34590b5f031c'},{'$oid': 'a1d6821e5b054b2617b0f72f'},{'$oid': '5ea7568adbfa9131f797bbb6'},205.48,EUR,expense,Alışveriş,Hepsiburada,{'$date': '2025-12-23T10:49:08.014000Z'},True
+{'$oid': '77dbfe0adea4b7fa02a44668'},{'$oid': 'e017b55d16bb44476beac83b'},{'$oid': '0b0b6a86f49db8d2f56df15e'},1357.81,USD,expense,Eğlence,YouTube Premium,{'$date': '2025-12-12T03:30:08.014000Z'},False
+{'$oid': '610184b90ae624e989d2a03e'},{'$oid': '565d70edfb389535c545b073'},{'$oid': '90533974bd6b6bb2666de51c'},1562.26,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-12-01T07:14:08.014000Z'},False
+{'$oid': '3f5990ba7a914c95bb83734d'},{'$oid': '3e1e1fa13b5adfb3a41bce2a'},{'$oid': '97621a34d8f39ebcafe33aaa'},1984.97,TRY,expense,Diğer,Trendyol Go,{'$date': '2025-12-04T09:14:08.014000Z'},False
+{'$oid': 'd0610855429db0d5af9d71a6'},{'$oid': '80b092b653690a1b0941f5d9'},{'$oid': '382967cda1b2bc33ce9b8289'},4817.48,TRY,expense,Sağlık,Eczane,{'$date': '2025-11-24T21:36:08.014000Z'},False
+{'$oid': 'fc87ffed0969349f667378b3'},{'$oid': 'dbcc16c8aebb46ce119b7e3f'},{'$oid': '3f0f95f38bb4f6e193a8a94c'},4362.68,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-08T04:17:08.014000Z'},False
+{'$oid': 'd7a5232335c8b9279383b558'},{'$oid': '80b092b653690a1b0941f5d9'},{'$oid': '382967cda1b2bc33ce9b8289'},110.23,TRY,expense,Sağlık,Memorial,{'$date': '2025-12-03T08:46:08.014000Z'},True
+{'$oid': '3d5484ce4cc6827a059e894f'},{'$oid': '0e0ccab0e0305f872a3aa6ca'},{'$oid': '3315857984a8ac70a448b729'},259.89,EUR,expense,Sağlık,Memorial,{'$date': '2025-12-01T11:34:08.014000Z'},False
+{'$oid': 'cd5293092daccbad59de1dff'},{'$oid': '88371a0c2965e1666ad6f6f2'},{'$oid': '007f322429ebc19082e5932b'},1492.58,TRY,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-01T17:52:08.014000Z'},True
+{'$oid': '8ae83cd02793c80c33b8f964'},{'$oid': '281c0b39b799e091444f6181'},{'$oid': '99d953b426654fdd8681437b'},4495.45,TRY,expense,Market,Macrocenter,{'$date': '2025-12-07T22:51:08.014000Z'},True
+{'$oid': '990392766a806d08cc3393d3'},{'$oid': '909c8724416f6d9384d2eedd'},{'$oid': '29adb730d2496882268464d1'},722.41,TRY,expense,Alışveriş,Hepsiburada,{'$date': '2025-10-26T21:48:08.014000Z'},False
+{'$oid': 'dc172b69760adc187c3377e5'},{'$oid': '4e615750e88a7055219dc83a'},{'$oid': 'b0e9a445b29162480688b015'},4170.45,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-11-19T06:34:08.014000Z'},False
+{'$oid': '4ec15c2058568bebaa84aaf2'},{'$oid': 'dbcc16c8aebb46ce119b7e3f'},{'$oid': '3f0f95f38bb4f6e193a8a94c'},2687.92,USD,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-17T15:11:08.014000Z'},True
+{'$oid': '7e074ea435629b83bc44a92d'},{'$oid': '6a63393c79bdced36d747c70'},{'$oid': 'c83ded3cb6e42e68f4ce8083'},1345.21,TRY,expense,Diğer,Amazon,{'$date': '2025-12-17T06:54:08.014000Z'},False
+{'$oid': '643eddb2bb9921bf5bf140a1'},{'$oid': 'a8b1bb53d1127dbe883b454e'},{'$oid': 'd76bd2a0989ea8ec9b172f46'},735.55,TRY,income,Transfer,IBAN Transferi,{'$date': '2025-12-13T19:05:08.014000Z'},False
+{'$oid': '6e530bafe9204f73a1ea543c'},{'$oid': 'a1d6821e5b054b2617b0f72f'},{'$oid': 'e1eb62cc09f26eeeee32303d'},1656.23,TRY,expense,Diğer,Apple,{'$date': '2025-11-07T11:45:08.014000Z'},False
+{'$oid': '2d7ed17e3a3f41658184aa56'},{'$oid': 'a7ebc6ea57cbdd1e94491cf0'},{'$oid': '335eddd5b2162919636ccd16'},3336.12,EUR,income,Transfer,IBAN Transferi,{'$date': '2025-11-29T04:15:08.014000Z'},True
+{'$oid': '8e78fd6e55bcbe9626dbc70d'},{'$oid': '66d27677c70e1a4d43cebd5d'},{'$oid': 'bcff6e4fc1080faadc6f4172'},1561.98,EUR,expense,Sağlık,Eczane,{'$date': '2025-11-29T12:57:08.014000Z'},True
+{'$oid': '64a52d824efc953a5902f874'},{'$oid': '5e2eb3b69878b03354f82960'},{'$oid': 'eca85f36bdaaeae581243121'},2896.27,USD,income,Transfer,Havale,{'$date': '2025-11-13T03:12:08.014000Z'},False
+{'$oid': '43c1dd45943923dc9c7d06be'},{'$oid': '281c0b39b799e091444f6181'},{'$oid': '99d953b426654fdd8681437b'},2837.51,TRY,income,Transfer,EFT,{'$date': '2025-11-21T07:02:08.014000Z'},False
+{'$oid': '8fa95de2b39a244e184b03d0'},{'$oid': '1ea60e24254e512ad1d98f0f'},{'$oid': '372c1639f382d0f8ee24088b'},582.28,TRY,expense,Yemek,Starbucks,{'$date': '2025-11-18T04:41:08.014000Z'},False
+{'$oid': 'adacec549438679230f0c49e'},{'$oid': '281c0b39b799e091444f6181'},{'$oid': '043c43be39b12b1a34d9a625'},2736.14,TRY,income,Transfer,Para Transferi,{'$date': '2025-12-24T08:40:08.014000Z'},True
+{'$oid': '2b9c2335381b6a9a2fc395f1'},{'$oid': '4107eb402f6ec92253540a81'},{'$oid': '70919dc0c12172605fbeeb54'},4238.71,EUR,expense,Sağlık,Florence Nightingale,{'$date': '2025-11-09T18:47:08.014000Z'},False
+{'$oid': '079dd92f15b2bf8cf0d633b1'},{'$oid': '44fde454fb7a712f19f94b83'},{'$oid': '61deeb75d67a645a245fa6a1'},1979.79,USD,expense,Transfer,IBAN Transferi,{'$date': '2025-11-16T03:40:08.014000Z'},False
+{'$oid': 'c66371846fecd358c094d8ef'},{'$oid': '0d15054f3b4af699b1c0603c'},{'$oid': 'e3e500ddd65d45d78bfa4404'},4487.13,USD,expense,Yemek,GetirYemek,{'$date': '2025-12-05T00:29:08.014000Z'},True
+{'$oid': '77990c0d7c5eaa8e3e77ce80'},{'$oid': '77e0e95abb061c49ab2483c3'},{'$oid': 'f32f68b0aae3f62e6d4a204c'},1961.27,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-10-29T15:23:08.014000Z'},False
+{'$oid': '05e7e37005db3cdc1655b65a'},{'$oid': '64c72857f4de03894ccd35d8'},{'$oid': '4576fa6e23e50eee6a226a15'},2465.05,USD,expense,Faturalar,Turkcell,{'$date': '2025-11-12T18:06:08.014000Z'},True
+{'$oid': 'dac80e4c70161c7ae4dc4f03'},{'$oid': '6db1f78decd18d325a6fcf19'},{'$oid': '4bf9077ff96a57395ed8847c'},3489.6,USD,expense,Transfer,EFT,{'$date': '2025-12-11T13:08:08.014000Z'},True
+{'$oid': 'dc401a8e0c4eec1f9a663ea7'},{'$oid': 'a86e236d6d582456067fd225'},{'$oid': '74fcf0c75ad20d11cbe1280d'},4690.56,USD,expense,Yemek,Yemeksepeti,{'$date': '2025-12-11T23:25:08.014000Z'},True
+{'$oid': 'bf4f225e11589b5ecbc91339'},{'$oid': '702d7b875181abc377ff1f22'},{'$oid': '5d7cb218bbd5515e1d01b90a'},1823.89,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-11-26T02:46:08.014000Z'},False
+{'$oid': '4710bfa2992086ae616f415f'},{'$oid': '90b84a284efdf5f361bb5f00'},{'$oid': 'd473ca41e1586ca95946062f'},3035.7,USD,expense,Ulaşım,HGS / OGS,{'$date': '2025-11-22T09:04:08.014000Z'},False
+{'$oid': 'a97524247cf7d2199330d3ee'},{'$oid': 'dfd05de1212b9b197a954d73'},{'$oid': 'c6c5cefe98fb6f56b7fd3075'},4834.34,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-11-04T16:01:08.014000Z'},False
+{'$oid': 'a0555fc962755614dbf3498a'},{'$oid': 'c10c92fdb21a4596eaaf15db'},{'$oid': '125319753b85bcf7923d98c4'},2515.73,TRY,expense,Faturalar,Doğalgaz Faturası,{'$date': '2025-12-04T16:48:08.014000Z'},True
+{'$oid': '1db4fda9ec23a9a5c205ecc0'},{'$oid': 'ec42c3b2f1af27aeacaf87c6'},{'$oid': 'a1baaba839538da1d577f6aa'},3158.58,EUR,expense,Transfer,FAST,{'$date': '2025-11-19T05:39:08.014000Z'},True
+{'$oid': 'ebdd5401859e331be8b68c29'},{'$oid': 'f38f6eb23c77888777226fc9'},{'$oid': '836ccde4d1da9817b92a2226'},317.52,TRY,expense,Faturalar,Doğalgaz Faturası,{'$date': '2025-12-10T09:09:08.014000Z'},True
+{'$oid': 'c71dc0233389324e1d3a2856'},{'$oid': 'd7d2508b23f665625f9bd0a2'},{'$oid': '11e2e49485027e3d4bb77170'},2659.31,USD,expense,Transfer,FAST,{'$date': '2025-11-05T11:19:08.014000Z'},False
+{'$oid': 'a4c12973a83d87429239be71'},{'$oid': 'ca20c013fb6501d44ed50aac'},{'$oid': 'ecbcaccbf8b85433afde5928'},1569.87,EUR,expense,Faturalar,Türk Telekom İnternet,{'$date': '2025-11-08T21:31:08.014000Z'},False
+{'$oid': 'e7705bed538874fa84295bed'},{'$oid': 'dcd9b5f1415b272404765622'},{'$oid': 'b2e22b324668e40d21b6dc34'},1532.74,USD,expense,Sağlık,Acıbadem,{'$date': '2025-12-05T09:50:08.014000Z'},False
+{'$oid': '27259d2faa29bc9d87d33d58'},{'$oid': '7491f0b431e466076f93ce3d'},{'$oid': '475ebaca36c180b72b091655'},1907.45,EUR,expense,Eğlence,Spotify,{'$date': '2025-11-30T13:21:08.014000Z'},False
+{'$oid': 'ac6c4c80f0a87bb4af0f2098'},{'$oid': 'dbcc16c8aebb46ce119b7e3f'},{'$oid': '3f0f95f38bb4f6e193a8a94c'},1231.77,USD,expense,Diğer,Google,{'$date': '2025-11-18T03:59:08.014000Z'},True
+{'$oid': 'bfa8faf0dd1e6e06239c58a9'},{'$oid': 'bc6d892adab9bf09fc155ce9'},{'$oid': '335395fcf274d5947fd3265a'},3009.74,TRY,expense,Faturalar,Doğalgaz Faturası,{'$date': '2025-11-26T01:53:08.014000Z'},False
+{'$oid': '584eead2aa365e92e69613a0'},{'$oid': '0e0ccab0e0305f872a3aa6ca'},{'$oid': '3315857984a8ac70a448b729'},3547.21,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-11-28T20:49:08.014000Z'},False
+{'$oid': '776b99fc32aff16c10f54b75'},{'$oid': '3a34d72f7ea183d09a99ff47'},{'$oid': '4212284656440c92366f2b1e'},621.92,EUR,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-17T15:03:08.014000Z'},False
+{'$oid': 'aea7d8875d356f2065abb4a3'},{'$oid': '5e2eb3b69878b03354f82960'},{'$oid': 'da773948a2c4486d48c6b39b'},604.36,TRY,expense,Eğlence,YouTube Premium,{'$date': '2025-10-29T07:01:08.014000Z'},False
+{'$oid': 'd8ffaf95afbd0a1a45d172bc'},{'$oid': '06eb6c35cd67adbd55693116'},{'$oid': '56340605d209737c6f67d99f'},3648.88,TRY,expense,Eğlence,Cineverse,{'$date': '2025-12-20T21:35:08.014000Z'},True
+{'$oid': 'b0e1c88ae77d860fad250f01'},{'$oid': '88371a0c2965e1666ad6f6f2'},{'$oid': '007f322429ebc19082e5932b'},3333.94,TRY,expense,Diğer,Uber,{'$date': '2025-11-26T07:49:08.014000Z'},False
+{'$oid': '5b328ba5eb1c6c26dfc7975c'},{'$oid': '18dc9e80d4f7459c743922db'},{'$oid': '83739cb70368162a348e8ae6'},897.12,USD,expense,Diğer,Trendyol Go,{'$date': '2025-11-04T16:52:08.014000Z'},True
+{'$oid': '833d5f91dc36795442a2c43f'},{'$oid': '1dca75cf82ceb498371147dc'},{'$oid': 'e9c57468a4ff1ad60a212d7c'},872.67,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-23T10:59:08.014000Z'},True
+{'$oid': 'd0676b310c882713cf3c28e8'},{'$oid': 'dad139f5f7de5046526a7b75'},{'$oid': 'c7d1d89541564177ac91f904'},1655.75,USD,expense,Diğer,Trendyol Go,{'$date': '2025-11-29T02:51:08.014000Z'},True
+{'$oid': 'c52269433d5c49667d72cd1a'},{'$oid': 'f38f6eb23c77888777226fc9'},{'$oid': '836ccde4d1da9817b92a2226'},2796.72,TRY,expense,Market,Macrocenter,{'$date': '2025-11-03T14:27:08.014000Z'},True
+{'$oid': '03e3ca4baff315c8f4878066'},{'$oid': '5e79bf3c3bdada5872fa8fcb'},{'$oid': 'a4d85f6fe8893bb85772ee7d'},4990.83,USD,income,Maaş,Salary Payment,{'$date': '2025-12-09T01:46:08.014000Z'},False
+{'$oid': '11c3e93547f4b9d65a30e4c7'},{'$oid': 'e5ecab85c44647b1b28418c4'},{'$oid': '43b288a423431fbf6cbfae79'},3666.13,EUR,expense,Market,Macrocenter,{'$date': '2025-11-05T16:41:08.014000Z'},False
+{'$oid': '49803b76f31ba5fbea8a7f01'},{'$oid': 'd82fca2682b433fd6e792592'},{'$oid': '9da09644e1f9494e281562af'},2387.94,TRY,expense,Alışveriş,LC Waikiki,{'$date': '2025-12-22T03:03:08.014000Z'},False
+{'$oid': '7e427c3cdabece4fa97bdc79'},{'$oid': 'a1ca60b4bf21944db35e52b1'},{'$oid': '7c9499e1528cac9675b8dfe9'},4072.5,USD,expense,Faturalar,Elektrik Faturası,{'$date': '2025-11-29T03:14:08.014000Z'},False
+{'$oid': '3d99e7268d9ea1ca475e483e'},{'$oid': '4380c301f0efee07b9faf0e7'},{'$oid': '055ecf6990643d5897387b6b'},4304.3,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-10-27T02:04:08.014000Z'},True
+{'$oid': 'ef14e9d7bc240bd8f9684116'},{'$oid': '72319c93225f3f0ae9e05f44'},{'$oid': 'e728d9181156267769c02144'},357.55,USD,expense,Transfer,EFT,{'$date': '2025-12-07T21:02:08.014000Z'},False
+{'$oid': '9fbd2e6dea827d9bda3f948e'},{'$oid': '8873b1a2eaaa8aba6efce5f5'},{'$oid': 'd236e82be7ee5aed1f81acec'},500.17,USD,expense,Diğer,Amazon,{'$date': '2025-11-07T23:31:08.014000Z'},False
+{'$oid': 'ca5e52632986808dfb342586'},{'$oid': '4380c301f0efee07b9faf0e7'},{'$oid': '6b1cdd5046c0e7238b47e698'},3202.74,TRY,expense,Market,BİM,{'$date': '2025-11-16T16:42:08.014000Z'},False
+{'$oid': '7e89c1f454c8f656c1e4301c'},{'$oid': '8aa3c914a0b94a47b2f65103'},{'$oid': '079ea22a3471905392c7d52c'},2982.3,USD,expense,Transfer,EFT,{'$date': '2025-12-05T20:55:08.014000Z'},True
+{'$oid': '8f21e1ef01efec4de7cd465a'},{'$oid': '300cf83dccc36cffd6f5c54d'},{'$oid': 'f97a4ffc1d1292ba982f23ac'},3972.44,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-12-15T03:53:08.014000Z'},True
+{'$oid': '2449051a14db7b0094c8642d'},{'$oid': '54ea48d9d90b4f8133c7949b'},{'$oid': 'a52a8f0a545c9205c3aeeabb'},4046.22,EUR,expense,Ulaşım,Metro İstanbul,{'$date': '2025-12-14T17:52:08.014000Z'},True
+{'$oid': 'd1ddec8f73f06a489f040ee0'},{'$oid': 'a7efa29b85f3b13bea969d4c'},{'$oid': '2c6728d21c688c5e86e6df69'},318.18,USD,expense,Transfer,FAST,{'$date': '2025-10-30T00:11:08.014000Z'},True
+{'$oid': 'a59f93682eb51d4bb2cde9b6'},{'$oid': '5e2eb3b69878b03354f82960'},{'$oid': 'eca85f36bdaaeae581243121'},1352.08,USD,expense,Diğer,Google,{'$date': '2025-12-07T02:14:08.014000Z'},True
+{'$oid': '3e6acd38fb3e28c60fb5b67e'},{'$oid': '1ba7ae457b29aae842ff0ca7'},{'$oid': '3aa60a83b255e43568be9aa2'},1428.57,EUR,expense,Ulaşım,Opet,{'$date': '2025-12-02T08:48:08.014000Z'},True
+{'$oid': 'e408d7e5c42b51721bd43bf7'},{'$oid': 'da5eda6713c5e4d262a1f240'},{'$oid': 'cd357a8f818b44a629aea69e'},1279.19,EUR,expense,Market,Migros,{'$date': '2025-12-09T04:45:08.014000Z'},True
+{'$oid': '4559b0540bd09ed1e2679548'},{'$oid': '2f0705e7601f548b8be20a8d'},{'$oid': '6f46a85cf56040a17da1eb9b'},359.16,TRY,expense,Ulaşım,BP,{'$date': '2025-11-01T16:15:08.014000Z'},True
+{'$oid': 'da3afef6f3844747e4ae2c97'},{'$oid': '734e428e161f43097fa019c7'},{'$oid': '3ae77887dce441fddfc5048c'},4767.94,EUR,expense,Sağlık,Medicana,{'$date': '2025-11-27T06:49:08.014000Z'},False
+{'$oid': 'a670cbec9fe509087c4cdebb'},{'$oid': '64c72857f4de03894ccd35d8'},{'$oid': '4576fa6e23e50eee6a226a15'},465.93,USD,expense,Diğer,Amazon,{'$date': '2025-11-23T19:18:08.014000Z'},False
+{'$oid': '94a8e8dd0d2ee2bdc17629fc'},{'$oid': '609da1ba84a515913704ef94'},{'$oid': '4bec759e88bed28d8cf7ec74'},4802.33,USD,income,Transfer,Havale,{'$date': '2025-11-10T19:04:08.014000Z'},True
+{'$oid': 'faf4019a65b7459f16d00686'},{'$oid': 'aae8373fd84d674569391012'},{'$oid': '247e66c2df73a32aa60042cb'},1638.01,USD,income,Maaş,Salary Payment,{'$date': '2025-12-07T23:23:08.014000Z'},False
+{'$oid': '71fcd1a9fefadb529d77539e'},{'$oid': 'd23a67d9e45f27d643b300e8'},{'$oid': 'f3c7cc6712d9d50dece0b1dc'},2054.46,USD,income,Transfer,FAST,{'$date': '2025-11-13T10:29:08.014000Z'},False
+{'$oid': '11bc2665826de605d96c4f4a'},{'$oid': '4ef1d93732e689dd2d4d7d2a'},{'$oid': 'b0c2a763734d550dd36d6cbc'},331.31,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-12-24T15:47:08.014000Z'},False
+{'$oid': '1046a8f11b57198e86ab446a'},{'$oid': 'dc3e1a273d06405810658675'},{'$oid': '01079f1b344b3593f2c90d04'},762.16,TRY,expense,Market,A101,{'$date': '2025-11-02T06:47:08.014000Z'},False
+{'$oid': '69f27c96a9ee60a1070ad259'},{'$oid': '23e22c1c5268b686437d1eac'},{'$oid': '048b16a4d6557c8709b0ada9'},2796.45,TRY,expense,Eğlence,YouTube Premium,{'$date': '2025-11-30T23:08:08.014000Z'},False
+{'$oid': 'aa15fcd6a4b9c7ef193ef428'},{'$oid': '9583da1641a7cd34e80740f7'},{'$oid': 'bf4483472e6b95438c427884'},4144.51,EUR,expense,Diğer,Uber,{'$date': '2025-11-30T07:32:08.014000Z'},False
+{'$oid': 'b600d919ae3f1f364a9878d4'},{'$oid': 'ec42c3b2f1af27aeacaf87c6'},{'$oid': '49690055a8d409d55e91ffef'},568.89,USD,income,Transfer,IBAN Transferi,{'$date': '2025-11-12T20:46:08.014000Z'},True
+{'$oid': 'a3f4cc3248eecf8c054c3e5e'},{'$oid': '1ba7ae457b29aae842ff0ca7'},{'$oid': '3aa60a83b255e43568be9aa2'},2012.11,EUR,income,Transfer,Havale,{'$date': '2025-10-30T04:22:08.014000Z'},True
+{'$oid': 'e835462c9d6bf7af391180f4'},{'$oid': 'b62b6d1621aed81b5ef9b711'},{'$oid': '23f0d15187ce1e03cf07b19c'},4480.05,USD,expense,Alışveriş,Zara,{'$date': '2025-11-13T09:26:08.014000Z'},False
+{'$oid': 'bed7daccb868baf2d17befa5'},{'$oid': '3453b2417e10989f8bf2e06a'},{'$oid': '991a2c2b98811e258760f92e'},944.36,USD,income,Transfer,IBAN Transferi,{'$date': '2025-12-25T07:10:08.014000Z'},False
+{'$oid': 'f21953b481522f39a0b93fba'},{'$oid': 'd7d2508b23f665625f9bd0a2'},{'$oid': '11e2e49485027e3d4bb77170'},2385.15,USD,expense,Alışveriş,H&M,{'$date': '2025-11-28T07:40:08.014000Z'},False
+{'$oid': '53cb858ed7921669bf20cb04'},{'$oid': '59b6845fcfa5e66245da249f'},{'$oid': '7defc538a46b29357fe5317b'},4866.06,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-12-05T17:49:08.014000Z'},False
+{'$oid': '1c00a5930531cebb12941c57'},{'$oid': '030e6e0b656e969bc0906be5'},{'$oid': '5bacb729ffc252db2d746b8a'},3735.17,TRY,expense,Transfer,Para Transferi,{'$date': '2025-12-08T21:56:08.014000Z'},False
+{'$oid': 'd2073d22a98d7365f47115d7'},{'$oid': '43670daa84b7a245b483b48d'},{'$oid': 'b1fcf608ada0b53dc2f064f1'},4363.85,USD,expense,Eğlence,Spotify,{'$date': '2025-10-29T21:49:08.014000Z'},True
+{'$oid': '7cea86723879217550352863'},{'$oid': '49670e4b12181330fecaea5a'},{'$oid': '32bcc4617cb81d47b6a72514'},1335.8,USD,expense,Alışveriş,Trendyol,{'$date': '2025-12-16T02:39:08.014000Z'},False
+{'$oid': '5665ed8c6ef9690b4e72ba71'},{'$oid': '63d03b567622646cff46aa01'},{'$oid': '32d43b50922957baa8eedb35'},41.64,EUR,income,Maaş,Salary Payment,{'$date': '2025-11-26T02:20:08.014000Z'},True
+{'$oid': '84d9ccde4ae872b4b53be959'},{'$oid': 'e109ae0a347a175d154ac989'},{'$oid': '2b21334792fd491cb57fa49b'},4042.62,USD,expense,Yemek,McDonald's,{'$date': '2025-12-07T07:24:08.014000Z'},True
+{'$oid': '74711f257a9d338eeb8c43c9'},{'$oid': '06eb6c35cd67adbd55693116'},{'$oid': '56340605d209737c6f67d99f'},4674.35,TRY,expense,Ulaşım,Metro İstanbul,{'$date': '2025-12-12T18:28:08.014000Z'},False
+{'$oid': '5227346f220128b50958fb9d'},{'$oid': '045228d11d74c6f92bebd85a'},{'$oid': 'b998b6013d649ac51a202a1f'},2866.59,USD,expense,Sağlık,Memorial,{'$date': '2025-11-21T02:22:08.014000Z'},True
+{'$oid': '9423307cdd223862f0e58121'},{'$oid': 'ca20c013fb6501d44ed50aac'},{'$oid': 'ecbcaccbf8b85433afde5928'},1463.44,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-12-16T10:44:08.014000Z'},False
+{'$oid': 'ede9a130f9b49e5e20b0f29b'},{'$oid': '54ea48d9d90b4f8133c7949b'},{'$oid': 'a52a8f0a545c9205c3aeeabb'},4230.27,EUR,expense,Yemek,McDonald's,{'$date': '2025-12-16T04:40:08.014000Z'},True
+{'$oid': '28267b15ef0107a4b8a0e3b3'},{'$oid': '18dc9e80d4f7459c743922db'},{'$oid': 'bbfb1daddb0719cdcafc3a81'},4065.72,TRY,expense,Eğlence,YouTube Premium,{'$date': '2025-11-30T23:45:08.014000Z'},False
+{'$oid': '0ac8685ae17b8d16fe33c50d'},{'$oid': '93bf7d00845b9ef9b0a47629'},{'$oid': 'ee523c7772c9f1d6a5e0950c'},1295.91,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-11-30T19:59:08.014000Z'},True
+{'$oid': '5602eec7a3f559ebd5d58a65'},{'$oid': '0fa511f42597f85163bc83ac'},{'$oid': 'edb9b9ce42ac01f1139bb2a2'},2321.17,EUR,expense,Ulaşım,Metro İstanbul,{'$date': '2025-10-27T02:46:08.014000Z'},False
+{'$oid': '535fe86bc6934ae6ab27fdc1'},{'$oid': '1634b873b666ccf9ec4b00d0'},{'$oid': '5058b8dd7fe394a41c5364b0'},3342.8,TRY,expense,Faturalar,Doğalgaz Faturası,{'$date': '2025-10-28T21:22:08.014000Z'},True
+{'$oid': '71d5878020e8dbcd6140af81'},{'$oid': '63d03b567622646cff46aa01'},{'$oid': '32d43b50922957baa8eedb35'},109.41,EUR,expense,Alışveriş,Hepsiburada,{'$date': '2025-11-15T08:07:08.014000Z'},True
+{'$oid': 'ca474608f2a3f06a8a37139b'},{'$oid': '4107eb402f6ec92253540a81'},{'$oid': 'b67d882419d7714fd84dbaba'},1097.12,TRY,expense,Yemek,Yemeksepeti,{'$date': '2025-12-20T08:20:08.014000Z'},False
+{'$oid': 'e3e8cef9595d980897cdf978'},{'$oid': '6201c4fb8d057f1799edda4b'},{'$oid': '7a268b123b10740e2468ebbc'},4921.06,USD,expense,Ulaşım,Opet,{'$date': '2025-11-25T05:11:08.014000Z'},True
+{'$oid': '328c4caf709a6ee3d1bff92e'},{'$oid': '06eb6c35cd67adbd55693116'},{'$oid': '56340605d209737c6f67d99f'},104.43,TRY,expense,Ulaşım,HGS / OGS,{'$date': '2025-11-01T03:19:08.014000Z'},True
+{'$oid': 'cac26c318384d8b7674220a8'},{'$oid': 'ef7e33fba410b2048dcfd06d'},{'$oid': '3c08d26d421dac8dd48f9c64'},839.21,USD,income,Maaş,Salary Payment,{'$date': '2025-12-20T15:58:08.014000Z'},True
+{'$oid': '198dcfd1b3034fcf306ec2ee'},{'$oid': '565d70edfb389535c545b073'},{'$oid': '90533974bd6b6bb2666de51c'},393.71,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-01T06:23:08.014000Z'},False
+{'$oid': 'd340b3854e4d50a9a62e4632'},{'$oid': 'dfd05de1212b9b197a954d73'},{'$oid': 'c6c5cefe98fb6f56b7fd3075'},2878.14,EUR,expense,Transfer,Havale,{'$date': '2025-11-20T13:48:08.014000Z'},True
+{'$oid': 'c47aa4973429d8cb92b35bb2'},{'$oid': '296800a985307393cda2cf93'},{'$oid': '13bed24b807e33c00edcad13'},1968.62,EUR,expense,Alışveriş,Trendyol,{'$date': '2025-12-14T01:16:08.014000Z'},False
+{'$oid': '13bfdc5d9393920949e7bb7b'},{'$oid': '1d96f9d3f3901f8caa088168'},{'$oid': '51a73e1722da889b67ee0940'},44.39,USD,expense,Market,BİM,{'$date': '2025-11-16T22:31:08.014000Z'},False
+{'$oid': '4f1e8d04877f492153d112f3'},{'$oid': 'dad139f5f7de5046526a7b75'},{'$oid': '981a36ff7347ee8aaf7d4e2c'},2058.56,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-11-10T07:29:08.014000Z'},True
+{'$oid': '9bbb8154c69e99db2d5b3569'},{'$oid': '80d9a608496cab154b22286d'},{'$oid': 'add899130b89a31650c91afb'},1756.94,TRY,income,Transfer,Havale,{'$date': '2025-11-22T18:55:08.014000Z'},True
+{'$oid': '7a147585dd0dcfc8558b9a80'},{'$oid': '7eae0c70172c2315c2005dff'},{'$oid': '77ded2e0ab5b7ce3788cd3eb'},4941.09,TRY,income,Transfer,Havale,{'$date': '2025-12-14T13:04:08.014000Z'},True
+{'$oid': '61421f78cec2b8c4471f6df7'},{'$oid': '54ea48d9d90b4f8133c7949b'},{'$oid': 'a52a8f0a545c9205c3aeeabb'},2246.0,EUR,expense,Sağlık,Florence Nightingale,{'$date': '2025-12-03T15:08:08.014000Z'},True
+{'$oid': '3ec3191f5c8983dcaa8be5cc'},{'$oid': '300cf83dccc36cffd6f5c54d'},{'$oid': 'f97a4ffc1d1292ba982f23ac'},3563.37,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-22T20:00:08.014000Z'},True
+{'$oid': 'f1539bf66f76fbe56e798615'},{'$oid': '0653acfb0d2ee097b0936d74'},{'$oid': 'bde17535b470197ac99c5719'},2344.86,EUR,income,Maaş,Salary Payment,{'$date': '2025-11-09T22:34:08.014000Z'},False
+{'$oid': '0c050330d61b982a6d069ef4'},{'$oid': 'a7efa29b85f3b13bea969d4c'},{'$oid': '2c6728d21c688c5e86e6df69'},2576.09,USD,expense,Faturalar,Doğalgaz Faturası,{'$date': '2025-11-29T19:44:08.014000Z'},True
+{'$oid': '0a273edf2d5dfbc8041fbba0'},{'$oid': '0d15054f3b4af699b1c0603c'},{'$oid': '41e77f2e65068f8ac002c320'},4133.36,TRY,income,Maaş,Salary Payment,{'$date': '2025-11-07T08:48:08.014000Z'},False
+{'$oid': '2840c3571426b051fd08792a'},{'$oid': '909c8724416f6d9384d2eedd'},{'$oid': '29adb730d2496882268464d1'},2031.8,TRY,expense,Market,CarrefourSA,{'$date': '2025-12-10T17:29:08.014000Z'},False
+{'$oid': '95ea003fc8e397d20ea3ced6'},{'$oid': '87f1f5f040df74ed242c47c6'},{'$oid': 'ee39865f1ff126ae34d68bf2'},833.29,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-18T09:32:08.014000Z'},True
+{'$oid': 'ab5d7ee66085c9b331a35edc'},{'$oid': '3e1e1fa13b5adfb3a41bce2a'},{'$oid': '2a8cc0066c0f8fb5a8b011ab'},2095.2,EUR,expense,Diğer,Amazon,{'$date': '2025-11-29T11:34:08.014000Z'},True
+{'$oid': '15b9e8f8d7f39f30b3a3a564'},{'$oid': '4e615750e88a7055219dc83a'},{'$oid': 'b0e9a445b29162480688b015'},4161.37,USD,income,Maaş,Salary Payment,{'$date': '2025-11-17T07:43:08.014000Z'},True
+{'$oid': '92ec6f3d6374c4e78e56d30f'},{'$oid': 'ec42c3b2f1af27aeacaf87c6'},{'$oid': '49690055a8d409d55e91ffef'},2722.83,USD,expense,Eğlence,YouTube Premium,{'$date': '2025-12-14T08:14:08.014000Z'},False
+{'$oid': '0279a72c874967dfaa54cc5d'},{'$oid': '4d5786d2b6e91148a3608fd5'},{'$oid': 'c6c6205dbd93fddeec474b6e'},1516.03,TRY,expense,Ulaşım,İETT,{'$date': '2025-11-04T04:55:08.014000Z'},False
+{'$oid': 'ef5d27c3c8ff491885204cde'},{'$oid': 'e28ac8c35b92f0154e6ced1a'},{'$oid': '14b0feaa523adbbf53426cd5'},30.88,TRY,income,Transfer,Havale,{'$date': '2025-11-17T23:36:08.014000Z'},True
+{'$oid': 'e0e99caeb996d51793989f6f'},{'$oid': '9fdeb1d45b64f41dec28a914'},{'$oid': '60e8977c1bc24ee97367be41'},4476.87,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-03T11:42:08.014000Z'},True
+{'$oid': '96ee799f7d7c6cebe0b4cf7c'},{'$oid': '34a25da675ae4786278a5c6f'},{'$oid': 'a38d5385e28a95a6f2ff756f'},521.6,TRY,income,Transfer,EFT,{'$date': '2025-12-21T07:07:08.014000Z'},True
+{'$oid': 'ef2b0f02c09d467a7c972659'},{'$oid': 'da891b81d22c5a7f735b9de1'},{'$oid': '45150464d9fb67c74c9fb2d8'},541.83,USD,income,Transfer,EFT,{'$date': '2025-10-28T15:40:08.014000Z'},True
+{'$oid': '8e09fe908fdfc299295831d0'},{'$oid': 'f6d20dd0efa47a2a046496ec'},{'$oid': 'f6e9b4e1260ff638b56f173e'},3452.4,TRY,expense,Alışveriş,Decathlon,{'$date': '2025-11-18T04:04:08.014000Z'},False
+{'$oid': 'cd775751803de45f2f055a19'},{'$oid': '3bd85de641b4e96265d22b4c'},{'$oid': '9859831fea827c2cb68858a6'},4463.51,TRY,expense,Market,Macrocenter,{'$date': '2025-12-03T09:47:08.014000Z'},True
+{'$oid': 'fafefc92ffc0e95de3731c19'},{'$oid': 'a3d713a7af305efccf312c58'},{'$oid': 'b2a13ae830b5d27b8ba96ba4'},4435.95,TRY,expense,Sağlık,Florence Nightingale,{'$date': '2025-11-27T07:34:08.014000Z'},True
+{'$oid': '48df327d68ee78c30be4b98d'},{'$oid': '1dca75cf82ceb498371147dc'},{'$oid': 'e9c57468a4ff1ad60a212d7c'},4066.04,TRY,expense,Alışveriş,Zara,{'$date': '2025-11-21T03:45:08.014000Z'},False
+{'$oid': '77f84c3bea283b700f792641'},{'$oid': '66d27677c70e1a4d43cebd5d'},{'$oid': 'e2e6cb7e3171b272e04da9f2'},3368.29,TRY,expense,Market,Şok,{'$date': '2025-12-06T02:52:08.014000Z'},True
+{'$oid': '59a8e3b22ae08639a2bd7f22'},{'$oid': '75112c6dd35a0db2f5d8c512'},{'$oid': '03113eb21f914e78b5eeaa0a'},3151.54,USD,expense,Faturalar,Vodafone,{'$date': '2025-11-01T23:02:08.014000Z'},False
+{'$oid': '467f0ed1c4f211fc70f526d0'},{'$oid': '221464edf3305cf34d5a7ea5'},{'$oid': '319c02645d69585eb0b93abe'},4709.86,TRY,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-07T15:26:08.014000Z'},False
+{'$oid': '14926c64aa12fdd06c9f0e90'},{'$oid': '0001388848c73a89bc8d26e1'},{'$oid': '6d44fb8a12c931bfa86b3023'},4832.3,USD,expense,Transfer,EFT,{'$date': '2025-12-14T02:10:08.014000Z'},True
+{'$oid': 'a55ee9c2be01e4789af3d101'},{'$oid': '87a47f8143abd411c100ae5e'},{'$oid': 'cc2e4bd74eb1ab25be8f0d5a'},1130.03,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-12-21T08:09:08.014000Z'},False
+{'$oid': '94d3ac9850fc773a98e42370'},{'$oid': '73e9c64243699b021d9db9f2'},{'$oid': 'a7435ffb6094d8f24ab21b04'},4487.13,TRY,expense,Market,Macrocenter,{'$date': '2025-11-04T08:28:08.014000Z'},True
+{'$oid': '4c88b3b697e73aec4f50e444'},{'$oid': '8aa3c914a0b94a47b2f65103'},{'$oid': '079ea22a3471905392c7d52c'},4510.98,USD,expense,Diğer,Microsoft,{'$date': '2025-11-22T09:11:08.014000Z'},True
+{'$oid': 'f7f596c300498f1cf01d7129'},{'$oid': '0de88e6b73a2331c15626204'},{'$oid': '197258d1d8c4aec68571342b'},3469.98,USD,expense,Transfer,FAST,{'$date': '2025-12-21T03:28:08.014000Z'},True
+{'$oid': '9fb6501da328e9846e84e785'},{'$oid': 'ec42c3b2f1af27aeacaf87c6'},{'$oid': 'a1baaba839538da1d577f6aa'},3301.72,EUR,income,Maaş,Salary Payment,{'$date': '2025-11-17T13:16:08.014000Z'},True
+{'$oid': '397e7cb26861a428c9050ba8'},{'$oid': 'da891b81d22c5a7f735b9de1'},{'$oid': '45150464d9fb67c74c9fb2d8'},67.95,USD,income,Maaş,Salary Payment,{'$date': '2025-11-04T08:40:08.014000Z'},True
+{'$oid': 'f6b03d55e160d86d7adc247c'},{'$oid': '34a25da675ae4786278a5c6f'},{'$oid': 'a38d5385e28a95a6f2ff756f'},949.28,TRY,expense,Diğer,Apple,{'$date': '2025-12-13T00:40:08.014000Z'},False
+{'$oid': 'dba192bb0c6d3b73a0c356e5'},{'$oid': '44fde454fb7a712f19f94b83'},{'$oid': 'bd6452661fe9a5bf6563bffd'},1561.66,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-16T13:12:08.014000Z'},True
+{'$oid': 'c416c8a94cf81749df661bf8'},{'$oid': '7944e731a62918240bd2444d'},{'$oid': '5ef9ec7e3b40b6385e794a22'},3223.08,EUR,expense,Alışveriş,Decathlon,{'$date': '2025-12-05T06:50:08.014000Z'},False
+{'$oid': '17a56cd13c154d829cd38978'},{'$oid': 'e0591aa9db86dfd6f81dea3b'},{'$oid': '60faa02d2e6c9ba6044f8f96'},1884.17,EUR,expense,Diğer,Amazon,{'$date': '2025-12-15T15:19:08.014000Z'},True
+{'$oid': '0f2876c74d33c4db368b86b3'},{'$oid': '565d70edfb389535c545b073'},{'$oid': '90533974bd6b6bb2666de51c'},4957.43,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-11-05T10:15:08.014000Z'},False
+{'$oid': '14a938a1b736c40054b4e399'},{'$oid': 'a7efa29b85f3b13bea969d4c'},{'$oid': 'b7c123f9f916ea22a793e6bf'},3077.15,USD,expense,Faturalar,Türk Telekom İnternet,{'$date': '2025-12-07T03:11:08.014000Z'},False
+{'$oid': 'a2ec957f53b5df10369d858b'},{'$oid': '0eff0798420a0da1dc37280d'},{'$oid': '927e0b7c5882bf050573f32a'},3950.42,USD,expense,Sağlık,Medipol,{'$date': '2025-11-16T03:34:08.014000Z'},False
+{'$oid': '5e382f5a1e6387b4ff557228'},{'$oid': 'f38f6eb23c77888777226fc9'},{'$oid': 'b326eb1064cdd5b51d3c8cf5'},3527.28,TRY,expense,Eğlence,YouTube Premium,{'$date': '2025-11-04T04:15:08.014000Z'},False
+{'$oid': '904106b4c91815aa6212516a'},{'$oid': 'fc909e037704baa8686430c8'},{'$oid': '5b70a37376bb7d8b131b3e02'},1059.2,TRY,expense,Ulaşım,Metro İstanbul,{'$date': '2025-11-13T16:01:08.014000Z'},False
+{'$oid': '108f24c7817455882b143cec'},{'$oid': '0a49181b706b9400bb575d39'},{'$oid': '15c1c96d0b981b6f03d8670c'},1628.56,EUR,expense,Diğer,Google,{'$date': '2025-12-11T14:25:08.014000Z'},False
+{'$oid': 'e9b5761e0d57fe832022410b'},{'$oid': '5e79bf3c3bdada5872fa8fcb'},{'$oid': 'a4d85f6fe8893bb85772ee7d'},3896.23,USD,income,Transfer,Havale,{'$date': '2025-11-05T11:44:08.014000Z'},False
+{'$oid': '63428be9aa56257140dbde00'},{'$oid': '074a69243b2dace8bf90af3a'},{'$oid': 'ab5409978e0378328eb333ba'},4939.34,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-18T16:46:08.014000Z'},False
+{'$oid': 'c03eb43d297fa59b4662999d'},{'$oid': '4b86ebdff8953602ab2e6b4a'},{'$oid': '3aa0aa3a4c38661d941456c8'},915.98,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-18T20:54:08.014000Z'},True
+{'$oid': '54b0d6dd543cf15e731db526'},{'$oid': '9ac19681c61f40aaa63d8082'},{'$oid': '36bc19cbc9514fc90a7201fc'},1365.45,TRY,expense,Yemek,GetirYemek,{'$date': '2025-11-27T15:42:08.014000Z'},False
+{'$oid': '01ad1424dc59337049df3ee5'},{'$oid': 'f937afb03d65bf479e3314e9'},{'$oid': '83fa96045ad7e79f1b8da03c'},896.82,USD,expense,Market,CarrefourSA,{'$date': '2025-12-07T01:13:08.014000Z'},False
+{'$oid': 'd835641cfff4a64aee6fbd06'},{'$oid': '568d140201adfd7036cc63f8'},{'$oid': '8e8edb644a27b34f8bbdf00d'},365.95,TRY,expense,Diğer,Google,{'$date': '2025-10-29T15:24:08.014000Z'},False
+{'$oid': 'cce563c8e5eb46c1f9223fec'},{'$oid': '7aa335bc9a356fcd58e30efe'},{'$oid': '5d70c7355e00c0f6ab44cc1c'},1845.17,TRY,expense,Faturalar,Turkcell,{'$date': '2025-11-21T08:36:08.014000Z'},False
+{'$oid': '78d1eed3baececdff6fef13d'},{'$oid': '66d27677c70e1a4d43cebd5d'},{'$oid': 'bcff6e4fc1080faadc6f4172'},3507.78,EUR,expense,Eğlence,Spotify,{'$date': '2025-12-22T05:48:08.014000Z'},True
+{'$oid': '6e41631cf6b20e562d8c1bbd'},{'$oid': '4c83e9a4068e4226a39aea21'},{'$oid': 'd9ea6a9a41262e40f22d4127'},211.57,EUR,expense,Yemek,Burger King,{'$date': '2025-11-23T06:20:08.014000Z'},True
+{'$oid': '66e77fd5b5cb50e9ca05eb38'},{'$oid': 'd9d43e7bea63f1b6360efc86'},{'$oid': '654efb265e96acdf2f00e026'},4868.92,EUR,expense,Yemek,GetirYemek,{'$date': '2025-11-06T15:03:08.014000Z'},False
+{'$oid': '8eaec206c81f5b662da80f4a'},{'$oid': 'edee5f7717502f247c7d16ae'},{'$oid': 'ff471dd177e92cdc0ee0702a'},280.94,USD,expense,Eğlence,Steam,{'$date': '2025-12-10T07:28:08.014000Z'},False
+{'$oid': '908392beac84a594c0f67f22'},{'$oid': '3453b2417e10989f8bf2e06a'},{'$oid': 'd17cb21a58e376cfcdcee817'},4085.02,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-12-07T06:56:08.014000Z'},True
+{'$oid': '1d0bfd5381aa946163d403d9'},{'$oid': '395cc973064f095e52ab4471'},{'$oid': 'ef078e9645413a525e4ea3da'},4591.24,USD,expense,Diğer,Uber,{'$date': '2025-12-22T11:15:08.014000Z'},True
+{'$oid': 'bc2871d21452eb7bb0e30052'},{'$oid': 'abe69d5a80573274e709e96f'},{'$oid': '10e9a24a19dd5adc3d775aec'},3774.37,EUR,expense,Alışveriş,Zara,{'$date': '2025-11-19T19:49:08.014000Z'},True
+{'$oid': 'aa2e6b1e31d7e68428eb822d'},{'$oid': '4ebeac271a28ec4b8132159b'},{'$oid': 'c1297c6ccb0ed4b05a164539'},1033.6,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-23T09:49:08.014000Z'},True
+{'$oid': '06e4f0ff32574cfddcf22ceb'},{'$oid': 'd82fca2682b433fd6e792592'},{'$oid': '9da09644e1f9494e281562af'},1993.56,TRY,expense,Sağlık,Medipol,{'$date': '2025-11-21T14:10:08.014000Z'},True
+{'$oid': '54bc2d9e4c2806bfd8f58bcd'},{'$oid': '9ac19681c61f40aaa63d8082'},{'$oid': '36bc19cbc9514fc90a7201fc'},3794.45,TRY,income,Maaş,Salary Payment,{'$date': '2025-11-19T20:08:08.014000Z'},False
+{'$oid': 'b8513241809065ff6630fd8d'},{'$oid': 'ae4c003d3df6fde66bc24ad3'},{'$oid': '6c07d488fd070de276c4e316'},3715.39,EUR,expense,Yemek,GetirYemek,{'$date': '2025-11-30T14:30:08.014000Z'},True
+{'$oid': '114eddf802f826cf24878d5d'},{'$oid': 'a86e236d6d582456067fd225'},{'$oid': 'c0d7bb2e3712773aee675fd1'},3983.27,USD,expense,Ulaşım,BP,{'$date': '2025-10-26T11:12:08.014000Z'},True
+{'$oid': '1c32846947839f92aee19690'},{'$oid': 'd9d43e7bea63f1b6360efc86'},{'$oid': '654efb265e96acdf2f00e026'},4119.13,EUR,expense,Sağlık,Florence Nightingale,{'$date': '2025-11-26T13:39:08.014000Z'},True
+{'$oid': 'd5e2f55bd29344bfa271b3b5'},{'$oid': 'd23a67d9e45f27d643b300e8'},{'$oid': 'f3c7cc6712d9d50dece0b1dc'},916.69,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-11-02T15:12:08.014000Z'},False
+{'$oid': 'f1314d4856b9fff18ba775cb'},{'$oid': '8873b1a2eaaa8aba6efce5f5'},{'$oid': 'd236e82be7ee5aed1f81acec'},2674.8,USD,expense,Sağlık,Eczane,{'$date': '2025-11-04T02:54:08.014000Z'},True
+{'$oid': 'e6aa4948bc2770543086f442'},{'$oid': '4107eb402f6ec92253540a81'},{'$oid': 'b67d882419d7714fd84dbaba'},2544.39,TRY,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-18T02:48:08.014000Z'},True
+{'$oid': '3212acf9ac1090b4be3d03cb'},{'$oid': '8f5da17351d8853d1771b5e2'},{'$oid': '73c55fca59e8642725e07404'},1131.18,USD,expense,Sağlık,Medipol,{'$date': '2025-11-11T18:27:08.014000Z'},True
+{'$oid': 'e37f0ade03061aa33d5094cc'},{'$oid': '3453b2417e10989f8bf2e06a'},{'$oid': 'd17cb21a58e376cfcdcee817'},636.69,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-09T17:51:08.014000Z'},False
+{'$oid': '65e835d84c7e9db0b07cc843'},{'$oid': 'a52377a9f5c6dc9210414bea'},{'$oid': 'fd55d360e227c34d8799833f'},978.47,USD,expense,Sağlık,Florence Nightingale,{'$date': '2025-12-20T04:28:08.014000Z'},False
+{'$oid': 'e18b1942445774d385e010d0'},{'$oid': 'e28ac8c35b92f0154e6ced1a'},{'$oid': '258269e6f0a05567e26711d3'},2573.53,USD,expense,Diğer,Apple,{'$date': '2025-11-14T09:02:08.014000Z'},False
+{'$oid': '6e2e81ce4a229d01ca9d2c7d'},{'$oid': 'd10e83240d479173cf7eff86'},{'$oid': 'f6e91dbf5839ce08c28a02e9'},1186.29,TRY,expense,Ulaşım,Opet,{'$date': '2025-12-14T23:07:08.014000Z'},False
+{'$oid': 'b8ed54dcf934ede8f33a405c'},{'$oid': '58b251c359c4fbb76f5e6443'},{'$oid': '172db452e11cef4baed3df8b'},773.11,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-21T09:38:08.014000Z'},True
+{'$oid': '8bb182eb9daf65b5baae1dfc'},{'$oid': '8ba3d9e8c4722bbb555cd833'},{'$oid': 'ebb48419a84e8d8677d44531'},1471.87,TRY,expense,Sağlık,Memorial,{'$date': '2025-11-06T00:34:08.014000Z'},True
+{'$oid': 'c2a50506c6c51724f3d132bd'},{'$oid': '0001388848c73a89bc8d26e1'},{'$oid': '6d44fb8a12c931bfa86b3023'},2813.7,USD,expense,Transfer,FAST,{'$date': '2025-12-10T14:41:08.014000Z'},True
+{'$oid': '8ac649e6871daf8d9622d817'},{'$oid': 'b934b02c4bb9482ea82a6cb8'},{'$oid': '8c0b5cf1a14703eff8edca7a'},3223.41,TRY,income,Transfer,IBAN Transferi,{'$date': '2025-12-20T05:33:08.014000Z'},True
+{'$oid': 'ec09e92e1c0361ff32fb5446'},{'$oid': '074a69243b2dace8bf90af3a'},{'$oid': '92d92bee809cd0d78306b37c'},4774.65,USD,expense,Alışveriş,LC Waikiki,{'$date': '2025-11-28T12:36:08.014000Z'},True
+{'$oid': '3652ad153bec290654875287'},{'$oid': '030e6e0b656e969bc0906be5'},{'$oid': '5bacb729ffc252db2d746b8a'},4542.17,TRY,income,Maaş,Salary Payment,{'$date': '2025-11-12T08:32:08.014000Z'},False
+{'$oid': 'c421bfd358d6c8ab6ed24788'},{'$oid': '702d7b875181abc377ff1f22'},{'$oid': '5d7cb218bbd5515e1d01b90a'},104.4,EUR,expense,Sağlık,Medipol,{'$date': '2025-12-10T23:20:08.014000Z'},True
+{'$oid': '867a4f4f561580566565a621'},{'$oid': '64c72857f4de03894ccd35d8'},{'$oid': '4576fa6e23e50eee6a226a15'},2235.6,USD,expense,Yemek,McDonald's,{'$date': '2025-11-27T12:03:08.014000Z'},True
+{'$oid': '3d6caba6d46b9cdcd4762fa1'},{'$oid': 'ec602447306444bfd4ea9bc3'},{'$oid': 'ada066e2148ffeea832fa099'},57.06,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-03T10:25:08.014000Z'},True
+{'$oid': '9b1a64b1c822598afcefc277'},{'$oid': 'f38f6eb23c77888777226fc9'},{'$oid': '836ccde4d1da9817b92a2226'},3407.55,TRY,expense,Faturalar,Türk Telekom İnternet,{'$date': '2025-12-04T18:24:08.014000Z'},True
+{'$oid': 'f3a3a65f5b1d8806bd293c1c'},{'$oid': '4d5786d2b6e91148a3608fd5'},{'$oid': 'c6c6205dbd93fddeec474b6e'},2952.84,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-10-27T23:35:08.014000Z'},True
+{'$oid': '2100acca8555491af22d5edd'},{'$oid': '80b092b653690a1b0941f5d9'},{'$oid': 'a62cb91c34aa27a2ea5bd47d'},4562.36,EUR,expense,Diğer,Google,{'$date': '2025-12-24T12:09:08.014000Z'},False
+{'$oid': '6baf0b657a1442f840599007'},{'$oid': 'defa0f08bc28d9963603c52c'},{'$oid': 'e4dac34964472db4b4213173'},2905.16,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-06T07:41:08.014000Z'},True
+{'$oid': '96f53962f2e22da9e5a3e7b5'},{'$oid': '102c83d351762da5333dddba'},{'$oid': '205d5b9c74143948842a517a'},2749.66,USD,expense,Alışveriş,LC Waikiki,{'$date': '2025-12-05T00:01:08.014000Z'},True
+{'$oid': '8029894c1ed54f516ef1f012'},{'$oid': '72319c93225f3f0ae9e05f44'},{'$oid': 'e728d9181156267769c02144'},1113.64,USD,income,Transfer,FAST,{'$date': '2025-12-02T17:21:08.014000Z'},False
+{'$oid': '52ba09030f3311f030208522'},{'$oid': '395cc973064f095e52ab4471'},{'$oid': 'ef078e9645413a525e4ea3da'},1786.77,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-10T10:06:08.014000Z'},True
+{'$oid': 'fdfff539b2222bdd78a8e73c'},{'$oid': '34a25da675ae4786278a5c6f'},{'$oid': 'a38d5385e28a95a6f2ff756f'},890.35,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-16T21:16:08.014000Z'},False
+{'$oid': '71b5f1ad217ca08750075eec'},{'$oid': '80d9a608496cab154b22286d'},{'$oid': 'd92820630f03857f4a9514de'},2102.46,TRY,income,Transfer,EFT,{'$date': '2025-10-26T21:06:08.014000Z'},False
+{'$oid': '6629e8096aff7f8f5e450654'},{'$oid': 'f5735309b4602dd75fb7fc81'},{'$oid': '6a8ee367e14fa7fe84cf31f3'},2163.75,USD,expense,Alışveriş,LC Waikiki,{'$date': '2025-12-15T05:56:08.014000Z'},False
+{'$oid': '603d3877f1e46bdca09b6fb2'},{'$oid': 'a209ad666991b6cb7b869f98'},{'$oid': 'c6fe2966dffa39b51a995ec9'},2661.84,EUR,income,Transfer,Para Transferi,{'$date': '2025-12-19T09:14:08.014000Z'},True
+{'$oid': 'd44a813bf9db0642298311f5'},{'$oid': '205394db9d171ebc1b2b14be'},{'$oid': 'be77d7dbffd53d54ee1f7496'},2760.54,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-12-02T19:09:08.014000Z'},True
+{'$oid': '791daf23be5d6db21b45a0a1'},{'$oid': 'd89e7a377d74a0e7500ade68'},{'$oid': '196ee9ef69088ddd1d921835'},2368.72,EUR,expense,Diğer,Amazon,{'$date': '2025-11-02T20:00:08.014000Z'},False
+{'$oid': '157756bd1e7ad12206ce23e3'},{'$oid': '9ac19681c61f40aaa63d8082'},{'$oid': '4411cb2acd6ffb54784aef37'},3589.28,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-30T19:32:08.014000Z'},False
+{'$oid': 'da4597c86a366f79028018c5'},{'$oid': '2f0705e7601f548b8be20a8d'},{'$oid': '6f46a85cf56040a17da1eb9b'},2286.94,TRY,income,Transfer,Para Transferi,{'$date': '2025-11-06T09:36:08.014000Z'},False
+{'$oid': '279e2f2494986a1a2b9f004f'},{'$oid': '2ae21608990ca8725e23830a'},{'$oid': '5da072318735ed9b21099246'},1687.97,TRY,expense,Alışveriş,Trendyol,{'$date': '2025-11-17T09:57:08.014000Z'},False
+{'$oid': '7ccd2dc5df16397aa51997fe'},{'$oid': '4b86ebdff8953602ab2e6b4a'},{'$oid': '654d30a53abe31da1fd21320'},4511.52,TRY,expense,Sağlık,Florence Nightingale,{'$date': '2025-10-30T17:43:08.014000Z'},False
+{'$oid': '2ea4c73ef1e20064e57c4ae4'},{'$oid': '8bf8e2d3a072683d1b7360b3'},{'$oid': 'dc1af062f6740f468041e5a4'},3266.81,USD,expense,Eğlence,PlayStation Store,{'$date': '2025-11-07T07:17:08.014000Z'},False
+{'$oid': '139b8990bb7c2c84cb8b15de'},{'$oid': '4e615750e88a7055219dc83a'},{'$oid': 'b0e9a445b29162480688b015'},545.43,USD,expense,Ulaşım,İETT,{'$date': '2025-11-02T04:26:08.014000Z'},False
+{'$oid': '5a39682d24d1df5809b8ded9'},{'$oid': 'd9d43e7bea63f1b6360efc86'},{'$oid': 'f0994d5c497884d7f43b09a7'},125.71,TRY,income,Maaş,Salary Payment,{'$date': '2025-11-07T02:01:08.014000Z'},False
+{'$oid': 'e50a2fce5b5f42fbb1cd3a6d'},{'$oid': '40360e41cedcfe62e68a742c'},{'$oid': '5956a73dd7449eda241362f1'},1477.31,EUR,expense,Alışveriş,Hepsiburada,{'$date': '2025-12-06T15:54:08.014000Z'},True
+{'$oid': '68c466994bc71f661b34b86c'},{'$oid': 'b4b5b1e37a599c1d6e0f5c7e'},{'$oid': '10e9b4d1f1eb3413e7833e10'},1312.7,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-11-04T05:41:08.014000Z'},True
+{'$oid': '719676f23b5a617abe2f5246'},{'$oid': 'a5261e4e973e49de2bc2fbd5'},{'$oid': '19750b99f0adc1ad624d4f58'},4583.96,TRY,income,Transfer,EFT,{'$date': '2025-11-17T09:03:08.014000Z'},True
+{'$oid': '50b66f8d3e65a32a05fb082e'},{'$oid': 'dbf39b26b3ee2f6e93300762'},{'$oid': 'ab73c81a9a079913f5942f1a'},1389.15,TRY,expense,Diğer,Uber,{'$date': '2025-12-14T02:46:08.014000Z'},True
+{'$oid': '9b41e673dd776f97b54a1f7f'},{'$oid': '18dc9e80d4f7459c743922db'},{'$oid': 'bbfb1daddb0719cdcafc3a81'},3725.23,TRY,expense,Market,Migros,{'$date': '2025-11-25T11:04:08.014000Z'},True
+{'$oid': '40fef5b8dc5dd7f1e3432f79'},{'$oid': '1a29640cc14628ad40ec0776'},{'$oid': '8d621ee220d4978a3b241263'},4943.13,EUR,income,Maaş,Salary Payment,{'$date': '2025-12-16T17:59:08.014000Z'},False
+{'$oid': 'bd3e0454da2b93ff00612169'},{'$oid': '9c352bd52d0a3be05cbeb45c'},{'$oid': '9a77ea5f0a29720b36558819'},4621.9,EUR,expense,Yemek,Kahve Dünyası,{'$date': '2025-12-17T08:17:08.014000Z'},True
+{'$oid': '1c52ad8f6d91c5e12f9d3b1f'},{'$oid': '58b251c359c4fbb76f5e6443'},{'$oid': '172db452e11cef4baed3df8b'},1506.0,EUR,expense,Transfer,Havale,{'$date': '2025-12-06T17:12:08.014000Z'},False
+{'$oid': '63a7d4feedc66f324038db70'},{'$oid': '4ef1d93732e689dd2d4d7d2a'},{'$oid': '337ed90ef818dd2f96b4493d'},4530.55,USD,income,Transfer,EFT,{'$date': '2025-12-07T16:09:08.014000Z'},True
+{'$oid': '7ef62d8b242ef4b568e5db1e'},{'$oid': 'd89e7a377d74a0e7500ade68'},{'$oid': '196ee9ef69088ddd1d921835'},3597.28,EUR,income,Transfer,IBAN Transferi,{'$date': '2025-11-24T01:47:08.014000Z'},True
+{'$oid': 'a085a4c8e8f53fb2b5eee3e4'},{'$oid': 'e5ecab85c44647b1b28418c4'},{'$oid': '43b288a423431fbf6cbfae79'},1773.45,EUR,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-30T05:42:08.014000Z'},False
+{'$oid': '6454ff51096693bf0447c0dc'},{'$oid': '8adf9cb7606948485e34f873'},{'$oid': 'f604bd67d97c57538896689d'},4047.08,USD,expense,Eğlence,YouTube Premium,{'$date': '2025-11-29T14:46:08.014000Z'},False
+{'$oid': '1bc1d6b22da4b44a6f3324ce'},{'$oid': '7aa335bc9a356fcd58e30efe'},{'$oid': '5d70c7355e00c0f6ab44cc1c'},1780.33,TRY,income,Transfer,EFT,{'$date': '2025-11-01T18:53:08.014000Z'},False
+{'$oid': '47951cb886361001743dd935'},{'$oid': 'c10c92fdb21a4596eaaf15db'},{'$oid': '125319753b85bcf7923d98c4'},1343.63,TRY,expense,Alışveriş,Zara,{'$date': '2025-12-18T12:33:08.014000Z'},True
+{'$oid': '3693ebfbb57be101a58a0979'},{'$oid': '2ae21608990ca8725e23830a'},{'$oid': '5da072318735ed9b21099246'},2311.5,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-11T05:40:08.014000Z'},False
+{'$oid': 'b9933187e42fe76fc6cc6cb2'},{'$oid': '560b1e0c63b828d56be6856d'},{'$oid': '5bd83a1ba2420ec3f2225fc7'},4315.66,TRY,expense,Ulaşım,İETT,{'$date': '2025-10-28T11:36:08.014000Z'},False
+{'$oid': '633f3edba053d73f9423a8ce'},{'$oid': 'f937afb03d65bf479e3314e9'},{'$oid': 'c28c042343a9bc955a7434b5'},275.46,EUR,expense,Transfer,Havale,{'$date': '2025-11-07T05:10:08.014000Z'},False
+{'$oid': '663746e23bff1c55720b15c3'},{'$oid': 'da891b81d22c5a7f735b9de1'},{'$oid': '45150464d9fb67c74c9fb2d8'},3706.58,USD,income,Transfer,FAST,{'$date': '2025-11-03T04:20:08.014000Z'},True
+{'$oid': '219448cf2438ef936c7a8c69'},{'$oid': 'b62b6d1621aed81b5ef9b711'},{'$oid': '23f0d15187ce1e03cf07b19c'},2661.61,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-10-30T14:43:08.014000Z'},True
+{'$oid': '4d2b5ce93c1e2ddddc3a08c6'},{'$oid': 'abe69d5a80573274e709e96f'},{'$oid': '10e9a24a19dd5adc3d775aec'},798.92,EUR,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-19T00:52:08.014000Z'},False
+{'$oid': 'eef733d7fe6e53de49d958e3'},{'$oid': '0eff0798420a0da1dc37280d'},{'$oid': '927e0b7c5882bf050573f32a'},348.7,USD,expense,Ulaşım,Opet,{'$date': '2025-12-05T08:48:08.014000Z'},True
+{'$oid': '508da36c8788d867507270cb'},{'$oid': 'c3cc2cccc86b328374cd9871'},{'$oid': 'bb5d0116324ccee82bd84b84'},200.24,TRY,expense,Transfer,FAST,{'$date': '2025-12-05T14:01:08.014000Z'},False
+{'$oid': '0a95f7f4cade447cdf0ef370'},{'$oid': '3b1881558dfbcb861a394fe1'},{'$oid': '269b722bc13499d0924fd995'},1285.91,USD,expense,Yemek,GetirYemek,{'$date': '2025-11-24T15:27:08.014000Z'},True
+{'$oid': '2c3a94db33af928827a9e9dd'},{'$oid': 'ef536d38ded46204361b8247'},{'$oid': 'd3d54145c8f89bd270142514'},2782.08,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-05T13:17:08.014000Z'},True
+{'$oid': 'b62accfe469e723cbc82b99d'},{'$oid': '0d15054f3b4af699b1c0603c'},{'$oid': 'e3e500ddd65d45d78bfa4404'},1979.66,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-11-08T09:25:08.014000Z'},True
+{'$oid': 'e508ce37aaeb412a8cf0ffad'},{'$oid': '4b86ebdff8953602ab2e6b4a'},{'$oid': '654d30a53abe31da1fd21320'},3784.33,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-12-01T08:51:08.014000Z'},False
+{'$oid': '83e0c2be41bc6bcb30dde385'},{'$oid': '9c352bd52d0a3be05cbeb45c'},{'$oid': 'c17bc74deef0ce03034918ac'},3899.58,TRY,income,Transfer,IBAN Transferi,{'$date': '2025-11-28T04:17:08.014000Z'},True
+{'$oid': 'ea47ebf8588430555854da42'},{'$oid': '8ba3d9e8c4722bbb555cd833'},{'$oid': 'b1e355a8d143ddbac59bfdf8'},1291.27,EUR,expense,Alışveriş,Hepsiburada,{'$date': '2025-11-23T07:46:08.014000Z'},False
+{'$oid': '39ab0c087fd1cc7fb91b65e4'},{'$oid': '423c1af9ef36ea6a13f5b7b8'},{'$oid': 'f3f99ceefaf8bc4c5f1d2278'},1675.2,TRY,expense,Diğer,Uber,{'$date': '2025-11-03T09:53:08.014000Z'},True
+{'$oid': 'e17f77e9de62402782dd0c16'},{'$oid': '8bba129a76e3093dad11941e'},{'$oid': 'ecb722c8f077af6828ed9fb2'},2036.79,USD,expense,Alışveriş,Trendyol,{'$date': '2025-11-11T15:02:08.014000Z'},False
+{'$oid': 'c76aacc447a15354f0dad0c0'},{'$oid': 'e28ac8c35b92f0154e6ced1a'},{'$oid': '14b0feaa523adbbf53426cd5'},1189.01,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-17T03:37:08.014000Z'},True
+{'$oid': 'cf5443f0ac3b7d6bf6508ad8'},{'$oid': '7eae0c70172c2315c2005dff'},{'$oid': '42746422607fb76eab19640e'},2222.51,TRY,income,Maaş,Salary Payment,{'$date': '2025-11-15T19:19:08.014000Z'},True
+{'$oid': '067148c94de8deefedc3edba'},{'$oid': '93bf7d00845b9ef9b0a47629'},{'$oid': 'ee523c7772c9f1d6a5e0950c'},4534.31,USD,income,Maaş,Salary Payment,{'$date': '2025-11-15T03:48:08.014000Z'},True
+{'$oid': '22d5710cc957a47dba3bc641'},{'$oid': 'dbf39b26b3ee2f6e93300762'},{'$oid': '8c28ec056c0cd2fa730addd8'},1172.83,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-12-09T10:14:08.014000Z'},False
+{'$oid': '47593f0d157011873d293d54'},{'$oid': '2d2ecf8edc50b986f843c278'},{'$oid': '04011328339726768592964a'},4556.59,USD,income,Maaş,Salary Payment,{'$date': '2025-11-17T13:41:08.014000Z'},False
+{'$oid': '0e638519a617b3095e7e58dc'},{'$oid': '7ab4343cf9d6a544f9e6454b'},{'$oid': '597c33a82d90c20ba6cc04d8'},1110.06,USD,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-26T17:57:08.014000Z'},False
+{'$oid': '09ffc10a33e9904560f4c6c5'},{'$oid': 'cc529239e7420650631fdbc3'},{'$oid': 'dd40f7804c0ec53d07edb4b5'},1786.09,TRY,expense,Ulaşım,Opet,{'$date': '2025-12-24T17:43:08.014000Z'},False
+{'$oid': '697327c3fb3345080c1f82bc'},{'$oid': 'e28ac8c35b92f0154e6ced1a'},{'$oid': '258269e6f0a05567e26711d3'},3226.19,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-04T00:07:08.014000Z'},False
+{'$oid': '29bf3dfc3e1a8b1d7e056f7b'},{'$oid': '7944e731a62918240bd2444d'},{'$oid': '5ef9ec7e3b40b6385e794a22'},43.8,EUR,expense,Market,Migros,{'$date': '2025-11-20T12:18:08.014000Z'},True
+{'$oid': 'beb8a289221a1139facf04ea'},{'$oid': '4107eb402f6ec92253540a81'},{'$oid': '70919dc0c12172605fbeeb54'},1040.77,EUR,expense,Diğer,Google,{'$date': '2025-12-10T10:38:08.014000Z'},True
+{'$oid': 'bb498a4371a4f259aaedfa80'},{'$oid': 'd4d7a39c0a583df2a0b83c63'},{'$oid': '0d2746b872d0a0036b0ad8a3'},432.47,USD,expense,Diğer,Apple,{'$date': '2025-11-30T14:10:08.014000Z'},True
+{'$oid': '892290f5af77ba29cee42472'},{'$oid': '66d27677c70e1a4d43cebd5d'},{'$oid': 'e2e6cb7e3171b272e04da9f2'},2383.53,TRY,expense,Market,A101,{'$date': '2025-12-13T14:36:08.014000Z'},False
+{'$oid': 'b3e94e6e16630e38275ae3d4'},{'$oid': '0001388848c73a89bc8d26e1'},{'$oid': '6d44fb8a12c931bfa86b3023'},2258.64,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-10-27T08:03:08.014000Z'},False
+{'$oid': '51600a4254873d16ef18ae43'},{'$oid': '89d5500d757a0ab49b007217'},{'$oid': '250958b73547405f5d191e2e'},3675.42,EUR,expense,Sağlık,Florence Nightingale,{'$date': '2025-11-18T18:46:08.014000Z'},False
+{'$oid': 'c2827af51e326d995467c9d9'},{'$oid': 'b934b02c4bb9482ea82a6cb8'},{'$oid': '8c0b5cf1a14703eff8edca7a'},1087.76,TRY,income,Maaş,Şirket Ödemesi,{'$date': '2025-10-29T21:25:08.014000Z'},True
+{'$oid': '96dac1072fa83bf326a28534'},{'$oid': '33a7fa2069b3f44553bd4729'},{'$oid': '23872bbcaf1a2939f85ffd6f'},4401.82,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-13T13:14:08.014000Z'},False
+{'$oid': '40e151c583d0e8beb3f2dc14'},{'$oid': '71c1d758f44913363104af05'},{'$oid': 'd6053d66377919555381993a'},110.27,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-11-22T03:07:08.014000Z'},True
+{'$oid': 'fe55193915288995b20f90a5'},{'$oid': '73e9c64243699b021d9db9f2'},{'$oid': '405c427c8a78c0e3289b1e8b'},1910.79,TRY,income,Maaş,Şirket Ödemesi,{'$date': '2025-10-28T09:24:08.014000Z'},True
+{'$oid': '2e09616dd6260dab51820008'},{'$oid': '560b1e0c63b828d56be6856d'},{'$oid': '6a1552b28c0738600814996b'},1666.9,EUR,expense,Diğer,Microsoft,{'$date': '2025-11-30T04:45:08.014000Z'},False
+{'$oid': '8257f4d9af07f8b7afc1015a'},{'$oid': '6fd0c41500b8f9182d2597b3'},{'$oid': '3c066523d7b120aa7b1b0b2b'},44.2,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-19T07:16:08.014000Z'},False
+{'$oid': 'ff7e11172d4207893d47033b'},{'$oid': 'fc8fa5ee2df6c07da7f39953'},{'$oid': '5d53ec8c04d222fe00ab3928'},1050.14,USD,expense,Yemek,Yemeksepeti,{'$date': '2025-11-09T19:47:08.014000Z'},False
+{'$oid': '7aabb93295af39e946283bb4'},{'$oid': '4380c301f0efee07b9faf0e7'},{'$oid': '6b1cdd5046c0e7238b47e698'},143.92,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-01T06:47:08.014000Z'},False
+{'$oid': '826af78f1938bcd2818c0492'},{'$oid': 'fc8fa5ee2df6c07da7f39953'},{'$oid': '5d53ec8c04d222fe00ab3928'},3682.01,USD,expense,Sağlık,Eczane,{'$date': '2025-12-17T12:23:08.014000Z'},False
+{'$oid': 'd61b334f99a6cf37a4794096'},{'$oid': '3e1e1fa13b5adfb3a41bce2a'},{'$oid': '97621a34d8f39ebcafe33aaa'},602.46,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-12-22T14:51:08.014000Z'},True
+{'$oid': '65f1213752272b8d0355ace3'},{'$oid': '69ed66e8cc71b987bde1a4d9'},{'$oid': '322e0b1642b1f26ec81e1d92'},1272.59,EUR,income,Transfer,IBAN Transferi,{'$date': '2025-11-13T19:30:08.014000Z'},False
+{'$oid': '4f118c8238c6f7a43993594b'},{'$oid': '205394db9d171ebc1b2b14be'},{'$oid': '44a7058173269f6a453e07f0'},3724.47,EUR,income,Maaş,Salary Payment,{'$date': '2025-10-28T15:23:08.014000Z'},False
+{'$oid': '7e68a8d0e537019c3d9f12fd'},{'$oid': '205394db9d171ebc1b2b14be'},{'$oid': 'be77d7dbffd53d54ee1f7496'},1632.82,TRY,expense,Transfer,EFT,{'$date': '2025-10-28T01:23:08.014000Z'},True
+{'$oid': 'f847dd2cc743284baf92bfee'},{'$oid': 'a1d6821e5b054b2617b0f72f'},{'$oid': '5ea7568adbfa9131f797bbb6'},993.97,EUR,expense,Market,CarrefourSA,{'$date': '2025-11-09T00:14:08.014000Z'},False
+{'$oid': 'f53ad02748605ee589d572d4'},{'$oid': 'fc909e037704baa8686430c8'},{'$oid': '5b70a37376bb7d8b131b3e02'},3690.36,TRY,expense,Alışveriş,H&M,{'$date': '2025-12-24T02:31:08.014000Z'},False
+{'$oid': '8d2eea671106e374b366f4eb'},{'$oid': '90b84a284efdf5f361bb5f00'},{'$oid': 'd473ca41e1586ca95946062f'},4685.1,USD,expense,Yemek,Yemeksepeti,{'$date': '2025-12-10T21:15:08.014000Z'},False
+{'$oid': '83bd7b233c14017ecc19c00d'},{'$oid': '73e9c64243699b021d9db9f2'},{'$oid': '405c427c8a78c0e3289b1e8b'},3410.17,TRY,expense,Transfer,IBAN Transferi,{'$date': '2025-11-06T07:07:08.014000Z'},False
+{'$oid': '9057dc580d7a85027e6b7875'},{'$oid': '33a7fa2069b3f44553bd4729'},{'$oid': '23872bbcaf1a2939f85ffd6f'},4007.51,USD,expense,Faturalar,Vodafone,{'$date': '2025-11-03T14:38:08.014000Z'},True
+{'$oid': 'bf3090310ed151b3cc824baf'},{'$oid': 'fc909e037704baa8686430c8'},{'$oid': '5b70a37376bb7d8b131b3e02'},1137.6,TRY,income,Transfer,Para Transferi,{'$date': '2025-12-08T04:51:08.014000Z'},True
+{'$oid': '452a92773d7478b6e2da30d1'},{'$oid': '03417abafb31686758ac3c6c'},{'$oid': '543a3c73ecb57189fc2d938e'},1931.07,EUR,income,Transfer,EFT,{'$date': '2025-11-09T20:46:08.014000Z'},False
+{'$oid': '4dff0256a913f68ab0f7f52f'},{'$oid': 'd07cbe2d6ebfb6f487d58acf'},{'$oid': '4c636ee8f462818688539467'},910.83,EUR,expense,Ulaşım,BP,{'$date': '2025-12-19T05:33:08.014000Z'},True
+{'$oid': '99389cdd1b469decf1af7d07'},{'$oid': 'fc909e037704baa8686430c8'},{'$oid': '904e5d3ba6cd7d1485d7d8b3'},4781.05,EUR,income,Transfer,EFT,{'$date': '2025-11-10T16:03:08.014000Z'},False
+{'$oid': 'c5609a8edc81d918f2b0ec46'},{'$oid': 'dad139f5f7de5046526a7b75'},{'$oid': 'c7d1d89541564177ac91f904'},814.99,USD,expense,Sağlık,Medicana,{'$date': '2025-12-19T16:32:08.014000Z'},True
+{'$oid': 'ab5a2a7a8e29fdd6187c76ed'},{'$oid': '63d03b567622646cff46aa01'},{'$oid': '32d43b50922957baa8eedb35'},828.33,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-11T17:42:08.014000Z'},True
+{'$oid': '55a90d2b321d1a40b0ed09f6'},{'$oid': 'b934b02c4bb9482ea82a6cb8'},{'$oid': '8c0b5cf1a14703eff8edca7a'},4350.71,TRY,expense,Alışveriş,Zara,{'$date': '2025-12-16T19:25:08.014000Z'},False
+{'$oid': '07da5ee4b3a85d8a98839f82'},{'$oid': '9583da1641a7cd34e80740f7'},{'$oid': 'bf4483472e6b95438c427884'},830.19,EUR,expense,Sağlık,Eczane,{'$date': '2025-12-13T11:15:08.014000Z'},True
+{'$oid': '24c5ec65ef3f390699cf9635'},{'$oid': '40360e41cedcfe62e68a742c'},{'$oid': '5956a73dd7449eda241362f1'},2690.46,EUR,expense,Sağlık,Eczane,{'$date': '2025-11-30T17:50:08.014000Z'},True
+{'$oid': '5e9a5a3be7865785a51ab601'},{'$oid': '80d9a608496cab154b22286d'},{'$oid': 'd92820630f03857f4a9514de'},782.1,TRY,income,Maaş,Salary Payment,{'$date': '2025-12-16T10:47:08.014000Z'},True
+{'$oid': '7bc01c8daef5dd6ec9f32579'},{'$oid': '72319c93225f3f0ae9e05f44'},{'$oid': 'e6ebf76e67f879864241d45c'},2800.86,TRY,expense,Sağlık,Memorial,{'$date': '2025-12-15T22:40:08.014000Z'},False
+{'$oid': '9776030c356b798da97b1b4f'},{'$oid': 'c0f934ef5e3efc864e9770ba'},{'$oid': '9c793e4010377339e706b43c'},2423.53,TRY,expense,Eğlence,Netflix,{'$date': '2025-12-21T15:46:08.014000Z'},True
+{'$oid': '79a5b092dd37e3e9dc5c813c'},{'$oid': 'e109ae0a347a175d154ac989'},{'$oid': '2b21334792fd491cb57fa49b'},4621.45,USD,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-23T03:46:08.014000Z'},False
+{'$oid': 'c92c78a8f132a9a1b5d67975'},{'$oid': 'a8b1bb53d1127dbe883b454e'},{'$oid': 'd76bd2a0989ea8ec9b172f46'},4949.08,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-03T08:13:08.014000Z'},False
+{'$oid': '405842a5c34e16836d55c591'},{'$oid': '1ac8e9af6c435b630db51495'},{'$oid': 'd6fc6693491bb4acd9229c51'},2985.99,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-11-28T12:20:08.014000Z'},True
+{'$oid': 'b83d764cd22fd52a93bee6b3'},{'$oid': '8adf9cb7606948485e34f873'},{'$oid': 'bc4af234db1c865bb5dba060'},4804.76,EUR,income,Transfer,Para Transferi,{'$date': '2025-10-30T10:09:08.014000Z'},True
+{'$oid': 'f3c968fec2b8311d9d745ca7'},{'$oid': '49670e4b12181330fecaea5a'},{'$oid': '32bcc4617cb81d47b6a72514'},1026.7,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-11-19T22:57:08.014000Z'},True
+{'$oid': '2758dc43ef1a70d4707e20c3'},{'$oid': '33a7fa2069b3f44553bd4729'},{'$oid': 'f3b65d1b37c4c36653bdb2b3'},2515.86,EUR,expense,Yemek,Starbucks,{'$date': '2025-12-14T17:48:08.014000Z'},False
+{'$oid': 'd9f278f6f11c7ddf441d783a'},{'$oid': '3bd85de641b4e96265d22b4c'},{'$oid': '9859831fea827c2cb68858a6'},2052.23,TRY,expense,Sağlık,Memorial,{'$date': '2025-11-22T19:50:08.014000Z'},False
+{'$oid': '912728db1987d9ef32f1b4e4'},{'$oid': '734e428e161f43097fa019c7'},{'$oid': '3ae77887dce441fddfc5048c'},1674.67,EUR,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-24T21:18:08.014000Z'},False
+{'$oid': 'b0d2ce8dcc95797d77248d7b'},{'$oid': 'b934b02c4bb9482ea82a6cb8'},{'$oid': '8c0b5cf1a14703eff8edca7a'},2358.64,TRY,income,Maaş,Salary Payment,{'$date': '2025-12-03T18:56:08.014000Z'},True
+{'$oid': '06cfae9798fd22d1881f2966'},{'$oid': '292afe7e48d0332c9c707980'},{'$oid': 'b7d4f823fd03ef0eb2ee8818'},687.6,TRY,expense,Eğlence,YouTube Premium,{'$date': '2025-11-11T11:25:08.014000Z'},False
+{'$oid': '0311d4a9f67dbc1ad251d88b'},{'$oid': 'b934b02c4bb9482ea82a6cb8'},{'$oid': '8c0b5cf1a14703eff8edca7a'},1281.13,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-11-15T07:27:08.014000Z'},True
+{'$oid': 'ffea1b449e11858dcdcc53ad'},{'$oid': 'dbf39b26b3ee2f6e93300762'},{'$oid': 'ab73c81a9a079913f5942f1a'},2497.19,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-06T14:59:08.014000Z'},True
+{'$oid': '233c030bc7613534962eed3e'},{'$oid': 'fc8fa5ee2df6c07da7f39953'},{'$oid': '5d53ec8c04d222fe00ab3928'},4576.01,USD,expense,Transfer,Para Transferi,{'$date': '2025-12-24T22:03:08.014000Z'},False
+{'$oid': '7ee1ae0fe5449bcc2a18dd6a'},{'$oid': 'f6d20dd0efa47a2a046496ec'},{'$oid': 'f6e9b4e1260ff638b56f173e'},4062.39,TRY,income,Transfer,FAST,{'$date': '2025-10-27T07:46:08.014000Z'},False
+{'$oid': '0b6f295cd88ae246ce03a59a'},{'$oid': '8aa3c914a0b94a47b2f65103'},{'$oid': 'bc59eb85cc25d59a78771f45'},375.8,USD,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-28T11:30:08.014000Z'},False
+{'$oid': 'cf55d450a9fc85353b9f5b3b'},{'$oid': '030e6e0b656e969bc0906be5'},{'$oid': '8807e6fe502ddbc75370b974'},2194.86,USD,expense,Yemek,Burger King,{'$date': '2025-11-23T00:27:08.014000Z'},True
+{'$oid': 'c491ddd33f70d42934f1517f'},{'$oid': '91eefd03d7813b0de11a9ce0'},{'$oid': '7c9d865b7d546ed7fef6265e'},1165.08,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-10-28T21:37:08.014000Z'},False
+{'$oid': '007bc829a80fbaf4b3190359'},{'$oid': '4107eb402f6ec92253540a81'},{'$oid': '70919dc0c12172605fbeeb54'},1871.86,EUR,expense,Faturalar,Türk Telekom İnternet,{'$date': '2025-10-30T15:06:08.014000Z'},True
+{'$oid': '2d8f798cf7fcd69d69087e80'},{'$oid': '8aa3c914a0b94a47b2f65103'},{'$oid': '079ea22a3471905392c7d52c'},4145.09,USD,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-08T02:58:08.014000Z'},False
+{'$oid': 'f74ea88f09266319e6721af5'},{'$oid': 'aec13f4ac750915b4bbf8ecf'},{'$oid': '85910e794ecaa36804e16b54'},3476.64,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-30T11:07:08.014000Z'},True
+{'$oid': '78b32d136bcd4768a4d0b96a'},{'$oid': 'af86e6e6300fbacbfc4c518e'},{'$oid': '7d770fc4e58ece8ce1b9f5c4'},760.45,USD,income,Transfer,EFT,{'$date': '2025-11-11T02:52:08.014000Z'},True
+{'$oid': 'a719b5e6ff6719893372958d'},{'$oid': '3453b2417e10989f8bf2e06a'},{'$oid': '991a2c2b98811e258760f92e'},166.05,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-12-23T23:02:08.014000Z'},True
+{'$oid': '9da65a284a8e0efec2f79cb5'},{'$oid': '896cfa7ed2b25783b526c7bc'},{'$oid': '66665092c2ae5c628e9673ee'},2170.89,TRY,income,Transfer,FAST,{'$date': '2025-11-30T08:00:08.014000Z'},False
+{'$oid': '028d8aee014a9ca1e5df7ed2'},{'$oid': '8f5da17351d8853d1771b5e2'},{'$oid': '8af48ca4323656c457dc646e'},2035.66,USD,income,Maaş,Salary Payment,{'$date': '2025-11-06T10:56:08.014000Z'},False
+{'$oid': '6c4953cf4bf9a01ef10e901e'},{'$oid': 'a7ebc6ea57cbdd1e94491cf0'},{'$oid': '335eddd5b2162919636ccd16'},3186.62,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-19T07:21:08.014000Z'},True
+{'$oid': 'b66c57c211946866b6f60000'},{'$oid': '24052913a013d49519446516'},{'$oid': 'b081396ccb8329794a4a29f5'},3179.78,EUR,expense,Market,Şok,{'$date': '2025-12-25T01:46:08.014000Z'},True
+{'$oid': 'fcec1e4150dec180409f3469'},{'$oid': '229e991b5c200219dba8a293'},{'$oid': '9b107833e2a45cbb75f92d55'},2064.63,USD,expense,Eğlence,PlayStation Store,{'$date': '2025-11-02T03:55:08.014000Z'},True
+{'$oid': '454a9f7ad099f245f6422a84'},{'$oid': '3453b2417e10989f8bf2e06a'},{'$oid': '991a2c2b98811e258760f92e'},1067.81,USD,expense,Eğlence,Steam,{'$date': '2025-12-18T00:05:08.014000Z'},False
+{'$oid': 'f218497eab87d8e557ee3274'},{'$oid': '0eff0798420a0da1dc37280d'},{'$oid': '927e0b7c5882bf050573f32a'},1133.29,USD,expense,Sağlık,Medicana,{'$date': '2025-11-05T04:57:08.014000Z'},True
+{'$oid': '81d3bc5b5aa187bee464fb0f'},{'$oid': 'b4b5b1e37a599c1d6e0f5c7e'},{'$oid': '10e9b4d1f1eb3413e7833e10'},356.09,USD,expense,Eğlence,Spotify,{'$date': '2025-12-13T20:54:08.014000Z'},False
+{'$oid': '5fc493d4b8301954e18dc2cc'},{'$oid': '80b092b653690a1b0941f5d9'},{'$oid': '382967cda1b2bc33ce9b8289'},168.94,TRY,income,Transfer,FAST,{'$date': '2025-11-28T01:36:08.014000Z'},True
+{'$oid': '229eb30abbfdb010bd309ab6'},{'$oid': '6a65ee971e564e19e0c02b3d'},{'$oid': '15412a3571ca52891d5fe6b9'},2140.01,EUR,income,Transfer,EFT,{'$date': '2025-12-05T08:47:08.014000Z'},False
+{'$oid': '73a9283ffc114e5cb7a28bfa'},{'$oid': '63d03b567622646cff46aa01'},{'$oid': 'ed4f276d68034328d744b0b6'},3560.74,TRY,expense,Transfer,IBAN Transferi,{'$date': '2025-11-04T20:46:08.014000Z'},True
+{'$oid': '30f6f798f25de5decc60972d'},{'$oid': '03417abafb31686758ac3c6c'},{'$oid': '5b44dedbc1ef9ccb87513c7a'},1644.89,USD,expense,Sağlık,Memorial,{'$date': '2025-11-04T19:40:08.014000Z'},True
+{'$oid': 'e1a8d0a68cbbc54f20cd3d8f'},{'$oid': '15ab8689b51573d57d85a58a'},{'$oid': 'b338b1468820a8124787596b'},2950.1,USD,expense,Yemek,GetirYemek,{'$date': '2025-11-11T05:50:08.014000Z'},True
+{'$oid': 'd11b05b68f3208bf62d4a140'},{'$oid': 'dabbabb3f9ffa2d313e0d0f4'},{'$oid': '7bf09a243776a8acef0ada87'},1182.67,TRY,expense,Ulaşım,Metro İstanbul,{'$date': '2025-12-20T01:01:08.014000Z'},False
+{'$oid': 'dba8ddd98443ca545cf81b16'},{'$oid': '66d27677c70e1a4d43cebd5d'},{'$oid': 'e2e6cb7e3171b272e04da9f2'},772.4,TRY,income,Transfer,Havale,{'$date': '2025-11-17T16:44:08.014000Z'},True
+{'$oid': '6eea65bcf424ecc5125c13d2'},{'$oid': '3e1e1fa13b5adfb3a41bce2a'},{'$oid': '2a8cc0066c0f8fb5a8b011ab'},1344.95,EUR,expense,Transfer,EFT,{'$date': '2025-11-04T21:48:08.014000Z'},True
+{'$oid': 'd9974ab3edbf7211b8736407'},{'$oid': '0de88e6b73a2331c15626204'},{'$oid': '197258d1d8c4aec68571342b'},4837.88,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-11T19:57:08.014000Z'},False
+{'$oid': '46a1d3b5f7dd8dedc7e10bf9'},{'$oid': 'ef536d38ded46204361b8247'},{'$oid': '94d215bd8d16818f13636c6e'},3317.93,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-06T04:04:08.014000Z'},True
+{'$oid': '1bb241ae6f3c7efa15aa54fa'},{'$oid': '89d5500d757a0ab49b007217'},{'$oid': '250958b73547405f5d191e2e'},1516.99,EUR,income,Transfer,Havale,{'$date': '2025-11-28T12:21:08.014000Z'},False
+{'$oid': '62a7203e13c21c19f711b6f7'},{'$oid': 'da891b81d22c5a7f735b9de1'},{'$oid': '39956c0588c735158ee6f09f'},3130.09,USD,expense,Diğer,Trendyol Go,{'$date': '2025-12-22T15:14:08.014000Z'},False
+{'$oid': 'e9124fd0e17c288e75924056'},{'$oid': '36d4793df5d882092e92e511'},{'$oid': '07bc883759fedb811a6110a6'},1621.59,TRY,expense,Eğlence,Spotify,{'$date': '2025-12-23T19:04:08.014000Z'},True
+{'$oid': 'bf701e69c0056b425ea09a7e'},{'$oid': 'b4b5b1e37a599c1d6e0f5c7e'},{'$oid': '8c33bcbb469bfbecc5f5147b'},2348.19,TRY,expense,Sağlık,Acıbadem,{'$date': '2025-12-11T20:38:08.014000Z'},False
+{'$oid': 'f0c713d35cdb44123a1980c2'},{'$oid': 'e0591aa9db86dfd6f81dea3b'},{'$oid': '60faa02d2e6c9ba6044f8f96'},4568.12,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-03T01:13:08.014000Z'},True
+{'$oid': '70f0c160d94bff3197704fa9'},{'$oid': 'c970305faaf820db7df8c09f'},{'$oid': '75dc55ca8e97817293fd0bb7'},3.77,EUR,expense,Ulaşım,İETT,{'$date': '2025-11-30T09:10:08.014000Z'},False
+{'$oid': '48c014943749a60d20c7d868'},{'$oid': '03417abafb31686758ac3c6c'},{'$oid': '543a3c73ecb57189fc2d938e'},4772.68,EUR,expense,Ulaşım,Shell,{'$date': '2025-12-14T21:19:08.014000Z'},False
+{'$oid': 'edf33dbfc012ee0b1b441b02'},{'$oid': '5487903badb338b54a9701df'},{'$oid': '460248031e9c6e608755150a'},1748.32,EUR,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-10T22:20:08.014000Z'},False
+{'$oid': 'eda3c0040bd4d63d114918ad'},{'$oid': '560b1e0c63b828d56be6856d'},{'$oid': '5bd83a1ba2420ec3f2225fc7'},948.12,TRY,income,Maaş,Salary Payment,{'$date': '2025-12-09T12:17:08.014000Z'},False
+{'$oid': '73a42f915f03218b3fb472f5'},{'$oid': '8adf9cb7606948485e34f873'},{'$oid': 'bc4af234db1c865bb5dba060'},4785.3,EUR,expense,Faturalar,Vodafone,{'$date': '2025-11-18T22:46:08.014000Z'},False
+{'$oid': '8ff9afae760f7c441f9320ab'},{'$oid': '4625e2f8db41ef1b9a3c1d76'},{'$oid': 'bbafdf7d769ac7c5d20516dd'},4132.21,USD,expense,Yemek,Burger King,{'$date': '2025-12-14T11:38:08.014000Z'},False
+{'$oid': '465a3738010275556bcb9a00'},{'$oid': '9f29bc9f9f36815758054e97'},{'$oid': '4f1a2701794529b2138d5278'},1456.44,USD,expense,Faturalar,Türk Telekom İnternet,{'$date': '2025-12-23T06:20:08.014000Z'},False
+{'$oid': '4aa8e82cc9500923b672d5ad'},{'$oid': '909c8724416f6d9384d2eedd'},{'$oid': '6a49c561313c4fc330ecc40a'},2124.51,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-11-18T08:05:08.014000Z'},True
+{'$oid': 'abd1edc3b711bbe4eae26ad1'},{'$oid': 'eba447c97c67a0c900cbd378'},{'$oid': 'ae767721cf88de1c260ad870'},1816.32,TRY,expense,Ulaşım,Opet,{'$date': '2025-12-23T03:27:08.014000Z'},False
+{'$oid': '21e22dfe464a2562359131e3'},{'$oid': '0d15054f3b4af699b1c0603c'},{'$oid': '41e77f2e65068f8ac002c320'},2081.77,TRY,expense,Yemek,McDonald's,{'$date': '2025-11-07T20:22:08.014000Z'},True
+{'$oid': '3cea300386ccc84ab4c67e59'},{'$oid': '560b1e0c63b828d56be6856d'},{'$oid': '6a1552b28c0738600814996b'},1402.2,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-11-19T17:36:08.014000Z'},False
+{'$oid': 'beecaf43a9c0dde2a92bd9bb'},{'$oid': 'a3d713a7af305efccf312c58'},{'$oid': 'f45c2518895e161738b14344'},1670.19,USD,income,Maaş,Maaş Yatırma,{'$date': '2025-12-20T07:49:08.014000Z'},True
+{'$oid': 'bcea128daa23f13c71e14d58'},{'$oid': '909c8724416f6d9384d2eedd'},{'$oid': '6a49c561313c4fc330ecc40a'},2263.62,EUR,expense,Sağlık,Medipol,{'$date': '2025-12-13T06:55:08.014000Z'},False
+{'$oid': 'cd82a8735e545f3a5a2dea00'},{'$oid': 'bc6d892adab9bf09fc155ce9'},{'$oid': '2cf53a83f836c7d17e7d3cf8'},3096.5,TRY,expense,Alışveriş,Zara,{'$date': '2025-11-15T04:50:08.014000Z'},False
+{'$oid': 'f88570b0bb0cbfd272270585'},{'$oid': '23e22c1c5268b686437d1eac'},{'$oid': '048b16a4d6557c8709b0ada9'},2227.79,TRY,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-22T18:18:08.014000Z'},True
+{'$oid': 'b07cbde6e9322980942393d2'},{'$oid': 'dfd05de1212b9b197a954d73'},{'$oid': 'c6c5cefe98fb6f56b7fd3075'},550.49,EUR,expense,Yemek,Yemeksepeti,{'$date': '2025-10-27T00:55:08.014000Z'},True
+{'$oid': 'e35b610ee8f1da5db6a6e3d5'},{'$oid': '58b251c359c4fbb76f5e6443'},{'$oid': '172db452e11cef4baed3df8b'},1977.69,EUR,expense,Market,Şok,{'$date': '2025-11-08T13:39:08.014000Z'},True
+{'$oid': '82b42e555c5ff5f3c826f101'},{'$oid': '9c7c3e050403c718d9a6591d'},{'$oid': '521e6624a467502340b5d097'},2437.04,EUR,income,Maaş,Şirket Ödemesi,{'$date': '2025-12-08T17:48:08.014000Z'},False
+{'$oid': 'e328fc1c3c0ab5112a7758f9'},{'$oid': 'bc6d892adab9bf09fc155ce9'},{'$oid': '2cf53a83f836c7d17e7d3cf8'},3949.23,TRY,expense,Transfer,IBAN Transferi,{'$date': '2025-12-22T23:38:08.014000Z'},False
+{'$oid': '8b9a1fd7ca46508542b544d1'},{'$oid': '0d15054f3b4af699b1c0603c'},{'$oid': 'e3e500ddd65d45d78bfa4404'},3197.63,USD,income,Maaş,Maaş Ödemesi,{'$date': '2025-10-31T14:03:08.014000Z'},True
+{'$oid': '1b34fc75334f149f0159fadd'},{'$oid': '1634b873b666ccf9ec4b00d0'},{'$oid': '5058b8dd7fe394a41c5364b0'},4667.97,TRY,expense,Market,Migros,{'$date': '2025-11-10T12:32:08.014000Z'},True
+{'$oid': 'f6c99e39f7194c299c4ca498'},{'$oid': '1a29640cc14628ad40ec0776'},{'$oid': '8d621ee220d4978a3b241263'},3397.17,EUR,expense,Alışveriş,H&M,{'$date': '2025-12-01T05:39:08.014000Z'},True
+{'$oid': '1ac19d3e3023c84f7d44a51e'},{'$oid': '3b1881558dfbcb861a394fe1'},{'$oid': '269b722bc13499d0924fd995'},1000.45,USD,expense,Yemek,GetirYemek,{'$date': '2025-11-05T14:07:08.014000Z'},True
+{'$oid': 'f9236ffc469bde877d5eb2e2'},{'$oid': 'c3cc2cccc86b328374cd9871'},{'$oid': 'bb5d0116324ccee82bd84b84'},3550.39,TRY,expense,Diğer,Google,{'$date': '2025-11-17T17:15:08.014000Z'},False
+{'$oid': '8511ccef5182b3fcfcb8ca1b'},{'$oid': 'defa0f08bc28d9963603c52c'},{'$oid': 'e4dac34964472db4b4213173'},769.09,EUR,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-22T21:51:08.014000Z'},True
+{'$oid': '8554666ad7fffb33e1d091ba'},{'$oid': '0653acfb0d2ee097b0936d74'},{'$oid': 'bde17535b470197ac99c5719'},708.67,EUR,expense,Sağlık,Medipol,{'$date': '2025-12-20T06:06:08.014000Z'},False
+{'$oid': '0136f63fd1a5aec30aba79a8'},{'$oid': '0d15054f3b4af699b1c0603c'},{'$oid': '41e77f2e65068f8ac002c320'},2368.56,TRY,income,Transfer,IBAN Transferi,{'$date': '2025-12-09T20:20:08.014000Z'},True
+{'$oid': 'ee11e3eb140d26407f29a38d'},{'$oid': 'b934b02c4bb9482ea82a6cb8'},{'$oid': '8c0b5cf1a14703eff8edca7a'},4560.83,TRY,expense,Diğer,Microsoft,{'$date': '2025-12-22T13:45:08.014000Z'},False
+{'$oid': '67c6597b2aeb19e50eb059ce'},{'$oid': '4e615750e88a7055219dc83a'},{'$oid': 'b8ac40ba0daceb8d88d83b26'},2635.8,TRY,expense,Yemek,McDonald's,{'$date': '2025-11-04T01:50:08.014000Z'},True
+{'$oid': '19bffa29da04a6dca17e4b5f'},{'$oid': '7aa335bc9a356fcd58e30efe'},{'$oid': '5d70c7355e00c0f6ab44cc1c'},1069.09,TRY,expense,Eğlence,Netflix,{'$date': '2025-10-26T11:04:08.014000Z'},False
+{'$oid': '30b314914d9236273835e915'},{'$oid': '3b1881558dfbcb861a394fe1'},{'$oid': '269b722bc13499d0924fd995'},2241.24,USD,expense,Alışveriş,Hepsiburada,{'$date': '2025-12-17T17:44:08.014000Z'},True
+{'$oid': '3d4767937bbd5f7dc54dc887'},{'$oid': '18dc9e80d4f7459c743922db'},{'$oid': 'bbfb1daddb0719cdcafc3a81'},4448.75,TRY,expense,Faturalar,Doğalgaz Faturası,{'$date': '2025-11-23T13:20:08.014000Z'},False
+{'$oid': 'cade0f10f7007f47bc6184ed'},{'$oid': '5b534baf6cd728c89c70cae5'},{'$oid': '4780c3d6823586f516c980d4'},2977.76,EUR,expense,Market,A101,{'$date': '2025-12-18T00:22:08.014000Z'},False
+{'$oid': '183c3b5f9e07371fec3570c9'},{'$oid': '030e6e0b656e969bc0906be5'},{'$oid': '8807e6fe502ddbc75370b974'},2320.9,USD,expense,Alışveriş,Zara,{'$date': '2025-11-08T11:25:08.014000Z'},True
+{'$oid': '967f0cbfab8f5574ea14d183'},{'$oid': '14a70bdacc1df54eb1ea9d86'},{'$oid': 'c0167809e587cdf8bccc380e'},785.18,TRY,income,Maaş,Maaş Yatırma,{'$date': '2025-12-21T10:18:08.014000Z'},False
+{'$oid': '9c11e9557db03f4c48261067'},{'$oid': '0d15054f3b4af699b1c0603c'},{'$oid': 'e3e500ddd65d45d78bfa4404'},3662.8,USD,income,Transfer,Havale,{'$date': '2025-10-27T01:21:08.014000Z'},False
+{'$oid': 'e17f79ef8a0bbbbc6d8bf9aa'},{'$oid': '1ac8e9af6c435b630db51495'},{'$oid': 'd6fc6693491bb4acd9229c51'},3295.94,TRY,income,Transfer,Havale,{'$date': '2025-11-27T19:04:08.014000Z'},False
+{'$oid': 'ee8e7657eb8017606073f509'},{'$oid': '102c83d351762da5333dddba'},{'$oid': '205d5b9c74143948842a517a'},70.08,USD,expense,Diğer,Google,{'$date': '2025-11-07T03:03:08.014000Z'},False
+{'$oid': '0c9eac068c1986987836a391'},{'$oid': 'aae8373fd84d674569391012'},{'$oid': '247e66c2df73a32aa60042cb'},1704.05,USD,expense,Alışveriş,Trendyol,{'$date': '2025-11-10T06:04:08.014000Z'},False
+{'$oid': '322df5eba11fece5ed018fde'},{'$oid': '76307d97293e6133e390832a'},{'$oid': 'cf5a33b340d16648d780125f'},2367.38,USD,expense,Faturalar,Turkcell,{'$date': '2025-11-07T17:04:08.014000Z'},False
+{'$oid': '4685fabf7c972dbbecd45304'},{'$oid': 'cc529239e7420650631fdbc3'},{'$oid': '54976bfaf3f5c4eb76b41cf7'},1053.01,EUR,expense,Diğer,Apple,{'$date': '2025-12-18T21:06:08.014000Z'},True
+{'$oid': 'ff0dad30c00497180071e317'},{'$oid': '4380c301f0efee07b9faf0e7'},{'$oid': '055ecf6990643d5897387b6b'},3790.13,EUR,expense,Faturalar,Turkcell,{'$date': '2025-12-17T19:40:08.014000Z'},False
+{'$oid': 'be49a43cc0ac04cdb827ba84'},{'$oid': '03417abafb31686758ac3c6c'},{'$oid': '5b44dedbc1ef9ccb87513c7a'},1237.95,USD,expense,Diğer,Amazon,{'$date': '2025-12-24T10:38:08.014000Z'},False
+{'$oid': '4359d35de517282fb4ec1a7c'},{'$oid': 'de2bcf9a6c467c47d7a2ef61'},{'$oid': '507a57c23cc90b99b45cbfe1'},3145.15,EUR,expense,Yemek,Yemeksepeti,{'$date': '2025-11-24T19:20:08.014000Z'},True
+{'$oid': 'f7d9872026248f1602a2df7c'},{'$oid': 'ef7e33fba410b2048dcfd06d'},{'$oid': 'd01c6c5c80265ae5039084b1'},4344.81,EUR,expense,Sağlık,Florence Nightingale,{'$date': '2025-11-14T04:34:08.014000Z'},True
+{'$oid': 'f08a4be9959650b8b6702b3a'},{'$oid': '9583da1641a7cd34e80740f7'},{'$oid': 'bf4483472e6b95438c427884'},1595.14,EUR,expense,Sağlık,Florence Nightingale,{'$date': '2025-10-29T00:46:08.014000Z'},True
+{'$oid': '1fa314ea2b43dfcf169e60fe'},{'$oid': '2f0705e7601f548b8be20a8d'},{'$oid': '6f46a85cf56040a17da1eb9b'},4433.09,TRY,expense,Ulaşım,Shell,{'$date': '2025-11-11T11:09:08.014000Z'},False
+{'$oid': '775ebddd69f1baa56be882a9'},{'$oid': '398e689cc43790882a89f06e'},{'$oid': '6de6f5074abd4d74c488194d'},4376.27,USD,expense,Faturalar,Turkcell,{'$date': '2025-11-27T02:26:08.014000Z'},True
+{'$oid': '653ee10019eec489f9a4690d'},{'$oid': '229e991b5c200219dba8a293'},{'$oid': '9b107833e2a45cbb75f92d55'},3845.94,USD,expense,Sağlık,Florence Nightingale,{'$date': '2025-11-08T16:39:08.014000Z'},False
+{'$oid': '0bfab68da73d5d8dca168e4f'},{'$oid': 'eb369c26e47768377307b3e8'},{'$oid': '0eff466c031c27421ca6043e'},70.08,TRY,expense,Transfer,Havale,{'$date': '2025-11-16T23:19:08.014000Z'},True
+{'$oid': '9129b1c5ce26b3c10bdc89f6'},{'$oid': 'ef7e33fba410b2048dcfd06d'},{'$oid': 'd01c6c5c80265ae5039084b1'},3453.86,EUR,expense,Eğlence,YouTube Premium,{'$date': '2025-11-06T14:51:08.014000Z'},False
+{'$oid': '6869d4f7b1e8629ff70d6dd1'},{'$oid': '1ba7ae457b29aae842ff0ca7'},{'$oid': '3aa60a83b255e43568be9aa2'},2774.29,EUR,income,Transfer,Para Transferi,{'$date': '2025-11-28T10:17:08.014000Z'},False
+{'$oid': '2c8fcca225944f8cae704d5b'},{'$oid': 'eb369c26e47768377307b3e8'},{'$oid': '0eff466c031c27421ca6043e'},1093.75,TRY,expense,Diğer,Amazon,{'$date': '2025-12-22T21:29:08.014000Z'},True
+{'$oid': 'c2bfeebda11b7c1fc94d4600'},{'$oid': '0eff0798420a0da1dc37280d'},{'$oid': '927e0b7c5882bf050573f32a'},4388.44,USD,expense,Eğlence,PlayStation Store,{'$date': '2025-11-03T22:33:08.014000Z'},False
+{'$oid': 'da6dca58f37c2914ecbac3a7'},{'$oid': 'dbf39b26b3ee2f6e93300762'},{'$oid': '8c28ec056c0cd2fa730addd8'},4226.74,EUR,expense,Ulaşım,İETT,{'$date': '2025-11-20T06:59:08.014000Z'},True
+{'$oid': '9c6fddf5981101474f1f3f6e'},{'$oid': 'dfd05de1212b9b197a954d73'},{'$oid': 'ae4898d3064a343979ea99a3'},4726.07,USD,expense,Diğer,Trendyol Go,{'$date': '2025-12-16T03:48:08.014000Z'},True
+{'$oid': '0c4b1efaa1d761577531b720'},{'$oid': 'aec13f4ac750915b4bbf8ecf'},{'$oid': '85910e794ecaa36804e16b54'},413.94,EUR,expense,Diğer,Microsoft,{'$date': '2025-10-31T12:10:08.014000Z'},True
+{'$oid': '57c642756e4a4805e97faf9f'},{'$oid': '18dc9e80d4f7459c743922db'},{'$oid': 'bbfb1daddb0719cdcafc3a81'},1995.23,TRY,expense,Diğer,Google,{'$date': '2025-11-11T04:11:08.014000Z'},True
+{'$oid': '2a095e0218786d7c30443623'},{'$oid': 'dbf39b26b3ee2f6e93300762'},{'$oid': '8c28ec056c0cd2fa730addd8'},1077.93,EUR,expense,Sağlık,Memorial,{'$date': '2025-11-11T05:22:08.014000Z'},True
+{'$oid': 'fecc0ab1f5d6c32aa9962307'},{'$oid': '58b251c359c4fbb76f5e6443'},{'$oid': '172db452e11cef4baed3df8b'},483.66,EUR,expense,Sağlık,Florence Nightingale,{'$date': '2025-11-06T07:52:08.014000Z'},False
+{'$oid': '38e1485663aec139a518b778'},{'$oid': 'db9b05fde7b0262683aabc6c'},{'$oid': 'f0b008e39edcbeff3f227f66'},3895.73,USD,income,Transfer,FAST,{'$date': '2025-10-31T04:13:08.014000Z'},True
+{'$oid': '282b90c360002a9c4d2a4eb6'},{'$oid': 'd4d7a39c0a583df2a0b83c63'},{'$oid': '0d2746b872d0a0036b0ad8a3'},4582.1,USD,expense,Sağlık,Medipol,{'$date': '2025-11-17T12:30:08.014000Z'},False
+{'$oid': 'f2b8f53508c3fe5a83b464ce'},{'$oid': 'd10e83240d479173cf7eff86'},{'$oid': 'a596b4843eefccd1f9ad9c56'},2465.54,USD,expense,Transfer,IBAN Transferi,{'$date': '2025-12-15T22:20:08.014000Z'},True
+{'$oid': '41eacb2c70fc63bb483e0592'},{'$oid': 'd82fca2682b433fd6e792592'},{'$oid': '9da09644e1f9494e281562af'},2369.74,TRY,expense,Faturalar,Türk Telekom İnternet,{'$date': '2025-11-13T21:46:08.014000Z'},True
+{'$oid': '0697303f4d7ece251f6a36ae'},{'$oid': '6db1f78decd18d325a6fcf19'},{'$oid': '4bf9077ff96a57395ed8847c'},3753.5,USD,expense,Faturalar,Turkcell,{'$date': '2025-11-16T10:30:08.014000Z'},False
+{'$oid': 'cf39297526c0b204374c9ff5'},{'$oid': '02b1f9a04446a1723a34cdc3'},{'$oid': '1f8bc4ccd38e0ed8a7b96374'},3960.52,USD,expense,Alışveriş,Decathlon,{'$date': '2025-11-20T23:33:08.014000Z'},False
+{'$oid': '665e5d8a0b982198dc429c07'},{'$oid': '03417abafb31686758ac3c6c'},{'$oid': '543a3c73ecb57189fc2d938e'},1586.76,EUR,expense,Diğer,Uber,{'$date': '2025-12-24T17:54:08.014000Z'},True
+{'$oid': 'b1695aa6341a4f5cc56aea66'},{'$oid': '34a25da675ae4786278a5c6f'},{'$oid': 'a38d5385e28a95a6f2ff756f'},3192.96,TRY,income,Transfer,EFT,{'$date': '2025-12-10T17:36:08.014000Z'},True
+{'$oid': '38b4c0f95fa11f759f728f51'},{'$oid': '0370dac680b6f1d30e5fcaae'},{'$oid': '070f1bb66cc742db01bb3565'},2726.7,USD,expense,Yemek,Starbucks,{'$date': '2025-12-12T16:00:08.014000Z'},True
+{'$oid': '1d9301620959fc6974eb1de0'},{'$oid': '229e991b5c200219dba8a293'},{'$oid': '9b107833e2a45cbb75f92d55'},1180.97,USD,expense,Eğlence,YouTube Premium,{'$date': '2025-11-08T21:45:08.014000Z'},False
+{'$oid': '5efa2dbdc9772fcdfd70a262'},{'$oid': '64c72857f4de03894ccd35d8'},{'$oid': 'e7e16128582d202996fa6f9a'},905.84,EUR,expense,Alışveriş,Decathlon,{'$date': '2025-11-09T02:02:08.014000Z'},False
+{'$oid': 'b7f6f36d255cc51adb0f40ec'},{'$oid': '80b092b653690a1b0941f5d9'},{'$oid': 'a62cb91c34aa27a2ea5bd47d'},4538.18,EUR,expense,Eğlence,Steam,{'$date': '2025-12-21T03:56:08.014000Z'},True
+{'$oid': '2d448b3107d9631a67cb8221'},{'$oid': 'dfd05de1212b9b197a954d73'},{'$oid': 'ae4898d3064a343979ea99a3'},842.34,USD,income,Maaş,Salary Payment,{'$date': '2025-12-23T10:40:08.014000Z'},False
+{'$oid': '6eecd723e026f5e0f16c3031'},{'$oid': '69ed66e8cc71b987bde1a4d9'},{'$oid': '10d94796b7f2220c797bbadc'},3854.93,EUR,expense,Market,A101,{'$date': '2025-11-02T04:12:08.014000Z'},True
+{'$oid': '0aff8431b166913a8f3601c1'},{'$oid': '18dc9e80d4f7459c743922db'},{'$oid': 'bbfb1daddb0719cdcafc3a81'},1492.55,TRY,income,Maaş,Salary Payment,{'$date': '2025-10-29T02:40:08.014000Z'},True
+{'$oid': '9f8d4103161db597f9513899'},{'$oid': '017bf2ae3f0404cf29ccf048'},{'$oid': '0abfd5baae8c3720c9dad693'},3956.99,TRY,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-27T20:12:08.014000Z'},True
+{'$oid': '81f8a08a623131e98097f756'},{'$oid': 'd9d43e7bea63f1b6360efc86'},{'$oid': '654efb265e96acdf2f00e026'},2692.07,EUR,expense,Diğer,Apple,{'$date': '2025-11-15T22:23:08.014000Z'},False
+{'$oid': 'eebc5b8b90087029fff7509a'},{'$oid': 'e28ac8c35b92f0154e6ced1a'},{'$oid': '258269e6f0a05567e26711d3'},917.99,USD,expense,Sağlık,Acıbadem,{'$date': '2025-11-15T06:40:08.014000Z'},False
+{'$oid': '44daeaba0ad40c0a9addd205'},{'$oid': 'd23a67d9e45f27d643b300e8'},{'$oid': 'f3c7cc6712d9d50dece0b1dc'},1008.39,USD,expense,Alışveriş,Hepsiburada,{'$date': '2025-12-24T01:16:08.014000Z'},True
+{'$oid': '0dbd09be9737652eab1d44f8'},{'$oid': 'bc6d892adab9bf09fc155ce9'},{'$oid': '2cf53a83f836c7d17e7d3cf8'},1705.66,TRY,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-03T15:00:08.014000Z'},True
+{'$oid': 'be8b82228bb8730b36c11450'},{'$oid': '229e991b5c200219dba8a293'},{'$oid': '9b107833e2a45cbb75f92d55'},3893.89,USD,expense,Diğer,Uber,{'$date': '2025-11-16T21:16:08.014000Z'},True
+{'$oid': 'cdb40d9cb22992422d0778c5'},{'$oid': '565d70edfb389535c545b073'},{'$oid': '90533974bd6b6bb2666de51c'},1912.57,EUR,income,Maaş,Salary Payment,{'$date': '2025-12-07T21:09:08.014000Z'},True
+{'$oid': 'b8b4431b818067cf48a6dfcc'},{'$oid': '395cc973064f095e52ab4471'},{'$oid': 'ef078e9645413a525e4ea3da'},4414.42,USD,expense,Faturalar,Doğalgaz Faturası,{'$date': '2025-11-20T13:36:08.014000Z'},False
+{'$oid': '54d6569bb3ca34980f178091'},{'$oid': '9f29bc9f9f36815758054e97'},{'$oid': '4f1a2701794529b2138d5278'},1122.69,USD,expense,Alışveriş,Zara,{'$date': '2025-12-21T17:11:08.014000Z'},True
+{'$oid': '46a79085ada445eae8232fb6'},{'$oid': 'a5261e4e973e49de2bc2fbd5'},{'$oid': '19750b99f0adc1ad624d4f58'},616.65,TRY,income,Maaş,Salary Payment,{'$date': '2025-10-28T21:26:08.014000Z'},False
+{'$oid': '197ba8b1fb7a1954192c9e5a'},{'$oid': '58b251c359c4fbb76f5e6443'},{'$oid': '172db452e11cef4baed3df8b'},2197.96,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-01T05:03:08.014000Z'},False
+{'$oid': '3973bfcbbb5ab8a0bca1d9d7'},{'$oid': '03417abafb31686758ac3c6c'},{'$oid': '5b44dedbc1ef9ccb87513c7a'},487.72,USD,income,Maaş,Şirket Ödemesi,{'$date': '2025-11-14T07:50:08.014000Z'},False
+{'$oid': '218c1d35fb9d42ee29cf6d37'},{'$oid': '69ed66e8cc71b987bde1a4d9'},{'$oid': '10d94796b7f2220c797bbadc'},2404.77,EUR,expense,Alışveriş,Hepsiburada,{'$date': '2025-12-11T03:48:08.014000Z'},True
+{'$oid': '8f7f6abb4f052a5fd2d64136'},{'$oid': 'e28ac8c35b92f0154e6ced1a'},{'$oid': '258269e6f0a05567e26711d3'},1569.28,USD,expense,Yemek,McDonald's,{'$date': '2025-11-21T22:40:08.014000Z'},False
+{'$oid': '92e1f49ef76d117ab996b425'},{'$oid': 'b4b5b1e37a599c1d6e0f5c7e'},{'$oid': '8c33bcbb469bfbecc5f5147b'},2966.18,TRY,expense,Sağlık,Acıbadem,{'$date': '2025-11-04T01:26:08.014000Z'},True
+{'$oid': 'ba5520251e2fddd4a43f10d3'},{'$oid': 'ca20c013fb6501d44ed50aac'},{'$oid': '84b234711a9360450503d879'},2620.42,EUR,income,Maaş,Maaş Ödemesi,{'$date': '2025-12-22T23:09:08.014000Z'},True
+{'$oid': 'f7a6c6937fa48b55ae4469cb'},{'$oid': '33a7fa2069b3f44553bd4729'},{'$oid': 'f3b65d1b37c4c36653bdb2b3'},3490.2,EUR,income,Maaş,Maaş Yatırma,{'$date': '2025-11-28T02:31:08.014000Z'},True
