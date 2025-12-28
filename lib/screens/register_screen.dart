@@ -20,7 +20,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _securityAnswerController = TextEditingController();
-  
+
   String? _selectedSecurityQuestion;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
@@ -101,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: 20),
                   const OpbaLogo(size: 0.8),
                   const SizedBox(height: 20),
-                  // Register Card
+                  // kayıt ol kartı
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -127,7 +127,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 20),
-                        // Username
+                        // kullanıcı adı
                         _buildLabeledField(l10n.username, isDark),
                         TextFormField(
                           controller: _usernameController,
@@ -146,7 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        // Email
+                        // e-posta
                         _buildLabeledField(l10n.email, isDark),
                         TextFormField(
                           controller: _emailController,
@@ -169,7 +169,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        // Phone
+                        // telefon numarası
                         _buildLabeledField(l10n.phone, isDark),
                         TextFormField(
                           controller: _phoneController,
@@ -189,7 +189,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        // Password
+                        // şifre
                         _buildLabeledField(l10n.password, isDark),
                         TextFormField(
                           controller: _passwordController,
@@ -224,7 +224,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        // Confirm Password
+                        // şifremi unuttum
                         _buildLabeledField(l10n.passwordConfirm, isDark),
                         TextFormField(
                           controller: _confirmPasswordController,
@@ -257,7 +257,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        // Security Question
+                        // güvenlik sorusu
                         _buildLabeledField(l10n.securityQuestion, isDark,
                             icon: Icons.search),
                         DropdownButtonFormField<String>(
@@ -286,7 +286,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        // Security Answer
+                        // güvenlik sorusu cevabı
                         _buildLabeledField(l10n.securityAnswer, isDark),
                         TextFormField(
                           controller: _securityAnswerController,
@@ -305,7 +305,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                         const SizedBox(height: 20),
-                        // Register button
+                        // kayıt ol butonu
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -341,7 +341,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Login link
+                  // giriş yap linki
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

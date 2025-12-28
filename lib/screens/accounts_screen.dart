@@ -17,7 +17,8 @@ class AccountsScreen extends StatelessWidget {
     final appProvider = Provider.of<AppProvider>(context);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor:
+          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -108,8 +109,8 @@ class AccountsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  
-                  // Accounts List
+
+                  // hesaplar listesi
                   Text(
                     l10n.myAccounts,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -117,7 +118,7 @@ class AccountsScreen extends StatelessWidget {
                         ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   ...accountProvider.accounts.map((account) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16),
@@ -126,16 +127,17 @@ class AccountsScreen extends StatelessWidget {
                           _showAccountDetails(context, account);
                         },
                         onLongPress: () {
-                          _showDeleteDialog(context, accountProvider, account.id!);
+                          _showDeleteDialog(
+                              context, accountProvider, account.id!);
                         },
                         child: CreditCardWidget(account: account),
                       ),
                     );
                   }),
-                  
+
                   const SizedBox(height: 16),
-                  
-                  // Add Account Button
+
+                  // hesap ekle butonu
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
@@ -172,14 +174,14 @@ class AccountsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'Henüz hesabınız yok',
+            'Henüz hesabınız yok.',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: AppColors.textSecondaryLight,
                 ),
           ),
           const SizedBox(height: 8),
           Text(
-            'İlk hesabınızı ekleyin',
+            'İlk hesabınızı ekleyin.',
             style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
@@ -248,7 +250,8 @@ class AccountsScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(color: AppColors.textSecondaryLight)),
+          Text(label,
+              style: const TextStyle(color: AppColors.textSecondaryLight)),
           Expanded(
             child: Text(
               value,
@@ -262,7 +265,8 @@ class AccountsScreen extends StatelessWidget {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, AccountProvider provider, String accountId) {
+  void _showDeleteDialog(
+      BuildContext context, AccountProvider provider, String accountId) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

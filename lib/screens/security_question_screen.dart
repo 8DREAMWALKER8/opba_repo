@@ -46,6 +46,11 @@ class _SecurityQuestionScreenState extends State<SecurityQuestionScreen> {
     }
   }
 
+  void _goBackToLogin() {
+    if (_isLoading) return;
+    Navigator.pushReplacementNamed(context, '/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
@@ -77,10 +82,8 @@ class _SecurityQuestionScreenState extends State<SecurityQuestionScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 60),
-                  // Logo
                   const OpbaLogo(),
                   const SizedBox(height: 40),
-                  // Security Question Card
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -98,7 +101,7 @@ class _SecurityQuestionScreenState extends State<SecurityQuestionScreen> {
                     ),
                     child: Column(
                       children: [
-                        // Security question label
+                        // güvenlik sorusu etiketi
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -128,8 +131,10 @@ class _SecurityQuestionScreenState extends State<SecurityQuestionScreen> {
                             ],
                           ),
                         ),
+
                         const SizedBox(height: 12),
-                        // Display the security question
+
+                        // güvenlik sorusunu görüntüle
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(16),
@@ -155,8 +160,10 @@ class _SecurityQuestionScreenState extends State<SecurityQuestionScreen> {
                             ),
                           ),
                         ),
+
                         const SizedBox(height: 16),
-                        // Answer label
+
+                        // cevap etiketi
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -180,8 +187,10 @@ class _SecurityQuestionScreenState extends State<SecurityQuestionScreen> {
                             ],
                           ),
                         ),
+
                         const SizedBox(height: 12),
-                        // Answer field
+
+                        // cevap alanı
                         TextFormField(
                           controller: _answerController,
                           decoration: InputDecoration(
@@ -198,8 +207,10 @@ class _SecurityQuestionScreenState extends State<SecurityQuestionScreen> {
                             return null;
                           },
                         ),
+
                         const SizedBox(height: 24),
-                        // Login button
+
+                        // giriş yap butonu
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -218,7 +229,8 @@ class _SecurityQuestionScreenState extends State<SecurityQuestionScreen> {
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.white),
+                                        Colors.white,
+                                      ),
                                     ),
                                   )
                                 : Text(
@@ -229,6 +241,33 @@ class _SecurityQuestionScreenState extends State<SecurityQuestionScreen> {
                                       color: Colors.white,
                                     ),
                                   ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // hoşgeldiniz ekranına geri dön butonu
+                        SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            onPressed: _isLoading ? null : _goBackToLogin,
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppColors.primaryBlue,
+                              side: const BorderSide(
+                                color: AppColors.primaryBlue,
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: Text(
+                              l10n.backToLogin,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ),
                       ],

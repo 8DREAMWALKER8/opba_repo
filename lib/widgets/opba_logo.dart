@@ -14,7 +14,7 @@ class OpbaLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       padding: EdgeInsets.all(16 * size),
       decoration: showBackground
@@ -33,7 +33,7 @@ class OpbaLogo extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Lock icon
+          // kilit ikonu
           Icon(
             Icons.lock,
             color: AppColors.primaryBlue,
@@ -68,7 +68,7 @@ class OpbaLogo extends StatelessWidget {
             ),
           ),
           SizedBox(width: 6 * size),
-          // Bank icon
+          // banka ikonu
           Icon(
             Icons.account_balance,
             color: AppColors.primaryBlue,

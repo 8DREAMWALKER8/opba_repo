@@ -11,7 +11,8 @@ class PrivacyScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor:
+          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -36,7 +37,7 @@ class PrivacyScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Card
+            // başlık karto
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -80,7 +81,7 @@ class PrivacyScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Privacy Sections
+            // gizlilik bölümleri
             _buildSection(
               context,
               icon: Icons.info_outline,
@@ -109,7 +110,8 @@ class PrivacyScreen extends StatelessWidget {
               context,
               icon: Icons.settings_applications,
               title: '3. Verilerin Kullanımı',
-              content: 'Toplanan veriler aşağıdaki amaçlarla kullanılmaktadır:\n\n'
+              content:
+                  'Toplanan veriler aşağıdaki amaçlarla kullanılmaktadır:\n\n'
                   '• Hesap yönetimi ve işlem takibi\n'
                   '• Bütçe analizi ve harcama raporları\n'
                   '• Kişiselleştirilmiş öneriler sunma\n'
@@ -122,7 +124,8 @@ class PrivacyScreen extends StatelessWidget {
               context,
               icon: Icons.lock_outline,
               title: '4. Veri Güvenliği',
-              content: 'Verilerinizi korumak için aşağıdaki önlemleri alıyoruz:\n\n'
+              content:
+                  'Verilerinizi korumak için aşağıdaki önlemleri alıyoruz:\n\n'
                   '• End-to-end şifreleme\n'
                   '• İki faktörlü kimlik doğrulama\n'
                   '• Güvenlik sorusu ile ek koruma\n'
@@ -189,7 +192,7 @@ class PrivacyScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // Accept Button
+            // kabul et butonu
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -235,7 +238,7 @@ class PrivacyScreen extends StatelessWidget {
                         ),
                       ),
                       child: const Text(
-                        'Anladım',
+                        'Anladım.',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

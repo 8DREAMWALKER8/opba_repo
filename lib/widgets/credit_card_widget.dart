@@ -33,7 +33,7 @@ class CreditCardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Card Type
+          // kart tipi
           const Text(
             'VISA',
             style: TextStyle(
@@ -44,7 +44,7 @@ class CreditCardWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          // Card Number
+          // kart numarası
           Text(
             account.maskedCardNumber,
             style: const TextStyle(
@@ -55,11 +55,11 @@ class CreditCardWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          // Card Details Row
+          // kart detayları satırı
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Card Holder
+              // kart sahibi
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -73,7 +73,7 @@ class CreditCardWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              // Expiry Date
+              // son kullanma tarihi
               Text(
                 account.expiryDate ?? '',
                 style: const TextStyle(
@@ -85,7 +85,7 @@ class CreditCardWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          // Balance
+          // bakiye
           Text(
             'Bakiye: ${_formatNumber(account.balance)} TL',
             style: const TextStyle(
@@ -99,7 +99,6 @@ class CreditCardWidget extends StatelessWidget {
   }
 
   List<Color> _getGradientColors() {
-    // Different gradients based on bank
     final bankName = account.bankName.toLowerCase();
     if (bankName.contains('ziraat')) {
       return [const Color(0xFF1E3A8A), const Color(0xFF3B82F6)];

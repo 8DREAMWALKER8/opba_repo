@@ -16,7 +16,8 @@ class SettingsScreen extends StatelessWidget {
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor:
+          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -41,7 +42,6 @@ class SettingsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profile Card
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -105,9 +105,7 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-
-            // Account Section
-            _buildSectionTitle(context, 'Hesap'),
+            _buildSectionTitle(context, l10n.accountSection),
             const SizedBox(height: 12),
             _buildSettingsCard(
               context,
@@ -137,18 +135,14 @@ class SettingsScreen extends StatelessWidget {
                   title: l10n.notifications,
                   trailing: Switch(
                     value: true,
-                    onChanged: (value) {
-                      // TODO: Implement notification toggle
-                    },
+                    onChanged: (value) {},
                     activeColor: AppColors.primaryBlue,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 24),
-
-            // Preferences Section
-            _buildSectionTitle(context, 'Tercihler'),
+            _buildSectionTitle(context, l10n.preferencesSection),
             const SizedBox(height: 12),
             _buildSettingsCard(
               context,
@@ -171,7 +165,9 @@ class SettingsScreen extends StatelessWidget {
                   context,
                   icon: Icons.language,
                   title: l10n.language,
-                  subtitle: appProvider.language == 'tr' ? 'Türkçe' : 'English',
+                  subtitle: appProvider.language == 'tr'
+                      ? l10n.languageTurkish
+                      : l10n.languageEnglish,
                   onTap: () {
                     _showLanguageDialog(context, appProvider);
                   },
@@ -189,9 +185,7 @@ class SettingsScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-
-            // About Section
-            _buildSectionTitle(context, 'Hakkında'),
+            _buildSectionTitle(context, l10n.aboutSection),
             const SizedBox(height: 12),
             _buildSettingsCard(
               context,
@@ -218,14 +212,12 @@ class SettingsScreen extends StatelessWidget {
                 _buildSettingsItem(
                   context,
                   icon: Icons.description_outlined,
-                  title: 'Sürüm',
+                  title: l10n.version,
                   subtitle: '1.0.0',
                 ),
               ],
             ),
             const SizedBox(height: 24),
-
-            // Logout Button
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -292,7 +284,7 @@ class SettingsScreen extends StatelessWidget {
     VoidCallback? onTap,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return ListTile(
       leading: Container(
         padding: const EdgeInsets.all(8),
@@ -342,29 +334,43 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showEditProfileDialog(BuildContext context, AuthProvider authProvider) {
+    final l10n = context.l10n;
+
     final nameController = TextEditingController(text: authProvider.user?.name);
-    final phoneController = TextEditingController(text: authProvider.user?.phone);
+    final emailController =
+        TextEditingController(text: authProvider.user?.email);
+    final phoneController =
+        TextEditingController(text: authProvider.user?.phone);
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Profili Düzenle'),
+        title: Text(l10n.editProfile),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Ad Soyad',
-                prefixIcon: Icon(Icons.person_outline),
+              decoration: InputDecoration(
+                labelText: l10n.fullName,
+                prefixIcon: const Icon(Icons.person_outline),
               ),
             ),
             const SizedBox(height: 16),
             TextField(
+              controller: emailController,
+              decoration: InputDecoration(
+                labelText: l10n.email,
+                prefixIcon: const Icon(Icons.mail_outline),
+              ),
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 16),
+            TextField(
               controller: phoneController,
-              decoration: const InputDecoration(
-                labelText: 'Telefon',
-                prefixIcon: Icon(Icons.phone_outlined),
+              decoration: InputDecoration(
+                labelText: l10n.phone,
+                prefixIcon: const Icon(Icons.phone_outlined),
               ),
               keyboardType: TextInputType.phone,
             ),
@@ -373,21 +379,28 @@ class SettingsScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('İptal'),
+            child: Text(l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () {
+              final currentUser = authProvider.user;
+              final newName = nameController.text.trim();
+              final newEmail = emailController.text.trim();
+              final newPhone = phoneController.text.trim();
+
               authProvider.updateProfile(
-                name: nameController.text,
-                phone: phoneController.text,
+                name: newName.isEmpty ? currentUser?.name : newName,
+                email: newEmail.isEmpty ? currentUser?.email : newEmail,
+                phone: newPhone.isEmpty ? currentUser?.phone : newPhone,
               );
+
               Navigator.pop(context);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryBlue,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Kaydet'),
+            child: Text(l10n.save),
           ),
         ],
       ),
@@ -403,11 +416,11 @@ class SettingsScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: const Icon(Icons.lock_outline, color: AppColors.primaryBlue),
+              leading:
+                  const Icon(Icons.lock_outline, color: AppColors.primaryBlue),
               title: const Text('Şifre Değiştir'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Implement password change
               },
             ),
             ListTile(
@@ -415,7 +428,6 @@ class SettingsScreen extends StatelessWidget {
               title: const Text('Güvenlik Sorusu'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Implement security question change
               },
             ),
           ],
@@ -431,15 +443,17 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showLanguageDialog(BuildContext context, AppProvider appProvider) {
+    final l10n = context.l10n;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Dil Seçin'),
+        title: Text(l10n.languageSelectTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             RadioListTile<String>(
-              title: const Text('Türkçe'),
+              title: Text(l10n.languageTurkish),
               value: 'tr',
               groupValue: appProvider.language,
               onChanged: (value) {
@@ -448,7 +462,7 @@ class SettingsScreen extends StatelessWidget {
               },
             ),
             RadioListTile<String>(
-              title: const Text('English'),
+              title: Text(l10n.languageEnglish),
               value: 'en',
               groupValue: appProvider.language,
               onChanged: (value) {
@@ -463,15 +477,17 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showCurrencyDialog(BuildContext context, AppProvider appProvider) {
+    final l10n = context.l10n;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Para Birimi Seçin'),
+        title: Text(l10n.currencySelectTitle),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             RadioListTile<String>(
-              title: const Text('₺ Türk Lirası (TRY)'),
+              title: Text(l10n.currencyTryLabel),
               value: 'TRY',
               groupValue: appProvider.currency,
               onChanged: (value) {
@@ -480,7 +496,7 @@ class SettingsScreen extends StatelessWidget {
               },
             ),
             RadioListTile<String>(
-              title: const Text('\$ ABD Doları (USD)'),
+              title: Text(l10n.currencyUsdLabel),
               value: 'USD',
               groupValue: appProvider.currency,
               onChanged: (value) {
@@ -489,7 +505,7 @@ class SettingsScreen extends StatelessWidget {
               },
             ),
             RadioListTile<String>(
-              title: const Text('€ Euro (EUR)'),
+              title: Text(l10n.currencyEurLabel),
               value: 'EUR',
               groupValue: appProvider.currency,
               onChanged: (value) {
@@ -498,7 +514,7 @@ class SettingsScreen extends StatelessWidget {
               },
             ),
             RadioListTile<String>(
-              title: const Text('£ İngiliz Sterlini (GBP)'),
+              title: Text(l10n.currencyGbpLabel),
               value: 'GBP',
               groupValue: appProvider.currency,
               onChanged: (value) {
@@ -533,8 +549,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             SizedBox(height: 12),
             Text(
-              'OPBA, kişisel finans yönetiminizi kolaylaştırmak için '
-              'tasarlanmış açık kaynaklı bir mobil bankacılık uygulamasıdır.',
+              'OPBA, kişisel finans yönetiminizi kolaylaştırmak için tasarlanmış açık kaynaklı bir mobil bankacılık uygulamasıdır.',
               style: TextStyle(fontSize: 14),
             ),
             SizedBox(height: 12),
@@ -553,31 +568,31 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showLogoutDialog(BuildContext context, AuthProvider authProvider) {
+    final l10n = context.l10n;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Çıkış Yap'),
-        content: const Text('Hesabınızdan çıkış yapmak istediğinize emin misiniz?'),
+        title: Text(l10n.logoutTitle),
+        content: Text(l10n.logoutConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('İptal'),
+            child: Text(l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
               await authProvider.logout();
               if (context.mounted) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/login',
-                  (route) => false,
-                );
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/login', (route) => false);
               }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.error,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Çıkış Yap'),
+            child: Text(l10n.logout),
           ),
         ],
       ),

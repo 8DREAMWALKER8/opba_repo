@@ -12,8 +12,8 @@ class CreditScreen extends StatefulWidget {
 
 class _CreditScreenState extends State<CreditScreen> {
   int _currentIndex = 2;
-  
-  // Demo kredi faiz oranları
+
+  // demo kredi faiz oranları
   final List<Map<String, dynamic>> _loanRates = [
     {
       'bankName': 'Halkbank',
@@ -79,7 +79,8 @@ class _CreditScreenState extends State<CreditScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor:
+          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -115,7 +116,7 @@ class _CreditScreenState extends State<CreditScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Info Card
+            // bilgi kartı
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(16),
@@ -133,13 +134,14 @@ class _CreditScreenState extends State<CreditScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
-                      Icon(Icons.info_outline, color: Colors.white, size: 20),
-                      SizedBox(width: 8),
+                      const Icon(Icons.info_outline,
+                          color: Colors.white, size: 20),
+                      const SizedBox(width: 8),
                       Text(
-                        'İhtiyaç Kredisi Faiz Oranları',
-                        style: TextStyle(
+                        l10n.personalLoanRatesTitle,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
@@ -149,7 +151,7 @@ class _CreditScreenState extends State<CreditScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Aşağıda bankaların güncel ihtiyaç kredisi faiz oranlarını karşılaştırabilirsiniz.',
+                    l10n.personalLoanRatesDesc,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontSize: 13,
@@ -160,12 +162,12 @@ class _CreditScreenState extends State<CreditScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Section Title
+            // bölüm başlığı
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Banka Faiz Oranları',
+                  l10n.bankInterestRates,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -202,7 +204,7 @@ class _CreditScreenState extends State<CreditScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Loan Rates List
+            // kredi faiz oranları listesi
             ..._loanRates.map((rate) {
               return _buildLoanRateCard(
                 context,
@@ -216,7 +218,7 @@ class _CreditScreenState extends State<CreditScreen> {
 
             const SizedBox(height: 24),
 
-            // Calculator Button
+            // hesaplama butonu
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -225,7 +227,7 @@ class _CreditScreenState extends State<CreditScreen> {
                   _showCalculatorBottomSheet(context);
                 },
                 icon: const Icon(Icons.calculate),
-                label: const Text('Kredi Hesaplama'),
+                label: Text(l10n.loanCalculator),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.primaryBlue,
                   side: const BorderSide(color: AppColors.primaryBlue),
@@ -256,15 +258,15 @@ class _CreditScreenState extends State<CreditScreen> {
     required bool isBest,
     required bool isDark,
   }) {
+    final l10n = context.l10n;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark ? AppColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: isBest
-            ? Border.all(color: AppColors.success, width: 2)
-            : null,
+        border: isBest ? Border.all(color: AppColors.success, width: 2) : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
@@ -275,7 +277,7 @@ class _CreditScreenState extends State<CreditScreen> {
       ),
       child: Row(
         children: [
-          // Bank Icon
+          // banka ikonu
           Container(
             width: 48,
             height: 48,
@@ -290,8 +292,8 @@ class _CreditScreenState extends State<CreditScreen> {
             ),
           ),
           const SizedBox(width: 16),
-          
-          // Bank Name
+
+          // banka ismi
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -305,7 +307,7 @@ class _CreditScreenState extends State<CreditScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'İhtiyaç Kredisi',
+                  l10n.personalLoan,
                   style: TextStyle(
                     color: isDark
                         ? AppColors.textSecondaryDark
@@ -317,7 +319,7 @@ class _CreditScreenState extends State<CreditScreen> {
             ),
           ),
 
-          // Interest Rate
+          // faiz oranı
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -334,9 +336,9 @@ class _CreditScreenState extends State<CreditScreen> {
                         color: AppColors.success,
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      child: const Text(
-                        'EN İYİ',
-                        style: TextStyle(
+                      child: Text(
+                        l10n.best,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -354,7 +356,7 @@ class _CreditScreenState extends State<CreditScreen> {
                 ],
               ),
               Text(
-                'aylık faiz',
+                l10n.monthlyInterest,
                 style: TextStyle(
                   color: isDark
                       ? AppColors.textSecondaryDark
@@ -370,6 +372,8 @@ class _CreditScreenState extends State<CreditScreen> {
   }
 
   void _showCalculatorBottomSheet(BuildContext context) {
+    final l10n = context.l10n;
+
     final amountController = TextEditingController();
     final termController = TextEditingController(text: '12');
     double? monthlyPayment;
@@ -387,13 +391,15 @@ class _CreditScreenState extends State<CreditScreen> {
             void calculate() {
               final amount = double.tryParse(amountController.text);
               final term = int.tryParse(termController.text);
-              
+
               if (amount != null && term != null && amount > 0 && term > 0) {
-                // En düşük faiz oranı ile hesaplama
-                final rate = (_loanRates.first['interestRate'] as num).toDouble() / 100;
+                // en düşük faiz oranı ile hesaplama
+                final rate =
+                    (_loanRates.first['interestRate'] as num).toDouble() / 100;
                 final n = term;
-                final monthly = (amount * rate * _pow(1 + rate, n)) / (_pow(1 + rate, n) - 1);
-                
+                final monthly = (amount * rate * _pow(1 + rate, n)) /
+                    (_pow(1 + rate, n) - 1);
+
                 setModalState(() {
                   monthlyPayment = monthly;
                   totalPayment = monthly * n;
@@ -415,9 +421,9 @@ class _CreditScreenState extends State<CreditScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Kredi Hesaplama',
-                        style: TextStyle(
+                      Text(
+                        l10n.loanCalculator,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -429,31 +435,28 @@ class _CreditScreenState extends State<CreditScreen> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  
                   TextField(
                     controller: amountController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Kredi Tutarı',
+                    decoration: InputDecoration(
+                      labelText: l10n.loanAmount,
                       hintText: '100000',
                       suffixText: 'TL',
                     ),
                     onChanged: (_) => calculate(),
                   ),
                   const SizedBox(height: 16),
-                  
                   TextField(
                     controller: termController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Vade (Ay)',
+                    decoration: InputDecoration(
+                      labelText: l10n.loanTermMonths,
                       hintText: '12',
-                      suffixText: 'ay',
+                      suffixText: l10n.months,
                     ),
                     onChanged: (_) => calculate(),
                   ),
                   const SizedBox(height: 24),
-
                   if (monthlyPayment != null) ...[
                     Container(
                       width: double.infinity,
@@ -467,7 +470,9 @@ class _CreditScreenState extends State<CreditScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Aylık Taksit:'),
+                              Text(
+                                l10n.installmentMonthly,
+                              ),
                               Text(
                                 '${monthlyPayment!.toStringAsFixed(2)} TL',
                                 style: const TextStyle(
@@ -481,7 +486,9 @@ class _CreditScreenState extends State<CreditScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Toplam Ödeme:'),
+                              Text(
+                                l10n.totalPayment,
+                              ),
                               Text(
                                 '${totalPayment!.toStringAsFixed(2)} TL',
                                 style: const TextStyle(
@@ -521,7 +528,7 @@ class _CreditScreenState extends State<CreditScreen> {
         Navigator.pushReplacementNamed(context, '/expenses');
         break;
       case 2:
-        // Already on credit
+        // zaten kredili
         break;
     }
   }

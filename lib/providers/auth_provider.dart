@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/user_model.dart';
-import '../services/api_service.dart';
 
 enum AuthStatus { initial, authenticated, unauthenticated, loading }
 
@@ -14,7 +13,6 @@ class AuthProvider extends ChangeNotifier {
   String? _error;
 
   final _storage = const FlutterSecureStorage();
-  final _apiService = ApiService();
 
   AuthStatus get status => _status;
   User? get user => _user;
@@ -37,8 +35,6 @@ class AuthProvider extends ChangeNotifier {
 
       if (token != null && userId != null) {
         _token = token;
-        // TODO: Verify token with backend
-        // For now, we'll consider it valid
         _status = AuthStatus.authenticated;
       } else {
         _status = AuthStatus.unauthenticated;
@@ -50,21 +46,17 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Step 1: Login with username/email and password
   Future<bool> login(String emailOrUsername, String password) async {
     _status = AuthStatus.loading;
     _error = null;
     notifyListeners();
 
     try {
-      // Simulate API call
       await Future.delayed(const Duration(seconds: 1));
-      
-      // For demo purposes, accept any login
-      // In production, this would call the actual API
+
       _tempUserId = 'user_123';
       _securityQuestion = 'Annenizin kızlık soyadı nedir?';
-      
+
       _status = AuthStatus.unauthenticated;
       notifyListeners();
       return true;
@@ -76,17 +68,14 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // Step 2: Verify security question
   Future<bool> verifySecurityAnswer(String answer) async {
     _status = AuthStatus.loading;
     _error = null;
     notifyListeners();
 
     try {
-      // Simulate API call
       await Future.delayed(const Duration(seconds: 1));
 
-      // For demo purposes, accept any answer
       _token = 'demo_token_${DateTime.now().millisecondsSinceEpoch}';
       _user = User(
         id: _tempUserId,
@@ -113,7 +102,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // Register new user
   Future<bool> register({
     required String username,
     required String email,
@@ -127,7 +115,6 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Simulate API call
       await Future.delayed(const Duration(seconds: 1));
 
       _token = 'demo_token_${DateTime.now().millisecondsSinceEpoch}';
@@ -156,7 +143,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // Logout
   Future<void> logout() async {
     await _storage.deleteAll();
     _user = null;
@@ -167,9 +153,9 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Update user profile
   Future<bool> updateProfile({
     String? name,
+    String? email,
     String? phone,
     String? language,
     String? currency,
@@ -180,6 +166,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       _user = _user!.copyWith(
         name: name ?? _user!.name,
+        email: email ?? _user!.email,
         phone: phone ?? _user!.phone,
         language: language ?? _user!.language,
         currency: currency ?? _user!.currency,

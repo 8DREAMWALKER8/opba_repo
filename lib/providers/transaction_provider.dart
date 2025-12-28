@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/transection_model.dart';
+import '../models/transaction_model.dart';
 
 class TransactionProvider extends ChangeNotifier {
   List<Transaction> _transactions = [];
@@ -10,10 +10,8 @@ class TransactionProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  List<Transaction> get recentTransactions =>
-      _transactions.take(5).toList();
+  List<Transaction> get recentTransactions => _transactions.take(5).toList();
 
-  // Getter for category summaries (used in ExpensesScreen)
   List<CategorySummary> get categorySummaries => getCategorySummary();
 
   TransactionProvider() {
@@ -81,12 +79,12 @@ class TransactionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Get transactions by category
+  // işlemleri kategoriye göre görüntüle
   List<Transaction> getByCategory(TransactionCategory category) {
     return _transactions.where((t) => t.category == category).toList();
   }
 
-  // Get category summary for pie chart
+  // pasta grafiği için kategori özeti alma
   List<CategorySummary> getCategorySummary() {
     final Map<TransactionCategory, double> categoryTotals = {};
     double totalExpenses = 0;
@@ -106,26 +104,26 @@ class TransactionProvider extends ChangeNotifier {
       ));
     });
 
-    // Sort by amount descending
+    // miktara göre azalan sırada sırala
     summaries.sort((a, b) => b.amount.compareTo(a.amount));
     return summaries;
   }
 
-  // Get total expenses
+  // toplam gider'i getir
   double get totalExpenses {
     return _transactions
         .where((t) => t.isExpense)
         .fold(0.0, (sum, t) => sum + t.amount);
   }
 
-  // Get total income
+  // toplam geliri getir
   double get totalIncome {
     return _transactions
         .where((t) => t.isIncome)
         .fold(0.0, (sum, t) => sum + t.amount);
   }
 
-  // Get category total
+  // kategori toplamını al
   double getCategoryTotal(TransactionCategory category) {
     return _transactions
         .where((t) => t.category == category && t.isExpense)

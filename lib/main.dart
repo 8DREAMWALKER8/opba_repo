@@ -25,13 +25,13 @@ import 'screens/privacy_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Set preferred orientations
+
+  // tercih edilen seçenekleri ayarla
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  
+
   runApp(const OpbaApp());
 }
 
@@ -55,7 +55,8 @@ class OpbaApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
-            themeMode: appProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            themeMode:
+                appProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
             locale: Locale(appProvider.language),
             supportedLocales: const [
               Locale('tr'),

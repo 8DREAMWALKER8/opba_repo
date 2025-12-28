@@ -7,7 +7,8 @@ import '../theme/app_theme.dart';
 import '../utils/app_localizations.dart';
 import '../widgets/bottom_nav_bar.dart';
 import '../widgets/credit_card_widget.dart';
-import '../models/transection_model.dart';
+import '../models/transaction_model.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -27,17 +28,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final appProvider = Provider.of<AppProvider>(context);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor:
+          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: isDark ? Colors.white : AppColors.primaryBlue,
-          ),
-          onPressed: () {},
-        ),
+        automaticallyImplyLeading: false,
         title: Text(
           l10n.accounts,
           style: TextStyle(
@@ -63,7 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header with add account button
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -89,15 +84,18 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            // Account Cards
+
+            // hesap kartları
             ...accountProvider.accounts.map((account) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: CreditCardWidget(account: account),
               );
             }),
+
             const SizedBox(height: 8),
-            // Total Balance
+
+            // toplam bakiye
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -136,8 +134,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 24),
-            // Recent Transactions
+
+            // son işlemler
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -154,7 +154,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const SizedBox(height: 12),
-            // Transactions list
+
+            // işlemler listesi
             ...transactionProvider.recentTransactions.map((transaction) {
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
@@ -242,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _navigateToScreen(int index) {
     switch (index) {
       case 0:
-        // Already on home
+        // zaten ana sayfada
         break;
       case 1:
         Navigator.pushNamed(context, '/expenses');
@@ -262,8 +263,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String _getMonthName(int month) {
     const months = [
-      'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
-      'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+      'Ocak',
+      'Şubat',
+      'Mart',
+      'Nisan',
+      'Mayıs',
+      'Haziran',
+      'Temmuz',
+      'Ağustos',
+      'Eylül',
+      'Ekim',
+      'Kasım',
+      'Aralık'
     ];
     return months[month - 1];
   }

@@ -20,7 +20,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
   final _cardHolderController = TextEditingController();
   final _expiryController = TextEditingController();
   final _balanceController = TextEditingController();
-  
+
   String? _selectedBank;
   bool _isLoading = false;
 
@@ -66,7 +66,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
     if (_selectedBank == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Lütfen bir banka seçin'),
+          content: Text('Lütfen bir banka seçin.'),
           backgroundColor: AppColors.error,
         ),
       );
@@ -75,8 +75,9 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
 
     setState(() => _isLoading = true);
 
-    final accountProvider = Provider.of<AccountProvider>(context, listen: false);
-    
+    final accountProvider =
+        Provider.of<AccountProvider>(context, listen: false);
+
     final success = await accountProvider.addAccount(
       bankName: _selectedBank!,
       cardNumber: _cardNumberController.text.replaceAll(' ', ''),
@@ -91,7 +92,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Hesap başarıyla eklendi'),
+          content: Text('Hesap başarıyla eklendi.'),
           backgroundColor: AppColors.success,
         ),
       );
@@ -105,7 +106,8 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor:
+          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -132,7 +134,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Bank Selection
+              // banka seç
               _buildLabel(l10n.bankSelect),
               const SizedBox(height: 8),
               Container(
@@ -140,7 +142,9 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   color: isDark ? AppColors.cardDark : Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                    color: isDark
+                        ? const Color(0xFF334155)
+                        : const Color(0xFFE2E8F0),
                   ),
                 ),
                 child: DropdownButtonFormField<String>(
@@ -173,7 +177,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Card Number
+              // kart numarası
               _buildLabel(l10n.cardNumber),
               const SizedBox(height: 8),
               TextFormField(
@@ -194,7 +198,8 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   if (formatted != value) {
                     _cardNumberController.value = TextEditingValue(
                       text: formatted,
-                      selection: TextSelection.collapsed(offset: formatted.length),
+                      selection:
+                          TextSelection.collapsed(offset: formatted.length),
                     );
                   }
                 },
@@ -228,7 +233,8 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   if (formatted != value) {
                     _ibanController.value = TextEditingValue(
                       text: formatted,
-                      selection: TextSelection.collapsed(offset: formatted.length),
+                      selection:
+                          TextSelection.collapsed(offset: formatted.length),
                     );
                   }
                 },
@@ -245,7 +251,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Card Holder Name
+              // kart sahibi adı
               _buildLabel('Kart Sahibi'),
               const SizedBox(height: 8),
               TextFormField(
@@ -266,7 +272,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Expiry Date and Balance Row
+              // son kullanma tarihi ve bakiye satırı
               Row(
                 children: [
                   Expanded(
@@ -286,12 +292,14 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                             hintText: 'AA/YY',
                             prefixIcon: const Icon(Icons.calendar_today),
                             filled: true,
-                            fillColor: isDark ? AppColors.cardDark : Colors.white,
+                            fillColor:
+                                isDark ? AppColors.cardDark : Colors.white,
                           ),
                           onChanged: (value) {
                             if (value.length == 2 && !value.contains('/')) {
                               _expiryController.text = '$value/';
-                              _expiryController.selection = TextSelection.collapsed(
+                              _expiryController.selection =
+                                  TextSelection.collapsed(
                                 offset: _expiryController.text.length,
                               );
                             }
@@ -321,7 +329,8 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                             prefixIcon: const Icon(Icons.attach_money),
                             suffixText: 'TL',
                             filled: true,
-                            fillColor: isDark ? AppColors.cardDark : Colors.white,
+                            fillColor:
+                                isDark ? AppColors.cardDark : Colors.white,
                           ),
                         ),
                       ],
@@ -331,7 +340,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
               ),
               const SizedBox(height: 32),
 
-              // Preview Card
+              // önizleme kartı
               if (_selectedBank != null) ...[
                 Text(
                   'Önizleme',
@@ -344,7 +353,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                 const SizedBox(height: 24),
               ],
 
-              // Submit Button
+              // gönder butonu
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -364,7 +373,8 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                           width: 24,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                       : Text(
@@ -479,7 +489,9 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                 ),
               ),
               Text(
-                _expiryController.text.isEmpty ? 'AA/YY' : _expiryController.text,
+                _expiryController.text.isEmpty
+                    ? 'AA/YY'
+                    : _expiryController.text,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,

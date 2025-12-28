@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
-  // Primary Colors
+  // ana renkler
   static const Color primaryBlue = Color(0xFF1E3A8A);
   static const Color primaryBlueLight = Color(0xFF3B82F6);
   static const Color primaryGradientStart = Color(0xFF1E3A8A);
   static const Color primaryGradientEnd = Color(0xFF3B82F6);
-  
-  // Background Colors
+
+  // arkaplan renkleri
   static const Color backgroundLight = Color(0xFFF8FAFC);
   static const Color backgroundDark = Color(0xFF0F172A);
   static const Color cardLight = Color(0xFFFFFFFF);
   static const Color cardDark = Color(0xFF1E293B);
-  
-  // Text Colors
+
+  // metin renkleri
   static const Color textPrimaryLight = Color(0xFF1E293B);
   static const Color textSecondaryLight = Color(0xFF64748B);
   static const Color textPrimaryDark = Color(0xFFF1F5F9);
   static const Color textSecondaryDark = Color(0xFF94A3B8);
-  
-  // Category Colors
+
+  // kategori renkleri
   static const Color categoryMarket = Color(0xFF3B82F6);
   static const Color categoryBills = Color(0xFF10B981);
   static const Color categoryEntertainment = Color(0xFF8B5CF6);
@@ -29,24 +29,24 @@ class AppColors {
   static const Color categoryHealth = Color(0xFF06B6D4);
   static const Color categoryShopping = Color(0xFFEC4899);
   static const Color categoryOther = Color(0xFF6B7280);
-  
-  // Status Colors
+
+  // durum renkleri
   static const Color success = Color(0xFF10B981);
   static const Color warning = Color(0xFFF59E0B);
   static const Color error = Color(0xFFEF4444);
   static const Color info = Color(0xFF3B82F6);
-  
-  // Card Gradient Colors
+
+  // kart gradyan renkleri
   static const List<Color> blueCardGradient = [
     Color(0xFF1E3A8A),
     Color(0xFF3B82F6),
   ];
-  
+
   static const List<Color> greenCardGradient = [
     Color(0xFF059669),
     Color(0xFF10B981),
   ];
-  
+
   static const List<Color> purpleCardGradient = [
     Color(0xFF7C3AED),
     Color(0xFFA78BFA),
@@ -166,7 +166,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.error),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         labelStyle: GoogleFonts.inter(
           fontSize: 14,
           color: AppColors.textSecondaryLight,
@@ -199,7 +200,8 @@ class AppTheme {
         background: AppColors.backgroundDark,
       ),
       scaffoldBackgroundColor: AppColors.backgroundDark,
-      textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
+      textTheme:
+          GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
         displayLarge: GoogleFonts.inter(
           fontSize: 32,
           fontWeight: FontWeight.bold,
@@ -292,13 +294,15 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primaryBlueLight, width: 2),
+          borderSide:
+              const BorderSide(color: AppColors.primaryBlueLight, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.error),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         labelStyle: GoogleFonts.inter(
           fontSize: 14,
           color: AppColors.textSecondaryDark,

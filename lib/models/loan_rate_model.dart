@@ -21,19 +21,17 @@ class LoanRate {
     this.lastUpdate,
   });
 
-  // Calculate monthly payment for a given loan amount
+  // belirli bir kredi tutarı için aylık ödemeyi hesaplama
   double calculateMonthlyPayment(double principal) {
     if (interestRate == 0) {
       return principal / termMonths;
     }
     final monthlyRate = interestRate / 100 / 12;
-    final factor = (monthlyRate * 
-        _pow(1 + monthlyRate, termMonths)) / 
+    final factor = (monthlyRate * _pow(1 + monthlyRate, termMonths)) /
         (_pow(1 + monthlyRate, termMonths) - 1);
     return principal * factor;
   }
 
-  // Simple pow function
   double _pow(double base, int exponent) {
     double result = 1.0;
     for (int i = 0; i < exponent; i++) {
@@ -93,9 +91,8 @@ class CurrencyRate {
       name: json['name'] ?? '',
       buyRate: (json['buyRate'] ?? 0).toDouble(),
       sellRate: (json['sellRate'] ?? 0).toDouble(),
-      asOf: json['asOf'] != null
-          ? DateTime.parse(json['asOf'])
-          : DateTime.now(),
+      asOf:
+          json['asOf'] != null ? DateTime.parse(json['asOf']) : DateTime.now(),
     );
   }
 

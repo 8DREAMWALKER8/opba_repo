@@ -1,4 +1,4 @@
-import '../models/transection_model.dart';
+import 'transaction_model.dart';
 
 class Budget {
   final String? id;
@@ -6,7 +6,7 @@ class Budget {
   final TransactionCategory category;
   final double limitAmount;
   final double spentAmount;
-  final String month; // Format: '2024-01'
+  final String month; // format: '2024-01'
   final bool alertSent80;
   final bool alertSent100;
   final DateTime? createdAt;
@@ -45,9 +45,8 @@ class Budget {
       month: json['month'] ?? '',
       alertSent80: json['alertSent80'] ?? false,
       alertSent100: json['alertSent100'] ?? false,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : null,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );
   }
 

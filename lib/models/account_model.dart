@@ -29,7 +29,7 @@ class Account {
     this.createdAt,
   });
 
-  // Masked card number for display
+  // görüntülemek için gizlenmiş kart numarası
   String get maskedCardNumber {
     if (cardNumber.length >= 16) {
       final cleaned = cardNumber.replaceAll(' ', '');
@@ -38,10 +38,12 @@ class Account {
     return cardNumber;
   }
 
-  // Get last 4 digits
+  // son 4 rakamı al
   String get lastFourDigits {
     final cleaned = cardNumber.replaceAll(' ', '');
-    return cleaned.length >= 4 ? cleaned.substring(cleaned.length - 4) : cleaned;
+    return cleaned.length >= 4
+        ? cleaned.substring(cleaned.length - 4)
+        : cleaned;
   }
 
   factory Account.fromJson(Map<String, dynamic> json) {
@@ -60,9 +62,8 @@ class Account {
       lastSyncAt: json['lastSyncAt'] != null
           ? DateTime.parse(json['lastSyncAt'])
           : null,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : null,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );
   }
 
@@ -115,7 +116,7 @@ class Account {
   }
 }
 
-// Bank list
+// banka listesi
 class Bank {
   final String id;
   final String name;

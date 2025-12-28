@@ -34,9 +34,8 @@ class User {
       currency: json['currency'] ?? 'TRY',
       theme: json['theme'] ?? 'light',
       securityQuestion: json['securityQuestion'] ?? '',
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : null,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );
   }
 

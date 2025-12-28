@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    
+
     if (authProvider.isAuthenticated) {
       Navigator.pushReplacementNamed(context, '/home');
     } else {
@@ -86,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Logo
+                      // logo
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -103,14 +103,14 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // Lock icon
+                            // kilit ikonu
                             const Icon(
                               Icons.lock,
                               color: AppColors.primaryBlue,
                               size: 32,
                             ),
                             const SizedBox(width: 8),
-                            // PBA text
+                            // PBA metni
                             Text(
                               'PBA',
                               style: TextStyle(
@@ -121,7 +121,7 @@ class _SplashScreenState extends State<SplashScreen>
                               ),
                             ),
                             const SizedBox(width: 8),
-                            // Bank icon
+                            // banka ikonu
                             const Icon(
                               Icons.account_balance,
                               color: AppColors.primaryBlue,
@@ -131,7 +131,7 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                       ),
                       const SizedBox(height: 30),
-                      // App name
+                      // uygulama ismi
                       const Text(
                         'Open Personal Banking',
                         style: TextStyle(
@@ -142,7 +142,7 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                       ),
                       const SizedBox(height: 50),
-                      // Loading indicator
+                      // yükleme göstergesi
                       const SizedBox(
                         width: 40,
                         height: 40,

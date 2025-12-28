@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/budget_provider.dart';
-import '../providers/transaction_provider.dart';
-import '../models/transection_model.dart';
+import '../models/transaction_model.dart';
 import '../theme/app_theme.dart';
 import '../utils/app_localizations.dart';
 
@@ -84,10 +83,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
     final l10n = context.l10n;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final budgetProvider = Provider.of<BudgetProvider>(context);
-    final transactionProvider = Provider.of<TransactionProvider>(context);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor:
+          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -112,7 +111,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Current Budgets Section
+            // mevcut bütçeler bölümü
             Text(
               'Mevcut Bütçeler',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -120,7 +119,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
             ),
             const SizedBox(height: 16),
-            
+
             if (budgetProvider.budgets.isEmpty)
               Container(
                 width: double.infinity,
@@ -155,7 +154,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
             const SizedBox(height: 32),
 
-            // Add/Edit Budget Section
+            // bütçe bölümünü ekle / düzenle
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -180,7 +179,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Category Selection
+                  // kategori seçimi
                   _buildLabel(l10n.selectCategory),
                   const SizedBox(height: 8),
                   Wrap(
@@ -191,10 +190,12 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       return GestureDetector(
                         onTap: () {
                           setState(() => _selectedCategory = category);
-                          // Pre-fill existing limit if any
-                          final existingBudget = budgetProvider.getBudgetForCategory(category);
+                          // varsa mevcut limiti önceden doldur
+                          final existingBudget =
+                              budgetProvider.getBudgetForCategory(category);
                           if (existingBudget != null) {
-                            _limitController.text = existingBudget.limitAmount.toStringAsFixed(0);
+                            _limitController.text =
+                                existingBudget.limitAmount.toStringAsFixed(0);
                           } else {
                             _limitController.clear();
                           }
@@ -220,13 +221,16 @@ class _BudgetScreenState extends State<BudgetScreen> {
                               Icon(
                                 category.icon,
                                 size: 16,
-                                color: isSelected ? Colors.white : category.color,
+                                color:
+                                    isSelected ? Colors.white : category.color,
                               ),
                               const SizedBox(width: 6),
                               Text(
                                 category.name,
                                 style: TextStyle(
-                                  color: isSelected ? Colors.white : category.color,
+                                  color: isSelected
+                                      ? Colors.white
+                                      : category.color,
                                   fontWeight: FontWeight.w500,
                                   fontSize: 13,
                                 ),
@@ -239,7 +243,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Limit Input
+                  // limit girişi
                   _buildLabel(l10n.setLimit),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -257,7 +261,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Submit Button
+                  // gönder butonu
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -306,7 +310,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
   }) {
     final progress = budget.progress;
     final percentage = budget.percentage;
-    
+
     Color progressColor;
     if (percentage >= 100) {
       progressColor = AppColors.error;
@@ -386,9 +390,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: (progress > 1.0 ? 1.0 : progress).toDouble(),
-              backgroundColor: isDark
-                  ? AppColors.backgroundDark
-                  : const Color(0xFFE2E8F0),
+              backgroundColor:
+                  isDark ? AppColors.backgroundDark : const Color(0xFFE2E8F0),
               valueColor: AlwaysStoppedAnimation<Color>(progressColor),
               minHeight: 8,
             ),

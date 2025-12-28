@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/account_model.dart';
-import '../services/api_service.dart';
 
 class AccountProvider extends ChangeNotifier {
   List<Account> _accounts = [];
@@ -20,7 +19,7 @@ class AccountProvider extends ChangeNotifier {
   }
 
   void _loadDemoAccounts() {
-    // Demo hesapları yükle
+    // demo hesapları yükle
     _accounts = [
       Account(
         id: 'acc_1',
@@ -54,9 +53,9 @@ class AccountProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Simulate API call
+      // API çağrısını simüle et
       await Future.delayed(const Duration(seconds: 1));
-      // _accounts would be loaded from API
+      // _accounts API'den yüklenecek
       _isLoading = false;
       notifyListeners();
     } catch (e) {

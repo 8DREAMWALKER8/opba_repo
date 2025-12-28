@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import '../providers/transaction_provider.dart';
-import '../providers/app_provider.dart';
-import '../models/transection_model.dart';
+import '../models/transaction_model.dart';
 import '../theme/app_theme.dart';
 import '../utils/app_localizations.dart';
 import '../widgets/bottom_nav_bar.dart';
@@ -48,12 +47,12 @@ class _ExpensesScreenState extends State<ExpensesScreen>
     final l10n = context.l10n;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final transactionProvider = Provider.of<TransactionProvider>(context);
-    final appProvider = Provider.of<AppProvider>(context);
 
     final categorySummaries = transactionProvider.categorySummaries;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+      backgroundColor:
+          isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -89,7 +88,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Total Expenses Card
+            // toplam giderler kartı
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -107,9 +106,9 @@ class _ExpensesScreenState extends State<ExpensesScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Toplam Harcama',
-                    style: TextStyle(
+                  Text(
+                    l10n.translate('total_expenses'),
+                    style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 14,
                     ),
@@ -125,7 +124,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Bu ay',
+                    l10n.translate('this_month'),
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.7),
                       fontSize: 12,
@@ -135,8 +134,8 @@ class _ExpensesScreenState extends State<ExpensesScreen>
               ),
             ),
             const SizedBox(height: 24),
-            
-            // Pie Chart
+
+            // pasta grafiği
             if (categorySummaries.isNotEmpty) ...[
               AnimatedBuilder(
                 animation: _animation,
@@ -170,23 +169,24 @@ class _ExpensesScreenState extends State<ExpensesScreen>
                       color: AppColors.textSecondaryLight.withOpacity(0.5),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
-                      'Henüz harcama verisi yok',
-                      style: TextStyle(color: AppColors.textSecondaryLight),
+                    Text(
+                      l10n.translate('no_expense_data'),
+                      style:
+                          const TextStyle(color: AppColors.textSecondaryLight),
                     ),
                   ],
                 ),
               ),
-            
-            // Category Legend
+
+            // kategori açıklaması
             Text(
-              'Kategoriler',
+              l10n.translate('categories_title'),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
             ),
             const SizedBox(height: 16),
-            
+
             ...categorySummaries.map((summary) {
               return _buildCategoryItem(
                 context,
@@ -196,10 +196,10 @@ class _ExpensesScreenState extends State<ExpensesScreen>
                 currencySymbol: 'TL',
               );
             }),
-            
+
             const SizedBox(height: 24),
-            
-            // Budget Management Button
+
+            // bütçe yönetimi butonu
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -244,8 +244,9 @@ class _ExpensesScreenState extends State<ExpensesScreen>
     required double percentage,
     required String currencySymbol,
   }) {
+    final l10n = context.l10n;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -262,7 +263,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
       ),
       child: Row(
         children: [
-          // Color indicator
+          // renk göstergesi
           Container(
             width: 40,
             height: 40,
@@ -277,13 +278,13 @@ class _ExpensesScreenState extends State<ExpensesScreen>
             ),
           ),
           const SizedBox(width: 12),
-          // Category name
+          // kategori ismi
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  category.name,
+                  category.localizedName(l10n),
                   style: TextStyle(
                     color: isDark ? Colors.white : Colors.black87,
                     fontSize: 15,
@@ -302,7 +303,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
               ],
             ),
           ),
-          // Amount
+          // miktar
           Text(
             '${_formatNumber(amount)} $currencySymbol',
             style: TextStyle(
@@ -322,7 +323,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
         Navigator.pushReplacementNamed(context, '/home');
         break;
       case 1:
-        // Already on expenses
+        // masraflar zaten dahil
         break;
       case 2:
         Navigator.pushReplacementNamed(context, '/credit');
@@ -338,7 +339,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
   }
 }
 
-// Custom Pie Chart Painter
+// özel pasta grafiği çizimi
 class PieChartPainter extends CustomPainter {
   final List<CategorySummary> categories;
   final double animationValue;
@@ -355,17 +356,18 @@ class PieChartPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = math.min(size.width, size.height) / 2;
     final innerRadius = radius * 0.6;
-    
+
     double startAngle = -math.pi / 2;
-    
+
     for (var category in categories) {
-      final sweepAngle = (category.percentage / 100) * 2 * math.pi * animationValue;
-      
+      final sweepAngle =
+          (category.percentage / 100) * 2 * math.pi * animationValue;
+
       final paint = Paint()
         ..color = category.category.color
         ..style = PaintingStyle.fill;
-      
-      // Draw arc
+
+      // yay çizimi
       final path = Path()
         ..moveTo(
           center.dx + innerRadius * math.cos(startAngle),
@@ -392,15 +394,15 @@ class PieChartPainter extends CustomPainter {
           false,
         )
         ..close();
-      
+
       canvas.drawPath(path, paint);
-      
-      // Add white separator line
+
+      // beyaz ayırıcı çizgi ekle
       final separatorPaint = Paint()
         ..color = isDark ? AppColors.backgroundDark : Colors.white
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2;
-      
+
       canvas.drawLine(
         Offset(
           center.dx + innerRadius * math.cos(startAngle),
@@ -412,15 +414,15 @@ class PieChartPainter extends CustomPainter {
         ),
         separatorPaint,
       );
-      
+
       startAngle += sweepAngle;
     }
-    
-    // Draw inner circle (donut hole)
+
+    // iç daireyi çiz
     final innerCirclePaint = Paint()
       ..color = isDark ? AppColors.backgroundDark : Colors.white
       ..style = PaintingStyle.fill;
-    
+
     canvas.drawCircle(center, innerRadius - 5, innerCirclePaint);
   }
 

@@ -81,10 +81,10 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 60),
-                  // Logo
+                  // logo
                   const OpbaLogo(),
                   const SizedBox(height: 40),
-                  // Welcome Card
+                  // hoşgeldiniz kartı
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                         ),
                         const SizedBox(height: 24),
-                        // Email field
+                        // e-posta alanı
                         TextFormField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
@@ -133,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         const SizedBox(height: 16),
-                        // Password field
+                        // şifre alanı
                         TextFormField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
@@ -166,13 +166,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                         const SizedBox(height: 8),
-                        // Forgot password
+                        // şifremi unuttum
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: () {
-                              // TODO: Implement forgot password
-                            },
+                            onPressed: () {},
                             child: Text(
                               l10n.forgotPassword,
                               style: const TextStyle(
@@ -182,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        // Login button
+                        // giriş yap butonu
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
@@ -218,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  // Register link
+                  // kayıt ol bağlantısı
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

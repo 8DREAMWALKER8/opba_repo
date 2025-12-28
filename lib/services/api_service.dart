@@ -3,17 +3,17 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiService {
-  // Base URL - will be configured for production
+  // base url
   static const String baseUrl = 'http://localhost:5000/api';
-  
+
   final _storage = const FlutterSecureStorage();
 
-  // Get auth token
+  // kimlik doğrulama token'ı al
   Future<String?> _getToken() async {
     return await _storage.read(key: 'auth_token');
   }
 
-  // Get headers
+  // headers'ı al
   Future<Map<String, String>> _getHeaders() async {
     final token = await _getToken();
     return {
@@ -22,7 +22,7 @@ class ApiService {
     };
   }
 
-  // Generic GET request
+  // generic get isteği
   Future<dynamic> get(String endpoint) async {
     try {
       final headers = await _getHeaders();
@@ -36,7 +36,7 @@ class ApiService {
     }
   }
 
-  // Generic POST request
+  // generic post isteği
   Future<dynamic> post(String endpoint, Map<String, dynamic> data) async {
     try {
       final headers = await _getHeaders();
@@ -51,7 +51,7 @@ class ApiService {
     }
   }
 
-  // Generic PUT request
+  // generic put isteği
   Future<dynamic> put(String endpoint, Map<String, dynamic> data) async {
     try {
       final headers = await _getHeaders();
@@ -66,7 +66,7 @@ class ApiService {
     }
   }
 
-  // Generic DELETE request
+  // generic delete isteği
   Future<dynamic> delete(String endpoint) async {
     try {
       final headers = await _getHeaders();
@@ -80,7 +80,7 @@ class ApiService {
     }
   }
 
-  // Handle response
+  // yanıtı işle
   dynamic _handleResponse(http.Response response) {
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (response.body.isNotEmpty) {
@@ -97,7 +97,7 @@ class ApiService {
     }
   }
 
-  // Auth endpoints
+  // kimlik doğrulama endpoint'leri
   Future<dynamic> login(String emailOrUsername, String password) async {
     return post('/auth/login', {
       'email': emailOrUsername,
@@ -105,8 +105,7 @@ class ApiService {
     });
   }
 
-  Future<dynamic> verifySecurityQuestion(
-      String userId, String answer) async {
+  Future<dynamic> verifySecurityQuestion(String userId, String answer) async {
     return post('/auth/verify-security', {
       'userId': userId,
       'answer': answer,
@@ -117,7 +116,7 @@ class ApiService {
     return post('/auth/register', userData);
   }
 
-  // Account endpoints
+  // hesap endpoint'leri
   Future<dynamic> getAccounts() async {
     return get('/accounts');
   }
@@ -126,7 +125,7 @@ class ApiService {
     return post('/accounts', accountData);
   }
 
-  // Transaction endpoints
+  // işlem endpoint'leri
   Future<dynamic> getTransactions({String? accountId}) async {
     final endpoint = accountId != null
         ? '/transactions?accountId=$accountId'
@@ -138,7 +137,7 @@ class ApiService {
     return get('/transactions/summary');
   }
 
-  // Budget endpoints
+  // bütçe endpoint'leri
   Future<dynamic> getBudgets() async {
     return get('/budgets');
   }
@@ -147,7 +146,7 @@ class ApiService {
     return post('/budgets', budgetData);
   }
 
-  // Loan endpoints
+  // kredi endpoint'leri
   Future<dynamic> getLoanRates() async {
     return get('/loans/rates');
   }
@@ -156,13 +155,12 @@ class ApiService {
     return get('/loans/compare');
   }
 
-  // Currency endpoints
+  // currency endpoint'leri
   Future<dynamic> getCurrencyRates() async {
     return get('/currency/rates');
   }
 
-  Future<dynamic> convertCurrency(
-      double amount, String from, String to) async {
+  Future<dynamic> convertCurrency(double amount, String from, String to) async {
     return get('/currency/convert?amount=$amount&from=$from&to=$to');
   }
 }

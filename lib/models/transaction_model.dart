@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../utils/app_localizations.dart';
 
 enum TransactionType { income, expense, transfer }
 
@@ -64,6 +65,32 @@ extension TransactionCategoryExtension on TransactionCategory {
         return 'Transfer';
       case TransactionCategory.other:
         return 'Other';
+    }
+  }
+
+  // uygulama dili neyse ona göre kategori adını döndür
+  String localizedName(AppLocalizations l10n) {
+    switch (this) {
+      case TransactionCategory.market:
+        return l10n.translate('category_market');
+      case TransactionCategory.bills:
+        return l10n.translate('category_bills');
+      case TransactionCategory.entertainment:
+        return l10n.translate('category_entertainment');
+      case TransactionCategory.transport:
+        return l10n.translate('category_transport');
+      case TransactionCategory.food:
+        return l10n.translate('category_food');
+      case TransactionCategory.health:
+        return l10n.translate('category_health');
+      case TransactionCategory.shopping:
+        return l10n.translate('category_shopping');
+      case TransactionCategory.salary:
+        return l10n.locale.languageCode == 'en' ? 'Salary' : 'Maaş';
+      case TransactionCategory.transfer:
+        return l10n.locale.languageCode == 'en' ? 'Transfer' : 'Transfer';
+      case TransactionCategory.other:
+        return l10n.translate('category_other');
     }
   }
 
@@ -166,11 +193,11 @@ class Transaction {
       currency: json['currency'] ?? 'TRY',
       type: _parseTransactionType(json['type']),
       category: _parseCategory(json['category']),
-      date: json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
+      date:
+          json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
       isRecurring: json['isRecurring'] ?? false,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : null,
+      createdAt:
+          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );
   }
 
@@ -234,7 +261,7 @@ class Transaction {
   }
 }
 
-// Category summary for expense chart
+// expense tablosu için kategori özeti
 class CategorySummary {
   final TransactionCategory category;
   final double amount;
