@@ -1,0 +1,21 @@
+class TcmbXmlParser {
+  parse(xml) {
+    const usdBlock = xml.match(/<Currency[^>]*CurrencyCode="USD"[\s\S]*?<\/Currency>/);
+    const eurBlock = xml.match(/<Currency[^>]*CurrencyCode="EUR"[\s\S]*?<\/Currency>/);
+
+    if (!usdBlock || !eurBlock) throw new Error("TCMB XML içinde USD/EUR bulunamadı");
+
+    const getRate = (block) => {
+      const selling = block[0].match(/<ForexSelling>(.*?)<\/ForexSelling>/)?.[1];
+      const buying = block[0].match(/<ForexBuying>(.*?)<\/ForexBuying>/)?.[1];
+      const val = (selling || buying || "").trim().replace(",", ".");
+      const num = Number(val);
+      if (!Number.isFinite(num) || num <= 0) throw new Error("Kur parse edilemedi");
+      return num;
+    };
+
+    return { USD: getRate(usdBlock), EUR: getRate(eurBlock), TRY: 1 };
+  }
+}
+
+module.exports = TcmbXmlParser;

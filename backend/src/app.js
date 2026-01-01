@@ -16,7 +16,28 @@ const fxRateRoutes = require("./routes/fxRateRoutes");
 const interestRatesRoutes = require("./routes/interestRates.routes");
 const loanCalcRoutes = require("./routes/loanCalc.routes");
 
+// fxrates wiring (API için)
+const SyncTcbmRates = require("./modules/fxrates/application/usecases/SyncTcbmRates");
+const AxiosHttpClient = require("./modules/fxrates/infrastructure/services/AxiosHttpClient");
+const TcmbXmlParser = require("./modules/fxrates/infrastructure/services/TcmbXmlParser");
+const FxRateRepositoryMongo = require("./modules/fxrates/infrastructure/persistence/repositories/FxRateRepositoryMongo");
+const makeFxRatesController = require("./modules/fxrates/presentation/controller");
+const makeFxRatesRoutes = require("./modules/fxrates/presentation/routes");
+
+
 const app = express();
+
+const fxRateRepo = new FxRateRepositoryMongo();
+const syncTcbmRates = new SyncTcbmRates({
+  httpClient: new AxiosHttpClient(),
+  xmlParser: new TcmbXmlParser(),
+  fxRateRepo,
+  tcmbUrl: process.env.TCMB_URL,
+});
+
+const fxController = makeFxRatesController({ syncTcbmRates, fxRateRepo });
+const fxRoutes = makeFxRatesRoutes(fxController);
+
 
 app.use(helmet());
 app.use(cors());
@@ -30,7 +51,7 @@ app.use("/transactions", transactionsRoutes);
 app.use("/budgets", budgetsRoutes);
 app.use("/auth", passwordResetRoutes);
 app.use("/notifications", notificationsRoutes);
-app.use("/api/fx", fxRateRoutes);
+app.use("/api/fx", fxRoutes);
 app.use("/api/interest-rates", interestRatesRoutes);
 app.use("/api/loan", loanCalcRoutes);
 
