@@ -2,10 +2,10 @@ const cron = require("node-cron");
 const axios = require("axios");
 const FxRate = require("../models/FxRate");
 
-console.log("fxRatesJob yüklendi");
+const TCMB_URL = process.env.TCMB_URL;
 
-// TCMB (XML) - güncel kurlar
-const TCMB_URL = "https://www.tcmb.gov.tr/kurlar/today.xml";
+console.log("fxRatesJob yüklendi");
+console.log("TCMB_URL:", TCMB_URL);
 
 // "2025-12-24" gibi date string üretelim (TR saatine yakın olsun diye sadece gün bazlı)
 function todayKey() {

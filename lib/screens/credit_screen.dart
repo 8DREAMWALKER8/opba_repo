@@ -19,56 +19,56 @@ class _CreditScreenState extends State<CreditScreen> {
       'bankName': 'Halkbank',
       'bankCode': 'halkbank',
       'interestRate': 3.89,
-      'color': Color(0xFF0066B3),
+      'color': const Color(0xFF0066B3),
       'isBest': true,
     },
     {
       'bankName': 'Vakıfbank',
       'bankCode': 'vakifbank',
       'interestRate': 3.95,
-      'color': Color(0xFF003366),
+      'color': const Color(0xFF003366),
       'isBest': false,
     },
     {
       'bankName': 'Ziraat Bankası',
       'bankCode': 'ziraat',
       'interestRate': 3.99,
-      'color': Color(0xFF1A5F2A),
+      'color': const Color(0xFF1A5F2A),
       'isBest': false,
     },
     {
       'bankName': 'İş Bankası',
       'bankCode': 'isbank',
       'interestRate': 4.09,
-      'color': Color(0xFF0A4D92),
+      'color': const Color(0xFF0A4D92),
       'isBest': false,
     },
     {
       'bankName': 'Akbank',
       'bankCode': 'akbank',
       'interestRate': 4.15,
-      'color': Color(0xFFE30613),
+      'color': const Color(0xFFE30613),
       'isBest': false,
     },
     {
       'bankName': 'Garanti BBVA',
       'bankCode': 'garanti',
       'interestRate': 4.19,
-      'color': Color(0xFF006A4D),
+      'color': const Color(0xFF006A4D),
       'isBest': false,
     },
     {
       'bankName': 'Yapı Kredi',
       'bankCode': 'yapikredi',
       'interestRate': 4.29,
-      'color': Color(0xFF004A8F),
+      'color': const Color(0xFF004A8F),
       'isBest': false,
     },
     {
       'bankName': 'QNB Finansbank',
       'bankCode': 'qnb',
       'interestRate': 4.39,
-      'color': Color(0xFF6F2C91),
+      'color': const Color(0xFF6F2C91),
       'isBest': false,
     },
   ];
@@ -183,7 +183,7 @@ class _CreditScreenState extends State<CreditScreen> {
                   ),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.check_circle,
                         color: AppColors.success,
                         size: 14,
@@ -191,7 +191,7 @@ class _CreditScreenState extends State<CreditScreen> {
                       const SizedBox(width: 4),
                       Text(
                         l10n.bestRate,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.success,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,

@@ -208,15 +208,15 @@ class PrivacyScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Row(
+                  const Row(
                     children: [
                       Icon(
                         Icons.check_circle,
                         color: AppColors.success,
                         size: 24,
                       ),
-                      const SizedBox(width: 12),
-                      const Expanded(
+                      SizedBox(width: 12),
+                      Expanded(
                         child: Text(
                           'Bu gizlilik politikasını okudum ve kabul ediyorum.',
                           style: TextStyle(fontSize: 14),

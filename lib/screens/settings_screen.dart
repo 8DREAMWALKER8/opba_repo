@@ -136,7 +136,7 @@ class SettingsScreen extends StatelessWidget {
                   trailing: Switch(
                     value: true,
                     onChanged: (value) {},
-                    activeColor: AppColors.primaryBlue,
+                    activeThumbColor: AppColors.primaryBlue,
                   ),
                 ),
               ],
@@ -157,7 +157,7 @@ class SettingsScreen extends StatelessWidget {
                     onChanged: (value) {
                       appProvider.setDarkMode(value);
                     },
-                    activeColor: AppColors.primaryBlue,
+                    activeThumbColor: AppColors.primaryBlue,
                   ),
                 ),
                 _buildDivider(isDark),
@@ -532,11 +532,11 @@ class SettingsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Row(
+        title: const Row(
           children: [
             Icon(Icons.account_balance, color: AppColors.primaryBlue),
-            const SizedBox(width: 8),
-            const Text('OPBA'),
+            SizedBox(width: 8),
+            Text('OPBA'),
           ],
         ),
         content: const Column(

@@ -261,7 +261,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _buildLabeledField(l10n.securityQuestion, isDark,
                             icon: Icons.search),
                         DropdownButtonFormField<String>(
-                          value: _selectedSecurityQuestion,
+                          initialValue: _selectedSecurityQuestion,
                           decoration: InputDecoration(
                             hintText: l10n.securityQuestionSelect,
                             filled: true,

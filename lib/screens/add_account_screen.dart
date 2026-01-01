@@ -148,7 +148,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   ),
                 ),
                 child: DropdownButtonFormField<String>(
-                  value: _selectedBank,
+                  initialValue: _selectedBank,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 16),
@@ -159,7 +159,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                       value: bank.name,
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.account_balance,
                             color: AppColors.primaryBlue,
                             size: 20,

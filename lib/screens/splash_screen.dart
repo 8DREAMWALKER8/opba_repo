@@ -100,16 +100,16 @@ class _SplashScreenState extends State<SplashScreen>
                             ),
                           ],
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             // kilit ikonu
-                            const Icon(
+                            Icon(
                               Icons.lock,
                               color: AppColors.primaryBlue,
                               size: 32,
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             // PBA metni
                             Text(
                               'PBA',
@@ -120,9 +120,9 @@ class _SplashScreenState extends State<SplashScreen>
                                 letterSpacing: 2,
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            SizedBox(width: 8),
                             // banka ikonu
-                            const Icon(
+                            Icon(
                               Icons.account_balance,
                               color: AppColors.primaryBlue,
                               size: 32,
