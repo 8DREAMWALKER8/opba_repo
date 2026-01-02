@@ -83,3 +83,6 @@ linux/flutter/ephemeral
 .DS_Store
 Thumbs.db
 
+node_modules/
+backend/node_modules/
+.env
