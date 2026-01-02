@@ -14,7 +14,8 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _surnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -28,7 +29,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _nameController.dispose();
+    _surnameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
@@ -53,18 +55,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.register(
-      username: _usernameController.text.trim(),
+      username:
+          "${_nameController.text.trim()} ${_surnameController.text.trim()}",
       email: _emailController.text.trim(),
       phone: _phoneController.text.trim(),
       password: _passwordController.text,
-      securityQuestion: _selectedSecurityQuestion!,
+      passwordConfirm: _confirmPasswordController.text,
+      securityQuestionId: _selectedSecurityQuestion!,
       securityAnswer: _securityAnswerController.text.trim(),
     );
 
     setState(() => _isLoading = false);
 
     if (success && mounted) {
-      Navigator.pushReplacementNamed(context, '/home');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('kayıt başarılı, lütfen giriş yapın.'),
+          backgroundColor: AppColors.success,
+        ),
+      );
+      Navigator.pushReplacementNamed(context, '/login');
     } else if (mounted && authProvider.error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -127,12 +137,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 20),
-                        // kullanıcı adı
-                        _buildLabeledField(l10n.username, isDark),
+                        // ad
+                        _buildLabeledField(l10n.name, isDark),
                         TextFormField(
-                          controller: _usernameController,
+                          controller: _nameController,
                           decoration: InputDecoration(
-                            hintText: l10n.usernameHint,
+                            hintText: l10n.namePlaceholder,
+                            filled: true,
+                            fillColor: isDark
+                                ? AppColors.backgroundDark
+                                : const Color(0xFFF1F5F9),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return l10n.translate('field_required');
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        // soyad
+                        _buildLabeledField(l10n.surname, isDark),
+                        TextFormField(
+                          controller: _surnameController,
+                          decoration: InputDecoration(
+                            hintText: l10n.surnamePlaceholer,
                             filled: true,
                             fillColor: isDark
                                 ? AppColors.backgroundDark
@@ -271,9 +300,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           items: l10n.securityQuestions.map((question) {
                             return DropdownMenuItem(
-                              value: question,
+                              value: question['id'],
                               child: Text(
-                                question,
+                                question['text']!,
                                 style: const TextStyle(fontSize: 13),
                                 overflow: TextOverflow.ellipsis,
                               ),

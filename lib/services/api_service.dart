@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class ApiService {
   // base url
-  static const String baseUrl = 'http://localhost:5000/api';
+  static const String baseUrl = 'http://localhost:5001';
 
   final _storage = const FlutterSecureStorage();
 
@@ -31,8 +31,11 @@ class ApiService {
         headers: headers,
       );
       return _handleResponse(response);
+    } on ApiException {
+      rethrow; // server hatasıysa olduğu gibi yukarı fırlat
     } catch (e) {
-      throw Exception('Network error: $e');
+      // burada gerçek network/parsing vb kalır
+      throw Exception('Network error');
     }
   }
 
@@ -46,8 +49,11 @@ class ApiService {
         body: jsonEncode(data),
       );
       return _handleResponse(response);
+    } on ApiException {
+      rethrow; // server hatasıysa olduğu gibi yukarı fırlat
     } catch (e) {
-      throw Exception('Network error: $e');
+      // burada gerçek network/parsing vb kalır
+      throw Exception('Network error');
     }
   }
 
@@ -61,8 +67,29 @@ class ApiService {
         body: jsonEncode(data),
       );
       return _handleResponse(response);
+    } on ApiException {
+      rethrow; // server hatasıysa olduğu gibi yukarı fırlat
     } catch (e) {
-      throw Exception('Network error: $e');
+      // burada gerçek network/parsing vb kalır
+      throw Exception('Network error');
+    }
+  }
+
+  // generic patch isteği
+  Future<dynamic> patch(String endpoint, Map<String, dynamic> data) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await http.patch(
+        Uri.parse('$baseUrl$endpoint'),
+        headers: headers,
+        body: jsonEncode(data),
+      );
+      return _handleResponse(response);
+    } on ApiException {
+      rethrow; // server hatasıysa olduğu gibi yukarı fırlat
+    } catch (e) {
+      // burada gerçek network/parsing vb kalır
+      throw Exception('Network error');
     }
   }
 
@@ -75,26 +102,38 @@ class ApiService {
         headers: headers,
       );
       return _handleResponse(response);
+    } on ApiException {
+      rethrow; // server hatasıysa olduğu gibi yukarı fırlat
     } catch (e) {
-      throw Exception('Network error: $e');
+      // burada gerçek network/parsing vb kalır
+      throw Exception('Network error');
     }
   }
 
-  // yanıtı işle
   dynamic _handleResponse(http.Response response) {
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      if (response.body.isNotEmpty) {
-        return jsonDecode(response.body);
-      }
-      return null;
-    } else if (response.statusCode == 401) {
-      throw Exception('Unauthorized');
-    } else if (response.statusCode == 404) {
-      throw Exception('Not found');
-    } else {
-      final body = response.body.isNotEmpty ? jsonDecode(response.body) : {};
-      throw Exception(body['message'] ?? 'Server error');
+    dynamic body;
+    try {
+      body = response.body.isNotEmpty ? jsonDecode(response.body) : null;
+    } catch (_) {
+      body = null;
     }
+
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      return body;
+    }
+
+    // Backend genelde { ok:false, message:"..." } döndürüyor
+    final message = (body is Map && body['message'] != null)
+        ? body['message'].toString()
+        : (response.reasonPhrase ?? 'Server error');
+
+    // Status code'u da taşımak istersen:
+    throw ApiException(message, statusCode: response.statusCode);
+  }
+
+  Future<Map<String, dynamic>> getMe() async {
+    final res = await get('/me');
+    return Map<String, dynamic>.from(res as Map);
   }
 
   // kimlik doğrulama endpoint'leri
@@ -105,10 +144,11 @@ class ApiService {
     });
   }
 
-  Future<dynamic> verifySecurityQuestion(String userId, String answer) async {
-    return post('/auth/verify-security', {
-      'userId': userId,
-      'answer': answer,
+  Future<dynamic> verifySecurityQuestion(
+      String challengeToken, String securityAnswer) async {
+    return post('/auth/login/verify-question', {
+      'challengeToken': challengeToken,
+      'securityAnswer': securityAnswer,
     });
   }
 
@@ -163,4 +203,37 @@ class ApiService {
   Future<dynamic> convertCurrency(double amount, String from, String to) async {
     return get('/currency/convert?amount=$amount&from=$from&to=$to');
   }
+
+  Future<dynamic> patchProfile(
+      {String? fullName, String? email, String? phone}) async {
+    final body = <String, dynamic>{};
+
+    // Backend PATCH /me/profile => username/email/phone
+    if (fullName != null && fullName.trim().isNotEmpty) {
+      body['username'] = fullName.trim();
+    }
+    if (email != null && email.trim().isNotEmpty) {
+      body['email'] = email.trim();
+    }
+    if (phone != null && phone.trim().isNotEmpty) {
+      body['phone'] = phone.trim();
+    }
+
+    if (body.isEmpty) {
+      // Hiç alan gönderilmezse backend'e gereksiz istek atmayalım
+      return {'ok': true, 'message': 'No changes'};
+    }
+
+    return patch('/me/profile', body);
+  }
+}
+
+class ApiException implements Exception {
+  final String message;
+  final int? statusCode;
+
+  ApiException(this.message, {this.statusCode});
+
+  @override
+  String toString() => message;
 }

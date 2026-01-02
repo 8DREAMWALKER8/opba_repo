@@ -77,7 +77,7 @@ class SettingsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          authProvider.user?.name ?? 'Kullanıcı',
+                          authProvider.user!.username,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -86,7 +86,7 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          authProvider.user?.email ?? 'email@example.com',
+                          authProvider.user!.email,
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.8),
                             fontSize: 14,
@@ -336,7 +336,8 @@ class SettingsScreen extends StatelessWidget {
   void _showEditProfileDialog(BuildContext context, AuthProvider authProvider) {
     final l10n = context.l10n;
 
-    final nameController = TextEditingController(text: authProvider.user?.name);
+    final fullNameController =
+        TextEditingController(text: authProvider.user?.username);
     final emailController =
         TextEditingController(text: authProvider.user?.email);
     final phoneController =
@@ -350,7 +351,7 @@ class SettingsScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
-              controller: nameController,
+              controller: fullNameController,
               decoration: InputDecoration(
                 labelText: l10n.fullName,
                 prefixIcon: const Icon(Icons.person_outline),
@@ -382,19 +383,35 @@ class SettingsScreen extends StatelessWidget {
             child: Text(l10n.cancel),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               final currentUser = authProvider.user;
-              final newName = nameController.text.trim();
+              final newFullname = fullNameController.text.trim();
               final newEmail = emailController.text.trim();
               final newPhone = phoneController.text.trim();
 
-              authProvider.updateProfile(
-                name: newName.isEmpty ? currentUser?.name : newName,
+              final success = await authProvider.updateProfile(
+                fullName:
+                    newFullname.isEmpty ? currentUser?.username : newFullname,
                 email: newEmail.isEmpty ? currentUser?.email : newEmail,
                 phone: newPhone.isEmpty ? currentUser?.phone : newPhone,
               );
 
-              Navigator.pop(context);
+              if (success) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Profil başarıyla güncellendi.'),
+                    backgroundColor: AppColors.success,
+                  ),
+                );
+                Navigator.pop(context);
+              } else if (authProvider.error != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(authProvider.error!),
+                    backgroundColor: AppColors.error,
+                  ),
+                );
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryBlue,

@@ -45,7 +45,7 @@ router.post("/register", async (req, res) => {
     .object({
       username: z.string().min(3, "Kullanıcı adı en az 3 karakter olmalı"),
       email: z.string().email("Geçerli bir e-posta girin"),
-      phone: z.string().min(10, "Telefon numarası geçersiz"),
+      phone: z.string().length(10, "Telefon numarası 10 karakter olmalı"),
 
       password: z.string().min(8, "Şifre en az 8 karakter olmalı"),
       passwordConfirm: z.string().min(8, "Şifre tekrar gerekli"),

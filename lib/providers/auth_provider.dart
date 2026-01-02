@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:opba_app/services/api_service.dart';
 import '../models/user_model.dart';
 
 enum AuthStatus { initial, authenticated, unauthenticated, loading }
@@ -52,16 +53,53 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      final api = ApiService();
 
-      _tempUserId = 'user_123';
-      _securityQuestion = 'Annenizin kızlık soyadı nedir?';
+      // Backend email bekliyor; username girilirse 400 alırsın.
+      final result = await api.login(emailOrUsername.trim(), password);
 
+      final ok = result is Map && result['ok'] == true;
+      final message = result is Map ? (result['message'] ?? '').toString() : '';
+
+      if (!ok) {
+        _error = message.isNotEmpty ? message : 'Giriş başarısız.';
+        _status = AuthStatus.unauthenticated;
+        notifyListeners();
+        return false;
+      }
+
+      final challengeToken = (result['challengeToken'] ?? '').toString();
+      final securityQuestionText =
+          (result['securityQuestionText'] ?? '').toString();
+      final securityQuestionId =
+          (result['securityQuestionId'] ?? '').toString();
+
+      if (challengeToken.isEmpty) {
+        _error = 'Giriş doğrulama anahtarı alınamadı.';
+        _status = AuthStatus.unauthenticated;
+        notifyListeners();
+        return false;
+      }
+
+      // 2. adım için geçici olarak sakla
+      await _storage.write(key: 'challenge_token', value: challengeToken);
+      await _storage.write(
+          key: 'security_question_id', value: securityQuestionId);
+
+      _securityQuestion = securityQuestionText;
+      _tempUserId = null; // backend artık userId dönmüyor; token içinde var
+
+      // Henüz authenticated değiliz; güvenlik sorusu adımı var
       _status = AuthStatus.unauthenticated;
       notifyListeners();
       return true;
+    } on ApiException catch (e) {
+      _error = e.message; // "Invalid credentials" gelir
+      _status = AuthStatus.unauthenticated;
+      notifyListeners();
+      return false;
     } catch (e) {
-      _error = 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
+      _error = e.toString().replaceFirst('Exception: ', '');
       _status = AuthStatus.unauthenticated;
       notifyListeners();
       return false;
@@ -74,28 +112,79 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      final api = ApiService();
 
-      _token = 'demo_token_${DateTime.now().millisecondsSinceEpoch}';
-      _user = User(
-        id: _tempUserId,
-        username: 'demo_user',
-        email: 'demo@opba.com',
-        name: 'Ahmet Yılmaz',
-        securityQuestion: _securityQuestion ?? '',
-        language: 'tr',
-        currency: 'TRY',
-        theme: 'light',
-      );
+      final challengeToken = await _storage.read(key: 'challenge_token');
+      if (challengeToken == null || challengeToken.isEmpty) {
+        _error = 'Doğrulama oturumu bulunamadı. Lütfen tekrar giriş yapın.';
+        _status = AuthStatus.unauthenticated;
+        notifyListeners();
+        return false;
+      }
 
-      await _storage.write(key: 'auth_token', value: _token);
-      await _storage.write(key: 'user_id', value: _user!.id);
+      // 1) verify
+      final verifyRes =
+          await api.verifySecurityQuestion(challengeToken, answer);
 
+      final verifyOk = verifyRes is Map && verifyRes['ok'] == true;
+      final verifyMsg =
+          verifyRes is Map ? (verifyRes['message'] ?? '').toString() : '';
+
+      if (!verifyOk) {
+        _error = verifyMsg.isNotEmpty ? verifyMsg : 'Güvenlik cevabı yanlış.';
+        _status = AuthStatus.unauthenticated;
+        notifyListeners();
+        return false;
+      }
+
+      final accessToken = verifyRes['accessToken']?.toString() ?? '';
+      if (accessToken.isEmpty) {
+        _error = 'Access token alınamadı.';
+        _status = AuthStatus.unauthenticated;
+        notifyListeners();
+        return false;
+      }
+
+      // 2) token kaydet
+      _token = accessToken;
+      await _storage.write(key: 'auth_token', value: accessToken);
+      await _storage.delete(key: 'challenge_token');
+
+      // 3) /me çağır ve user setle
+      final meRes = await api.getMe();
+
+      final meOk = meRes['ok'] == true;
+      final meMsg = (meRes['message'] ?? '').toString();
+      if (!meOk) {
+        _error = meMsg.isNotEmpty ? meMsg : 'Kullanıcı bilgileri alınamadı.';
+        _status = AuthStatus.unauthenticated;
+        notifyListeners();
+        return false;
+      }
+
+      final userJson = meRes['user'];
+      if (userJson is! Map<String, dynamic>) {
+        _error = 'Kullanıcı verisi beklenmeyen formatta.';
+        _status = AuthStatus.unauthenticated;
+        notifyListeners();
+        return false;
+      }
+
+      // User modelin hangi alanları bekliyorsa ona göre map et
+      _user = User.fromJson(userJson); // Eğer fromJson yoksa aşağıya bak
+
+      // user_id storage
+      final userId = (userJson['_id'] ?? userJson['id'])?.toString();
+      if (userId != null) {
+        await _storage.write(key: 'user_id', value: userId);
+      }
+
+      debugPrint('user PAYLOAD => ${userJson.toString()}');
       _status = AuthStatus.authenticated;
       notifyListeners();
       return true;
     } catch (e) {
-      _error = 'Güvenlik sorusu cevabı yanlış.';
+      _error = e.toString().replaceFirst('Exception: ', '');
       _status = AuthStatus.unauthenticated;
       notifyListeners();
       return false;
@@ -107,7 +196,8 @@ class AuthProvider extends ChangeNotifier {
     required String email,
     required String phone,
     required String password,
-    required String securityQuestion,
+    required String passwordConfirm,
+    required String securityQuestionId,
     required String securityAnswer,
   }) async {
     _status = AuthStatus.loading;
@@ -115,28 +205,38 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      final api = ApiService();
 
-      _token = 'demo_token_${DateTime.now().millisecondsSinceEpoch}';
-      _user = User(
-        id: 'user_${DateTime.now().millisecondsSinceEpoch}',
-        username: username,
-        email: email,
-        phone: phone,
-        securityQuestion: securityQuestion,
-        language: 'tr',
-        currency: 'TRY',
-        theme: 'light',
-      );
+      final result = await api.register({
+        'username': username,
+        'email': email,
+        'phone': phone,
+        'password': password,
+        'passwordConfirm': passwordConfirm,
+        'securityQuestionId': securityQuestionId,
+        'securityAnswer': securityAnswer,
+      });
+      debugPrint('REGISTER PAYLOAD => ${securityQuestionId}');
+      final ok = result is Map && result['ok'] == true;
+      final message = result is Map ? (result['message'] ?? '').toString() : '';
+      final userId = result is Map ? result['userId']?.toString() : null;
 
-      await _storage.write(key: 'auth_token', value: _token);
-      await _storage.write(key: 'user_id', value: _user!.id);
+      if (!ok) {
+        _error = message.isNotEmpty ? message : 'Kayıt başarısız.';
+        _status = AuthStatus.unauthenticated;
+        notifyListeners();
+        return false;
+      }
 
-      _status = AuthStatus.authenticated;
+      if (userId != null) {
+        await _storage.write(key: 'user_id', value: userId);
+      }
+
+      _status = AuthStatus.unauthenticated; // register token dönmüyor
       notifyListeners();
       return true;
     } catch (e) {
-      _error = 'Kayıt başarısız. Lütfen tekrar deneyin.';
+      _error = e.toString().replaceFirst('Exception: ', '');
       _status = AuthStatus.unauthenticated;
       notifyListeners();
       return false;
@@ -154,7 +254,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<bool> updateProfile({
-    String? name,
+    String? fullName, // UI'dan geliyor; backend "username" bekliyor
     String? email,
     String? phone,
     String? language,
@@ -163,18 +263,59 @@ class AuthProvider extends ChangeNotifier {
   }) async {
     if (_user == null) return false;
 
+    _status = AuthStatus.loading;
+    _error = null;
+    notifyListeners();
+
     try {
-      _user = _user!.copyWith(
-        name: name ?? _user!.name,
-        email: email ?? _user!.email,
-        phone: phone ?? _user!.phone,
-        language: language ?? _user!.language,
-        currency: currency ?? _user!.currency,
-        theme: theme ?? _user!.theme,
+      final api = ApiService();
+
+      // Backend profile endpoint sadece username/email/phone güncelliyor
+      final result = await api.patchProfile(
+        fullName: fullName, // fullName'i username'e map ediyoruz
+        email: email,
+        phone: phone,
       );
+
+      final ok = result is Map && result['ok'] == true;
+      final message = result is Map ? (result['message'] ?? '').toString() : '';
+
+      if (!ok) {
+        _error = message.isNotEmpty ? message : 'Profil güncellenemedi.';
+        _status = AuthStatus.authenticated;
+        notifyListeners();
+        return false;
+      }
+
+      final userJson = result['user'];
+      if (userJson is Map) {
+        // User modelinde fromJson varsa onu kullan
+        // _user = User.fromJson(Map<String, dynamic>.from(userJson));
+
+        // fromJson yoksa minimum alanlarla set et:
+        final m = Map<String, dynamic>.from(userJson);
+        _user = _user!.copyWith(
+          username: (m['username'] ?? _user!.username).toString(),
+          email: (m['email'] ?? _user!.email).toString(),
+          phone: (m['phone'] ?? _user!.phone).toString(),
+        );
+
+        // (opsiyonel) storage user_id güncelle
+        final userId = (m['_id'] ?? m['id'])?.toString();
+        if (userId != null && userId.isNotEmpty) {
+          await _storage.write(key: 'user_id', value: userId);
+        }
+      }
+
+      // Backend bu endpointte language/currency/theme güncellemiyor.
+      // Onlar için PATCH /me/settings kullanman gerekir.
+      _status = AuthStatus.authenticated;
       notifyListeners();
       return true;
     } catch (e) {
+      _error = e.toString().replaceFirst('Exception: ', '');
+      _status = AuthStatus.unauthenticated;
+      notifyListeners();
       return false;
     }
   }

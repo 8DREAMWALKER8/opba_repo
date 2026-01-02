@@ -3,7 +3,7 @@
  * Hepsinde requireAuth var çünkü sadece oturum açan kullanıcı erişebilir.
  */
 const router = require("express").Router();
-const { z } = require("zod");
+const { z, email } = require("zod");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const { requireAuth } = require("../middleware/auth");
@@ -14,6 +14,15 @@ const {
   normalizeLanguage,
 } = require("../utils/validators");
 
+function zodErrorMessage(err) {
+  if (err && Array.isArray(err.issues) && err.issues.length > 0) {
+    return err.issues[0].message;
+  }
+  if (err && Array.isArray(err.errors) && err.errors.length > 0) {
+    return err.errors[0].message;
+  }
+  return null;
+}
 
 /** 
 1-Giriş yapan kullanıcı bilgisi
@@ -99,10 +108,19 @@ Zod ile min/max kontrolü var.
 router.patch("/profile", requireAuth, async (req, res) => {
   const schema = z.object({
     username: z.string().min(2).max(30).optional(),
-    phone: z.string().min(7).max(20).optional(),
+    email: z.string().email().optional(),
+    phone: z.string().length(10, "Telefon numarası 10 karakter olmalı").optional(),
   });
 
-  const data = schema.parse(req.body);
+  let data;
+
+  try {
+    data = schema.parse(req.body);
+  } 
+  catch (err) {
+    const msg = zodErrorMessage(err);
+    return res.status(400).json({ ok: false, message: msg || "Geçersiz istek" });
+  }
 
   const user = await User.findByIdAndUpdate(
     req.user.userId,

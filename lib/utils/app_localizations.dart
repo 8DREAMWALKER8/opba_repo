@@ -30,6 +30,10 @@ class AppLocalizations {
       'login': 'Giriş Yap',
       'register': 'Kayıt Ol',
       'logout': 'Çıkış Yap',
+      'name': 'Ad',
+      'surname': 'Soyad',
+      'namePlaceholder': 'Adınızı girin',
+      'surnamePlaceholder': 'Soyadınızı girin',
       'email': 'E-posta',
       'email_hint': 'E-Posta Adresinizi Girin',
       'password': 'Şifre',
@@ -51,7 +55,7 @@ class AppLocalizations {
       'about_section': 'Hakkında',
       'version': 'Sürüm',
       'security_question': 'Güvenlik Sorusu',
-      'security_question_select': 'Güvenlik Sorusunu Seçin',
+      'security_question_select': 'Güvenlik sorusunu seçin',
       'security_answer': 'Güvenlik Sorusunun Cevabı',
       'security_answer_hint': 'Güvenlik Sorusunun Cevabı',
       'sq_mother_maiden': 'Annenizin kızlık soyadı nedir?',
@@ -170,6 +174,10 @@ class AppLocalizations {
       'login': 'Login',
       'register': 'Register',
       'logout': 'Logout',
+      'name': 'Name',
+      'surname': 'Surname',
+      'namePlaceholder': 'Enter your name',
+      'surnamePlaceholder': 'Enter your surname',
       'email': 'E-mail',
       'email_hint': 'Enter your email',
       'password': 'Password',
@@ -191,7 +199,7 @@ class AppLocalizations {
       'about_section': 'About',
       'version': 'Version',
       'security_question': 'Security Question',
-      'security_question_select': 'Select Security Question',
+      'security_question_select': 'Select security question',
       'security_answer': 'Security Answer',
       'security_answer_hint': 'Enter your answer',
       'sq_mother_maiden': "What is your mother's maiden name?",
@@ -315,6 +323,10 @@ class AppLocalizations {
   String get login => translate('login');
   String get register => translate('register');
   String get logout => translate('logout');
+  String get name => translate('name');
+  String get surname => translate('surname');
+  String get namePlaceholder => translate('namePlaceholder');
+  String get surnamePlaceholer => translate('surnamePlaceholder');
   String get email => translate('email');
   String get emailHint => translate('email_hint');
   String get password => translate('password');
@@ -400,12 +412,12 @@ class AppLocalizations {
   String get logoutConfirm => translate('logout_confirm');
   String get backToLogin => translate('back_to_login');
 
-  List<String> get securityQuestions => [
-        translate('sq_mother_maiden'),
-        translate('sq_first_pet'),
-        translate('sq_birth_city'),
-        translate('sq_first_school'),
-        translate('sq_favorite_movie'),
+  List<Map<String, String>> get securityQuestions => [
+        {'id': 'q1', 'text': translate('sq_mother_maiden')},
+        {'id': 'q2', 'text': translate('sq_first_pet')},
+        {'id': 'q3', 'text': translate('sq_birth_city')},
+        {'id': 'q4', 'text': translate('sq_first_school')},
+        {'id': 'q5', 'text': translate('sq_favorite_movie')},
       ];
 }
 
