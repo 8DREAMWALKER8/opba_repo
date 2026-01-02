@@ -1,10 +1,24 @@
 const Notification = require("../models/NotificationModel");
 
 class NotificationRepositoryMongo {
+  // CreateTransaction burayı çağıracak
+  async create(data) {
+    const doc = await Notification.create({
+      userId: data.userId,
+      type: data.type,
+      title: data.title,
+      message: data.message,
+      meta: data.meta || {},
+      isRead: false,
+    });
+
+    return doc.toObject ? doc.toObject() : doc;
+  }
+
   async findByUser(userId, { limit = 50 } = {}) {
     return Notification.find({ userId })
       .sort({ createdAt: -1 })
-      .limit(limit);
+      .limit(Number(limit));
   }
 
   async markRead(userId, notificationId) {
