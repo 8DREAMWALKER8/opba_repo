@@ -5,18 +5,29 @@ const morgan = require("morgan");
 require("express-async-errors");
 
 const { errorHandler } = require("./middleware/errorHandler");
+
+// legacy routes
 const authRoutes = require("./routes/auth.routes");
 const meRoutes = require("./routes/me.routes");
 const accountsRoutes = require("./routes/accounts.routes");
 const transactionsRoutes = require("./routes/transactions.routes");
 const budgetsRoutes = require("./routes/budgets.routes");
 const passwordResetRoutes = require("./routes/passwordReset.routes");
-const notificationsRoutes = require("./routes/notifications.routes");
-const fxRateRoutes = require("./routes/fxRateRoutes");
 const interestRatesRoutes = require("./routes/interestRates.routes");
 const loanCalcRoutes = require("./routes/loanCalc.routes");
 
-// fxrates wiring (API için)
+// auth middleware (sende bu dosya var)
+const { requireAuth } = require("./middleware/auth");
+
+// notifications (clean)
+const NotificationRepositoryMongo = require("./modules/notifications/infrastructure/persistence/repositories/NotificationRepositoryMongo");
+const GetMyNotifications = require("./modules/notifications/application/usecases/GetMyNotifications");
+const MarkNotificationAsRead = require("./modules/notifications/application/usecases/MarkNotificationAsRead");
+const MarkAllAsRead = require("./modules/notifications/application/usecases/MarkAllAsRead");
+const makeNotificationsController = require("./modules/notifications/presentation/controller");
+const makeNotificationsRoutes = require("./modules/notifications/presentation/routes");
+
+// fxrates (clean)
 const SyncTcbmRates = require("./modules/fxrates/application/usecases/SyncTcbmRates");
 const AxiosHttpClient = require("./modules/fxrates/infrastructure/services/AxiosHttpClient");
 const TcmbXmlParser = require("./modules/fxrates/infrastructure/services/TcmbXmlParser");
@@ -24,10 +35,33 @@ const FxRateRepositoryMongo = require("./modules/fxrates/infrastructure/persiste
 const makeFxRatesController = require("./modules/fxrates/presentation/controller");
 const makeFxRatesRoutes = require("./modules/fxrates/presentation/routes");
 
-
 const app = express();
 
+// --------------------
+// Clean Notifications wiring
+// --------------------
+const notificationRepo = new NotificationRepositoryMongo();
+
+const getMyNotifications = new GetMyNotifications({ notificationRepo });
+const markNotificationAsRead = new MarkNotificationAsRead({ notificationRepo });
+const markAllAsRead = new MarkAllAsRead({ notificationRepo });
+
+const notificationsController = makeNotificationsController({
+  getMyNotifications,
+  markNotificationAsRead,
+  markAllAsRead,
+});
+
+const notificationsRouter = makeNotificationsRoutes({
+  controller: notificationsController,
+  protect: requireAuth, // ✅ burada requireAuth'ı protect olarak veriyoruz
+});
+
+// --------------------
+// Clean FX wiring
+// --------------------
 const fxRateRepo = new FxRateRepositoryMongo();
+
 const syncTcbmRates = new SyncTcbmRates({
   httpClient: new AxiosHttpClient(),
   xmlParser: new TcmbXmlParser(),
@@ -38,27 +72,41 @@ const syncTcbmRates = new SyncTcbmRates({
 const fxController = makeFxRatesController({ syncTcbmRates, fxRateRepo });
 const fxRoutes = makeFxRatesRoutes(fxController);
 
-
+// --------------------
+// Middlewares
+// --------------------
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
+// --------------------
+// Routes
+// --------------------
 app.use("/auth", authRoutes);
 app.use("/me", meRoutes);
 app.use("/accounts", accountsRoutes);
 app.use("/transactions", transactionsRoutes);
 app.use("/budgets", budgetsRoutes);
 app.use("/auth", passwordResetRoutes);
-app.use("/notifications", notificationsRoutes);
+
+// clean routes
+app.use("/notifications", notificationsRouter);
 app.use("/api/fx", fxRoutes);
+
 app.use("/api/interest-rates", interestRatesRoutes);
 app.use("/api/loan", loanCalcRoutes);
 
+// health
 app.get("/health", (req, res) => {
-  res.json({ ok: true, service: "opba-backend", time: new Date().toISOString() });
+  res.json({
+    ok: true,
+    service: "opba-backend",
+    time: new Date().toISOString(),
+  });
 });
 
+// error handler
 app.use(errorHandler);
 
 module.exports = { app };
