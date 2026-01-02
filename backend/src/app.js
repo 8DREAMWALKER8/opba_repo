@@ -9,9 +9,6 @@ const { errorHandler } = require("./middleware/errorHandler");
 // legacy routes
 const authRoutes = require("./routes/auth.routes");
 const meRoutes = require("./routes/me.routes");
-const accountsRoutes = require("./routes/accounts.routes");
-const transactionsRoutes = require("./routes/transactions.routes");
-const budgetsRoutes = require("./routes/budgets.routes");
 const passwordResetRoutes = require("./routes/passwordReset.routes");
 const interestRatesRoutes = require("./routes/interestRates.routes");
 const loanCalcRoutes = require("./routes/loanCalc.routes");
@@ -19,7 +16,9 @@ const loanCalcRoutes = require("./routes/loanCalc.routes");
 // auth middleware
 const { requireAuth } = require("./middleware/auth");
 
-// notifications (clean)
+// --------------------
+// CLEAN: Notifications
+// --------------------
 const NotificationRepositoryMongo = require("./modules/notifications/infrastructure/persistence/repositories/NotificationRepositoryMongo");
 const GetMyNotifications = require("./modules/notifications/application/usecases/GetMyNotifications");
 const MarkNotificationAsRead = require("./modules/notifications/application/usecases/MarkNotificationAsRead");
@@ -27,7 +26,9 @@ const MarkAllAsRead = require("./modules/notifications/application/usecases/Mark
 const makeNotificationsController = require("./modules/notifications/presentation/controller");
 const makeNotificationsRoutes = require("./modules/notifications/presentation/routes");
 
-// fxrates (clean)
+// --------------------
+// CLEAN: FX Rates
+// --------------------
 const SyncTcbmRates = require("./modules/fxrates/application/usecases/SyncTcbmRates");
 const AxiosHttpClient = require("./modules/fxrates/infrastructure/services/AxiosHttpClient");
 const TcmbXmlParser = require("./modules/fxrates/infrastructure/services/TcmbXmlParser");
@@ -35,13 +36,25 @@ const FxRateRepositoryMongo = require("./modules/fxrates/infrastructure/persiste
 const makeFxRatesController = require("./modules/fxrates/presentation/controller");
 const makeFxRatesRoutes = require("./modules/fxrates/presentation/routes");
 
-// accounts (clean)
+// --------------------
+// CLEAN: Accounts
+// --------------------
 const BankAccountRepositoryMongo = require("./modules/accounts/infrastructure/persistence/repositories/BankAccountRepositoryMongo");
 const ListAccounts = require("./modules/accounts/application/usecases/ListAccounts");
 const CreateAccount = require("./modules/accounts/application/usecases/CreateAccount");
 const DeactivateAccount = require("./modules/accounts/application/usecases/DeactivateAccount");
 const makeAccountsController = require("./modules/accounts/presentation/controller");
 const makeAccountsRoutes = require("./modules/accounts/presentation/routes");
+
+// --------------------
+// CLEAN: Budgets
+// --------------------
+const budgetsRouter = require("./modules/budgets/presentation/routes");
+
+// --------------------
+// CLEAN: Transactions
+// --------------------
+const transactionsRouter = require("./modules/transactions/presentation/routes");
 
 const app = express();
 
@@ -61,7 +74,7 @@ const accountsController = makeAccountsController({
 
 const accountsRouter = makeAccountsRoutes({
   controller: accountsController,
-  protect: requireAuth, // ✅ FIX: protect tanımlı değildi, requireAuth veriyoruz
+  protect: requireAuth,
 });
 
 // --------------------
@@ -113,14 +126,12 @@ app.use(morgan("dev"));
 app.use("/auth", authRoutes);
 app.use("/me", meRoutes);
 
-// legacy accountsRoutes yerine clean accountsRouter
+// clean
 app.use("/accounts", accountsRouter);
+app.use("/transactions", transactionsRouter);
+app.use("/budgets", budgetsRouter);
 
-app.use("/transactions", transactionsRoutes);
-app.use("/budgets", budgetsRoutes);
 app.use("/auth", passwordResetRoutes);
-
-// clean routes
 app.use("/notifications", notificationsRouter);
 app.use("/api/fx", fxRoutes);
 
