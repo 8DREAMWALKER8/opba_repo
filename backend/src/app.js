@@ -16,7 +16,7 @@ const passwordResetRoutes = require("./routes/passwordReset.routes");
 const interestRatesRoutes = require("./routes/interestRates.routes");
 const loanCalcRoutes = require("./routes/loanCalc.routes");
 
-// auth middleware (sende bu dosya var)
+// auth middleware
 const { requireAuth } = require("./middleware/auth");
 
 // notifications (clean)
@@ -35,7 +35,34 @@ const FxRateRepositoryMongo = require("./modules/fxrates/infrastructure/persiste
 const makeFxRatesController = require("./modules/fxrates/presentation/controller");
 const makeFxRatesRoutes = require("./modules/fxrates/presentation/routes");
 
+// accounts (clean)
+const BankAccountRepositoryMongo = require("./modules/accounts/infrastructure/persistence/repositories/BankAccountRepositoryMongo");
+const ListAccounts = require("./modules/accounts/application/usecases/ListAccounts");
+const CreateAccount = require("./modules/accounts/application/usecases/CreateAccount");
+const DeactivateAccount = require("./modules/accounts/application/usecases/DeactivateAccount");
+const makeAccountsController = require("./modules/accounts/presentation/controller");
+const makeAccountsRoutes = require("./modules/accounts/presentation/routes");
+
 const app = express();
+
+// --------------------
+// Clean Accounts wiring
+// --------------------
+const accountRepo = new BankAccountRepositoryMongo();
+const listAccounts = new ListAccounts({ repo: accountRepo });
+const createAccount = new CreateAccount({ repo: accountRepo });
+const deactivateAccount = new DeactivateAccount({ repo: accountRepo });
+
+const accountsController = makeAccountsController({
+  listAccounts,
+  createAccount,
+  deactivateAccount,
+});
+
+const accountsRouter = makeAccountsRoutes({
+  controller: accountsController,
+  protect: requireAuth, // ✅ FIX: protect tanımlı değildi, requireAuth veriyoruz
+});
 
 // --------------------
 // Clean Notifications wiring
@@ -54,7 +81,7 @@ const notificationsController = makeNotificationsController({
 
 const notificationsRouter = makeNotificationsRoutes({
   controller: notificationsController,
-  protect: requireAuth, // ✅ burada requireAuth'ı protect olarak veriyoruz
+  protect: requireAuth,
 });
 
 // --------------------
@@ -85,7 +112,10 @@ app.use(morgan("dev"));
 // --------------------
 app.use("/auth", authRoutes);
 app.use("/me", meRoutes);
-app.use("/accounts", accountsRoutes);
+
+// legacy accountsRoutes yerine clean accountsRouter
+app.use("/accounts", accountsRouter);
+
 app.use("/transactions", transactionsRoutes);
 app.use("/budgets", budgetsRoutes);
 app.use("/auth", passwordResetRoutes);
