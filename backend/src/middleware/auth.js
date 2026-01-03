@@ -1,30 +1,28 @@
-/**
- * Bu middleware, kullanıcının giriş yapıp yapmadığını kontrol eder.
- * Authorization header içinden JWT token alır.
- * Token geçerliyse kullanıcıyı req.user içine ekler.
- * Geçersizse isteği engeller.
- */
-const jwt = require("jsonwebtoken");
+const { buildAuthModule } = require("../modules/auth");
 
-function requireAuth(req, res, next) {
-  const auth = req.headers.authorization || "";
-  const [type, token] = auth.split(" ");
+const auth = buildAuthModule();
 
-  // Bearer yoksa veya token gelmediyse yetkisiz erişim
-  if (type !== "Bearer" || !token) {
-    return res.status(401).json({ ok: false, message: "Unauthorized" });
-  }
+function extractBearerToken(req) {
+  const header = req.headers.authorization || req.headers.Authorization;
+  if (!header || typeof header !== "string") return null;
 
-  try {
-    // Token doğrulanır (imza + süresi kontrol edilir)
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-    // Token içindeki bilgiler request'e eklenir.
-    // Böylece route'larda req.user.userId kullanılabilir.
-    req.user = payload; 
-    return next();
-  } catch {
-    return res.status(401).json({ ok: false, message: "Invalid or expired token" });
-  }
+  const [type, token] = header.split(" ");
+  if (!type || !token) return null;
+  if (type.toLowerCase() !== "bearer") return null;
+
+  return token;
 }
+
+const requireAuth = async (req, res, next) => {
+  try {
+    const token = extractBearerToken(req);
+    const { userId } = await auth.verifyAccessToken.execute({ token });
+
+    req.user = { userId };
+    return next();
+  } catch (e) {
+    return res.status(401).json({ ok: false, error: e.message });
+  }
+};
 
 module.exports = { requireAuth };

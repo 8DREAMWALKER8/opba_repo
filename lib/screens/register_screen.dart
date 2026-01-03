@@ -69,7 +69,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('kayıt başarılı, lütfen giriş yapın.'),
           backgroundColor: AppColors.success,
         ),

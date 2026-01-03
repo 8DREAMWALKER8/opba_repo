@@ -216,7 +216,7 @@ class AuthProvider extends ChangeNotifier {
         'securityQuestionId': securityQuestionId,
         'securityAnswer': securityAnswer,
       });
-      debugPrint('REGISTER PAYLOAD => ${securityQuestionId}');
+      debugPrint('REGISTER PAYLOAD => $securityQuestionId');
       final ok = result is Map && result['ok'] == true;
       final message = result is Map ? (result['message'] ?? '').toString() : '';
       final userId = result is Map ? result['userId']?.toString() : null;

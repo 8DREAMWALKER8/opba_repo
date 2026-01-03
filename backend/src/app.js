@@ -6,15 +6,18 @@ require("express-async-errors");
 
 const { errorHandler } = require("./middleware/errorHandler");
 
-// legacy routes
-const authRoutes = require("./routes/auth.routes");
-const meRoutes = require("./routes/me.routes");
+// legacy routes (KEEP only what we still need)
 const passwordResetRoutes = require("./routes/passwordReset.routes");
 const interestRatesRoutes = require("./routes/interestRates.routes");
 const loanCalcRoutes = require("./routes/loanCalc.routes");
 
 // auth middleware
 const { requireAuth } = require("./middleware/auth");
+
+// --------------------
+// CLEAN: Users ✅
+// --------------------
+const { buildUserModule } = require("./modules/users");
 
 // --------------------
 // CLEAN: Notifications
@@ -123,18 +126,19 @@ app.use(morgan("dev"));
 // --------------------
 // Routes
 // --------------------
-app.use("/auth", authRoutes);
-app.use("/me", meRoutes);
 
-// clean
+// ✅ clean users (register/login/me artık burada)
+app.use("/users", buildUserModule());
+
+// ✅ clean modules
 app.use("/accounts", accountsRouter);
 app.use("/transactions", transactionsRouter);
 app.use("/budgets", budgetsRouter);
-
-app.use("/auth", passwordResetRoutes);
 app.use("/notifications", notificationsRouter);
 app.use("/api/fx", fxRoutes);
 
+// ✅ legacy (şimdilik kalsın)
+app.use("/auth", passwordResetRoutes);
 app.use("/api/interest-rates", interestRatesRoutes);
 app.use("/api/loan", loanCalcRoutes);
 

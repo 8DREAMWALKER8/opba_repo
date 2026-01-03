@@ -398,7 +398,7 @@ class SettingsScreen extends StatelessWidget {
 
               if (success) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text('Profil başarıyla güncellendi.'),
                     backgroundColor: AppColors.success,
                   ),
