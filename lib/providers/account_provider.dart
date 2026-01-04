@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:opba_app/services/api_service.dart';
 import '../models/account_model.dart';
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AccountProvider extends ChangeNotifier {
-  List<Account> _accounts = [];
+  List<Account> _accounts = <Account>[];
   bool _isLoading = false;
   String? _error;
 
@@ -13,6 +16,10 @@ class AccountProvider extends ChangeNotifier {
   double get totalBalance {
     return _accounts.fold(0.0, (sum, account) => sum + account.balance);
   }
+
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  String _cardKey(String iban) => 'acct_card_$iban';
 
   AccountProvider() {
     _loadDemoAccounts();
@@ -51,15 +58,50 @@ class AccountProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
-
+    debugPrint('Fetching accounts from API...');
     try {
-      // API çağrısını simüle et
-      await Future.delayed(const Duration(seconds: 1));
-      // _accounts API'den yüklenecek
+      final api = ApiService();
+
+      final raw = await api.getAccounts(); // List<dynamic>
+
+      final accounts = raw
+          .whereType<
+              Map<String, dynamic>>() // Eğer API zaten Map döndürüyorsa direkt
+          .map(Account.fromJson)
+          .toList();
+
+      final merged = <Account>[];
+
+      for (final acc in accounts) {
+        final stored = await _storage.read(key: _cardKey(acc.iban));
+
+        if (stored != null) {
+          final data = jsonDecode(stored) as Map<String, dynamic>;
+          merged.add(
+            acc.copyWith(
+              cardNumber: (data['cardNumber'] ?? acc.cardNumber).toString(),
+              expiryDate: (data['expiryDate'] ?? acc.expiryDate)?.toString(),
+              cardHolderName:
+                  (data['cardHolderName'] ?? acc.cardHolderName)?.toString(),
+            ),
+          );
+        } else {
+          merged.add(acc);
+        }
+      }
+
+      _accounts = merged;
+      debugPrint('Fetched accounts: $_accounts');
       _isLoading = false;
       notifyListeners();
-    } catch (e) {
+    } on ApiException catch (e) {
+      _error = e.message; // backend error mesajı
+      debugPrint('get account API Exception: ${e.message}');
+      _isLoading = false;
+      notifyListeners();
+    } catch (_) {
       _error = 'Hesaplar yüklenirken hata oluştu.';
+      debugPrint('get account general Exception: ${_.toString()}');
       _isLoading = false;
       notifyListeners();
     }
@@ -67,9 +109,7 @@ class AccountProvider extends ChangeNotifier {
 
   Future<bool> addAccount({
     required String bankName,
-    required String cardNumber,
-    required String cardHolderName,
-    required String expiryDate,
+    required String cardHolderName, // ✅ backend'e accountName gidecek
     required String iban,
     double balance = 0.0,
     String currency = 'TRY',
@@ -79,24 +119,35 @@ class AccountProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      final api = ApiService();
 
-      final newAccount = Account(
-        id: 'acc_${DateTime.now().millisecondsSinceEpoch}',
-        userId: 'user_123',
-        bankName: bankName,
-        cardNumber: cardNumber,
+      final payload = <String, dynamic>{
+        'bankName': bankName.trim(),
+        'accountName': cardHolderName.trim(), // ✅ mapping
+        'iban': iban.trim(),
+        'balance': balance,
+        'currency': currency,
+        'source': 'manual',
+      };
+
+      final createdJson = await api.createAccount(payload);
+      final created = Account.fromJson(createdJson);
+
+      // ✅ UI-only alanları localde tamamla
+      final uiAccount = created.copyWith(
         cardHolderName: cardHolderName,
-        expiryDate: expiryDate,
-        iban: iban,
-        balance: balance,
-        currency: currency,
+        lastSyncAt: DateTime.now(), // ✅ şimdilik new date
       );
 
-      _accounts.add(newAccount);
+      _accounts.insert(0, uiAccount);
       _isLoading = false;
       notifyListeners();
       return true;
+    } on ApiException catch (e) {
+      _error = e.message;
+      _isLoading = false;
+      notifyListeners();
+      return false;
     } catch (e) {
       _error = 'Hesap eklenirken hata oluştu.';
       _isLoading = false;
@@ -141,4 +192,14 @@ class AccountProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
   }
+}
+
+class ApiException implements Exception {
+  final String message;
+  final int statusCode;
+
+  ApiException(this.message, {required this.statusCode});
+
+  @override
+  String toString() => 'ApiException($statusCode): $message';
 }

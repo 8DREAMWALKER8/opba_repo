@@ -333,6 +333,583 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+  void _showChangePasswordDialog(BuildContext context) {
+    final l10n = context.l10n;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final currentPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
+
+    bool obscureCurrent = true;
+    bool obscureNew = true;
+    bool obscureConfirm = true;
+
+    // ✅ Kurallar ilk açılışta görünmesin
+    bool showPasswordRules = false;
+    List<String> passwordRuleErrors = [];
+
+    // ✅ Register ekranındaki kuralları buraya birebir taşı
+    List<String> validatePassword(String password) {
+      final errors = <String>[];
+      final p = password.trim();
+
+      // ÖRNEK KURAL SETİ (register ile aynı yap)
+      if (p.length < 8) errors.add('En az 8 karakter olmalı');
+      if (!RegExp(r'[A-Z]').hasMatch(p))
+        errors.add('En az 1 büyük harf içermeli');
+      if (!RegExp(r'[a-z]').hasMatch(p))
+        errors.add('En az 1 küçük harf içermeli');
+      if (!RegExp(r'\d').hasMatch(p)) errors.add('En az 1 rakam içermeli');
+      if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(p))
+        errors.add('En az 1 özel karakter içermeli');
+
+      return errors;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          backgroundColor: isDark ? AppColors.cardDark : Colors.white,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          titlePadding: const EdgeInsets.fromLTRB(20, 18, 20, 0),
+          contentPadding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+          actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryBlue.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child:
+                    const Icon(Icons.lock_reset, color: AppColors.primaryBlue),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Şifre Değiştir',
+                style: TextStyle(
+                  color: isDark ? Colors.white : AppColors.primaryBlue,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 6),
+
+              // Mevcut Şifre
+              TextField(
+                controller: currentPasswordController,
+                obscureText: obscureCurrent,
+                decoration: InputDecoration(
+                  labelText: 'Mevcut Şifre',
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  filled: true,
+                  fillColor: isDark
+                      ? AppColors.backgroundDark
+                      : const Color(0xFFF1F5F9),
+                  suffixIcon: IconButton(
+                    onPressed: () =>
+                        setState(() => obscureCurrent = !obscureCurrent),
+                    icon: Icon(
+                      obscureCurrent ? Icons.visibility_off : Icons.visibility,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondaryLight,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
+
+              // Yeni Şifre
+              TextField(
+                controller: newPasswordController,
+                obscureText: obscureNew,
+                decoration: InputDecoration(
+                  labelText: 'Yeni Şifre',
+                  prefixIcon: const Icon(Icons.lock),
+                  filled: true,
+                  fillColor: isDark
+                      ? AppColors.backgroundDark
+                      : const Color(0xFFF1F5F9),
+                  suffixIcon: IconButton(
+                    onPressed: () => setState(() => obscureNew = !obscureNew),
+                    icon: Icon(
+                      obscureNew ? Icons.visibility_off : Icons.visibility,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondaryLight,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
+
+              // Yeni Şifre Tekrar
+              TextField(
+                controller: confirmPasswordController,
+                obscureText: obscureConfirm,
+                decoration: InputDecoration(
+                  labelText: 'Yeni Şifre (Tekrar)',
+                  prefixIcon: const Icon(Icons.lock),
+                  filled: true,
+                  fillColor: isDark
+                      ? AppColors.backgroundDark
+                      : const Color(0xFFF1F5F9),
+                  suffixIcon: IconButton(
+                    onPressed: () =>
+                        setState(() => obscureConfirm = !obscureConfirm),
+                    icon: Icon(
+                      obscureConfirm ? Icons.visibility_off : Icons.visibility,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondaryLight,
+                    ),
+                  ),
+                ),
+              ),
+
+              // ✅ Kurallar sadece hata sonrası gösterilsin
+              if (showPasswordRules && passwordRuleErrors.isNotEmpty) ...[
+                const SizedBox(height: 14),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.error.withOpacity(isDark ? 0.12 : 0.08),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppColors.error.withOpacity(isDark ? 0.35 : 0.25),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Şifre kuralları:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      ...passwordRuleErrors.map(
+                        (m) => Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Icon(Icons.close,
+                                  size: 16, color: AppColors.error),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  m,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+
+              const SizedBox(height: 10),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.cancel),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final current = currentPasswordController.text.trim();
+                final next = newPasswordController.text.trim();
+                final confirm = confirmPasswordController.text.trim();
+
+                // reset: her denemede eski hataları temizle
+                setState(() {
+                  showPasswordRules = false;
+                  passwordRuleErrors = [];
+                });
+
+                if (next != confirm) {
+                  setState(() {
+                    showPasswordRules = true;
+                    passwordRuleErrors = ['Yeni şifreler eşleşmiyor.'];
+                  });
+                  return;
+                }
+
+                if (current.isEmpty || next.isEmpty || confirm.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Lütfen tüm alanları doldurun.'),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+                  return;
+                }
+
+                // ✅ Kurallar: sadece başarısızsa göster
+                final errors = validatePassword(next);
+                if (errors.isNotEmpty) {
+                  setState(() {
+                    showPasswordRules = true;
+                    passwordRuleErrors = errors;
+                  });
+                  return;
+                }
+
+                if (next != confirm) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Yeni şifreler eşleşmiyor.'),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+                  return;
+                }
+
+                // Burada backend çağrısı:
+                final authProvider = context.read<AuthProvider>();
+                final ok = await authProvider.updateProfile(
+                  currentPassword: current,
+                  password: next,
+                );
+                if (!ok) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content:
+                          Text(authProvider.error ?? 'Şifre güncellenemedi.'),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+                  return;
+                }
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Şifre başarıyla güncellendi.'),
+                    backgroundColor: AppColors.success,
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryBlue,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(l10n.save),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showChangeSecurityQuestionDialog(BuildContext context) {
+    final l10n = context.l10n;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final authProvider = context.read<AuthProvider>();
+
+    // Eğer sorular daha önce çekilmediyse burada da garanti altına al
+    // (authProvider.initSecurityQuestions varsa)
+    // Future.microtask(() => authProvider.initSecurityQuestions(lang: 'tr'));
+
+    final currentAnswerController = TextEditingController();
+    final newAnswerController = TextEditingController();
+
+    bool obscureCurrent = true;
+    bool obscureNew = true;
+
+    String? selectedNewQuestionId;
+
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          final questions = context.watch<AuthProvider>().securityQuestions;
+
+          // Mevcut soru metnini bul
+          final currentQuestionId = authProvider.user?.securityQuestionId;
+          debugPrint('Current question ID: $currentQuestionId');
+          final currentQuestionText = (currentQuestionId == null)
+              ? null
+              : questions
+                  .firstWhere(
+                    (q) => q['id'] == currentQuestionId,
+                    orElse: () => {},
+                  )['text']
+                  ?.toString();
+
+          return AlertDialog(
+            backgroundColor: isDark ? AppColors.cardDark : Colors.white,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            titlePadding: const EdgeInsets.fromLTRB(20, 18, 20, 0),
+            contentPadding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+            actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            title: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryBlue.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child:
+                      const Icon(Icons.security, color: AppColors.primaryBlue),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Güvenlik Sorusu',
+                  style: TextStyle(
+                    color: isDark ? Colors.white : AppColors.primaryBlue,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 6),
+
+                  // Mevcut soru (read-only görünüm)
+                  Text(
+                    'Mevcut Güvenlik Sorusu',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AppColors.backgroundDark
+                          : const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isDark
+                            ? const Color(0xFF334155)
+                            : const Color(0xFFE2E8F0),
+                      ),
+                    ),
+                    child: Text(
+                      currentQuestionText ?? '—',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: isDark
+                            ? Colors.white.withOpacity(0.9)
+                            : Colors.black87,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  // Mevcut cevap
+                  TextField(
+                    controller: currentAnswerController,
+                    obscureText: obscureCurrent,
+                    decoration: InputDecoration(
+                      labelText: 'Mevcut Cevap',
+                      prefixIcon: const Icon(Icons.lock_outline),
+                      filled: true,
+                      fillColor: isDark
+                          ? AppColors.backgroundDark
+                          : const Color(0xFFF1F5F9),
+                      suffixIcon: IconButton(
+                        onPressed: () =>
+                            setState(() => obscureCurrent = !obscureCurrent),
+                        icon: Icon(
+                          obscureCurrent
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: isDark
+                              ? AppColors.textSecondaryDark
+                              : AppColors.textSecondaryLight,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  // Yeni soru seçimi
+                  Text(
+                    'Yeni Güvenlik Sorusu',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  DropdownButtonFormField<String>(
+                    value: selectedNewQuestionId,
+                    decoration: InputDecoration(
+                      hintText: l10n.securityQuestionSelect,
+                      filled: true,
+                      fillColor: isDark
+                          ? AppColors.backgroundDark
+                          : const Color(0xFFF1F5F9),
+                    ),
+                    items: questions.map((q) {
+                      final id = q['id']?.toString() ?? '';
+                      final text = q['text']?.toString() ?? '';
+                      return DropdownMenuItem<String>(
+                        value: id,
+                        child: Text(
+                          text,
+                          style: const TextStyle(fontSize: 13),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedNewQuestionId = value;
+                      });
+                    },
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  // Yeni cevap
+                  TextField(
+                    controller: newAnswerController,
+                    obscureText: obscureNew,
+                    decoration: InputDecoration(
+                      labelText: 'Yeni Cevap',
+                      prefixIcon: const Icon(Icons.lock),
+                      filled: true,
+                      fillColor: isDark
+                          ? AppColors.backgroundDark
+                          : const Color(0xFFF1F5F9),
+                      suffixIcon: IconButton(
+                        onPressed: () =>
+                            setState(() => obscureNew = !obscureNew),
+                        icon: Icon(
+                          obscureNew ? Icons.visibility_off : Icons.visibility,
+                          color: isDark
+                              ? AppColors.textSecondaryDark
+                              : AppColors.textSecondaryLight,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 14),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(l10n.cancel),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  final currentAnswer = currentAnswerController.text.trim();
+                  final newAnswer = newAnswerController.text.trim();
+                  final newQid = selectedNewQuestionId;
+
+                  // ✅ Zorunluluk kontrolleri
+                  if (currentQuestionId == null || currentQuestionId.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Mevcut güvenlik sorusu bulunamadı.'),
+                        backgroundColor: AppColors.error,
+                      ),
+                    );
+                    return;
+                  }
+
+                  if (currentAnswer.isEmpty ||
+                      newQid == null ||
+                      newQid.isEmpty ||
+                      newAnswer.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Lütfen tüm alanları doldurun.'),
+                        backgroundColor: AppColors.error,
+                      ),
+                    );
+                    return;
+                  }
+
+                  // İstersen aynı soruyu seçmeyi engelle:
+                  if (newQid == currentQuestionId) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                            Text('Yeni soru, mevcut sorudan farklı olmalıdır.'),
+                        backgroundColor: AppColors.error,
+                      ),
+                    );
+                    return;
+                  }
+
+                  // ✅ Backend çağrısı (AuthProvider'da method yazacağız)
+                  final ok = await authProvider.updateProfile(
+                    securityAnswer: currentAnswer,
+                    securityQuestionId: newQid,
+                    newAnswer: newAnswer,
+                  );
+
+                  if (!ok && authProvider.error != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(authProvider.error!),
+                        backgroundColor: AppColors.error,
+                      ),
+                    );
+                    return;
+                  }
+
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Güvenlik sorusu başarıyla güncellendi.'),
+                      backgroundColor: AppColors.success,
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryBlue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(l10n.save),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
   void _showEditProfileDialog(BuildContext context, AuthProvider authProvider) {
     final l10n = context.l10n;
 
@@ -437,7 +1014,8 @@ class SettingsScreen extends StatelessWidget {
                   const Icon(Icons.lock_outline, color: AppColors.primaryBlue),
               title: const Text('Şifre Değiştir'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(context); // security dialog kapanır
+                _showChangePasswordDialog(context);
               },
             ),
             ListTile(
@@ -445,6 +1023,7 @@ class SettingsScreen extends StatelessWidget {
               title: const Text('Güvenlik Sorusu'),
               onTap: () {
                 Navigator.pop(context);
+                _showChangeSecurityQuestionDialog(context);
               },
             ),
           ],

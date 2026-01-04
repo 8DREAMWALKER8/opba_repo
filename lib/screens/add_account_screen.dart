@@ -15,10 +15,8 @@ class AddAccountScreen extends StatefulWidget {
 
 class _AddAccountScreenState extends State<AddAccountScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _cardNumberController = TextEditingController();
   final _ibanController = TextEditingController();
   final _cardHolderController = TextEditingController();
-  final _expiryController = TextEditingController();
   final _balanceController = TextEditingController();
 
   String? _selectedBank;
@@ -26,10 +24,8 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
 
   @override
   void dispose() {
-    _cardNumberController.dispose();
     _ibanController.dispose();
     _cardHolderController.dispose();
-    _expiryController.dispose();
     _balanceController.dispose();
     super.dispose();
   }
@@ -80,9 +76,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
 
     final success = await accountProvider.addAccount(
       bankName: _selectedBank!,
-      cardNumber: _cardNumberController.text.replaceAll(' ', ''),
       cardHolderName: _cardHolderController.text,
-      expiryDate: _expiryController.text,
       iban: _ibanController.text.replaceAll(' ', ''),
       balance: double.tryParse(_balanceController.text) ?? 0.0,
     );
@@ -177,44 +171,6 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
               ),
               const SizedBox(height: 20),
 
-              // kart numarası
-              _buildLabel(l10n.cardNumber),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _cardNumberController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(16),
-                ],
-                decoration: InputDecoration(
-                  hintText: l10n.cardNumberHint,
-                  prefixIcon: const Icon(Icons.credit_card),
-                  filled: true,
-                  fillColor: isDark ? AppColors.cardDark : Colors.white,
-                ),
-                onChanged: (value) {
-                  final formatted = _formatCardNumber(value);
-                  if (formatted != value) {
-                    _cardNumberController.value = TextEditingValue(
-                      text: formatted,
-                      selection:
-                          TextSelection.collapsed(offset: formatted.length),
-                    );
-                  }
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return l10n.translate('field_required');
-                  }
-                  if (value.replaceAll(' ', '').length < 16) {
-                    return l10n.translate('invalid_card_number');
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-
               // IBAN
               _buildLabel(l10n.iban),
               const SizedBox(height: 8),
@@ -237,7 +193,9 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                           TextSelection.collapsed(offset: formatted.length),
                     );
                   }
+                  setState(() {}); // ✅ preview rebuild
                 },
+                maxLength: 26 + 6, // boşluklarla birlikte
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return l10n.translate('field_required');
@@ -263,6 +221,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
                 ),
+                onChanged: (_) => setState(() {}),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return l10n.translate('field_required');
@@ -275,46 +234,6 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
               // son kullanma tarihi ve bakiye satırı
               Row(
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildLabel('Son Kullanma'),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: _expiryController,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(4),
-                          ],
-                          decoration: InputDecoration(
-                            hintText: 'AA/YY',
-                            prefixIcon: const Icon(Icons.calendar_today),
-                            filled: true,
-                            fillColor:
-                                isDark ? AppColors.cardDark : Colors.white,
-                          ),
-                          onChanged: (value) {
-                            if (value.length == 2 && !value.contains('/')) {
-                              _expiryController.text = '$value/';
-                              _expiryController.selection =
-                                  TextSelection.collapsed(
-                                offset: _expiryController.text.length,
-                              );
-                            }
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Zorunlu';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -465,12 +384,12 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            _cardNumberController.text.isEmpty
-                ? '**** **** **** ****'
-                : _cardNumberController.text,
+            _ibanController.text.isEmpty || _ibanController.text.length < 4
+                ? 'TR** **** **** **** **** **** **'
+                : _ibanController.text,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 14.5,
               fontWeight: FontWeight.w500,
               letterSpacing: 2,
             ),
@@ -483,15 +402,6 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                 _cardHolderController.text.isEmpty
                     ? 'AD SOYAD'
                     : _cardHolderController.text,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                _expiryController.text.isEmpty
-                    ? 'AA/YY'
-                    : _expiryController.text,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,

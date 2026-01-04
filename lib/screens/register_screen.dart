@@ -89,6 +89,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final auth = context.watch<AuthProvider>();
+    final questions = auth.securityQuestions;
 
     return Scaffold(
       body: Container(
@@ -290,7 +292,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         _buildLabeledField(l10n.securityQuestion, isDark,
                             icon: Icons.search),
                         DropdownButtonFormField<String>(
-                          initialValue: _selectedSecurityQuestion,
+                          initialValue: (questions.any(
+                                  (q) => q['id'] == _selectedSecurityQuestion))
+                              ? _selectedSecurityQuestion
+                              : null,
                           decoration: InputDecoration(
                             hintText: l10n.securityQuestionSelect,
                             filled: true,
@@ -298,11 +303,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ? AppColors.backgroundDark
                                 : const Color(0xFFF1F5F9),
                           ),
-                          items: l10n.securityQuestions.map((question) {
-                            return DropdownMenuItem(
-                              value: question['id'],
+                          items: questions.map((q) {
+                            final id = q['id']?.toString() ?? '';
+                            final text = q['text']?.toString() ?? '';
+                            return DropdownMenuItem<String>(
+                              value: id,
                               child: Text(
-                                question['text']!,
+                                text,
                                 style: const TextStyle(fontSize: 13),
                                 overflow: TextOverflow.ellipsis,
                               ),

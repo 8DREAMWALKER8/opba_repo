@@ -15,21 +15,31 @@ class TransactionRepositoryMongo {
 
     return doc.toObject();
   }
+async findByUserId(userId, opts = {}) {
+  const { limit = 50, skip = 0, type, category } = opts;
 
-  async findByUserId(userId, opts = {}) {
-    const { limit = 50, skip = 0, type, category } = opts;
+  const filter = { userId };
+  if (type) filter.type = type;
+  if (category) filter.category = category;
 
-    const filter = { userId };
-    if (type) filter.type = type;
-    if (category) filter.category = category;
+  const items = await TransactionModel.find(filter)
+    .sort({ occurredAt: -1, createdAt: -1 })
+    .skip(Number(skip))
+    .limit(Number(limit))
+    .lean(); // ✅ daha hızlı, direkt plain object
 
-    const items = await TransactionModel.find(filter)
-      .sort({ occurredAt: -1, createdAt: -1 })
-      .skip(Number(skip))
-      .limit(Number(limit));
-
-    return items.map((d) => d.toObject());
+  // ✅ _id bazlı tekilleştirme
+  const seen = new Set();
+  const unique = [];
+  for (const t of items) {
+    const id = String(t._id);
+    if (seen.has(id)) continue;
+    seen.add(id);
+    unique.push(t);
   }
+
+  return unique;
+}
 
   /**
    * Budget entegrasyonu için: belli tarih aralığında (örn. ay) belirli kategori expense toplamını döner.

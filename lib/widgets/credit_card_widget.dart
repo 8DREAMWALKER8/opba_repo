@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/account_model.dart';
 import '../theme/app_theme.dart';
 
-class CreditCardWidget extends StatelessWidget {
+class CreditCardWidget extends StatefulWidget {
   final Account account;
 
   const CreditCardWidget({
@@ -11,7 +11,19 @@ class CreditCardWidget extends StatelessWidget {
   });
 
   @override
+  State<CreditCardWidget> createState() => _CreditCardWidgetState();
+}
+
+class _CreditCardWidgetState extends State<CreditCardWidget> {
+  bool _showFullIban = false;
+
+  @override
   Widget build(BuildContext context) {
+    final account = widget.account;
+
+    final ibanText =
+        _showFullIban ? _formatIban(account.iban) : _maskIban(account.iban);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -19,7 +31,7 @@ class CreditCardWidget extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: _getGradientColors(),
+          colors: _getGradientColors(account),
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
@@ -44,27 +56,61 @@ class CreditCardWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          // kart numarası
-          Text(
-            account.maskedCardNumber,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 2,
-            ),
+
+          // ✅ IBAN + göz butonu (kart numarası kaldırıldı)
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  ibanText.isEmpty ? '—' : ibanText,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize:
+                        _showFullIban ? 14 : 16, // ✅ açılınca biraz küçült
+                    fontWeight: FontWeight.w500,
+                    letterSpacing:
+                        _showFullIban ? 0.6 : 1.2, // ✅ açılınca spacing azalt
+                    height: 1.2,
+                  ),
+                  maxLines: _showFullIban ? 2 : 1, // ✅ açılınca 2 satır
+                  overflow: _showFullIban
+                      ? TextOverflow.visible
+                      : TextOverflow.ellipsis, // ✅ kapalıyken ellipsis
+                  softWrap: true, // ✅ satıra böl
+                ),
+              ),
+              const SizedBox(width: 10),
+              InkWell(
+                borderRadius: BorderRadius.circular(999),
+                onTap: () => setState(() => _showFullIban = !_showFullIban),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.18),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    _showFullIban ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ],
           ),
+
           const SizedBox(height: 16),
+
           // kart detayları satırı
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // kart sahibi
+              // hesap adı (UI'daki cardHolderName = accountName)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    account.cardHolderName ?? 'Kart Sahibi',
+                    account.cardHolderName ?? 'Hesap Adı',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
@@ -73,9 +119,9 @@ class CreditCardWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              // son kullanma tarihi
+              // para birimi
               Text(
-                account.expiryDate ?? '',
+                account.currency,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
@@ -84,10 +130,12 @@ class CreditCardWidget extends StatelessWidget {
               ),
             ],
           ),
+
           const SizedBox(height: 8),
+
           // bakiye
           Text(
-            'Bakiye: ${_formatNumber(account.balance)} TL',
+            'Bakiye: ${_formatNumber(account.balance)} ${account.currency}',
             style: const TextStyle(
               color: Colors.white70,
               fontSize: 14,
@@ -98,7 +146,7 @@ class CreditCardWidget extends StatelessWidget {
     );
   }
 
-  List<Color> _getGradientColors() {
+  List<Color> _getGradientColors(Account account) {
     final bankName = account.bankName.toLowerCase();
     if (bankName.contains('ziraat')) {
       return [const Color(0xFF1E3A8A), const Color(0xFF3B82F6)];
@@ -121,64 +169,28 @@ class CreditCardWidget extends StatelessWidget {
           (Match m) => '${m[1]}.',
         );
   }
-}
 
-class MiniCreditCard extends StatelessWidget {
-  final Account account;
-  final VoidCallback? onTap;
+  // TRxx xxxx xxxx ... gibi okunabilir IBAN formatı
+  String _formatIban(String iban) {
+    final raw = iban.replaceAll(' ', '').trim();
+    if (raw.isEmpty) return '';
+    final buffer = StringBuffer();
+    for (int i = 0; i < raw.length; i++) {
+      buffer.write(raw[i]);
+      if ((i + 1) % 4 == 0 && (i + 1) != raw.length) buffer.write(' ');
+    }
+    return buffer.toString();
+  }
 
-  const MiniCreditCard({
-    super.key,
-    required this.account,
-    this.onTap,
-  });
+  // IBAN maskeleme: TR12 **** **** **** **** **34
+  String _maskIban(String iban) {
+    final raw = iban.replaceAll(' ', '').trim();
+    if (raw.isEmpty) return '';
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 160,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF1E3A8A), Color(0xFF3B82F6)],
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'VISA',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '**** ${account.lastFourDigits}',
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 11,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${account.balance.toStringAsFixed(0)} TL',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    if (raw.length <= 8) return raw;
+
+    final start = raw.substring(0, 4); // TR12
+    final end = raw.substring(raw.length - 4); // son 4
+    return '$start **** **** **** **** $end';
   }
 }

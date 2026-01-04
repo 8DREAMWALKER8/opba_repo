@@ -21,9 +21,54 @@ class AuthProvider extends ChangeNotifier {
   String? get securityQuestion => _securityQuestion;
   String? get error => _error;
   bool get isAuthenticated => _status == AuthStatus.authenticated;
+  List<Map<String, dynamic>> _securityQuestions = [];
+  bool _securityQuestionsLoaded = false;
+
+  List<Map<String, dynamic>> get securityQuestions => _securityQuestions;
+  bool get securityQuestionsLoaded => _securityQuestionsLoaded;
 
   AuthProvider() {
     _checkAuthStatus();
+  }
+
+  Future<void> initSecurityQuestions(
+      {String lang = 'tr', bool force = false}) async {
+    // Daha önce yüklediysek tekrar istek atma
+    if (_securityQuestionsLoaded && !force) return;
+
+    try {
+      final api = ApiService();
+
+      final resp = await api.getSecurityQuestions(lang: lang);
+
+      // Beklenen response örneği:
+      // { ok: true, lang: 'tr', questions: [ {id:'q1', text:'...'}, ... ] }
+      final ok = resp is Map && resp['ok'] == true;
+      if (!ok) {
+        // ok false ise cache'i bozma; sadece loaded flag'i false bırak
+        _securityQuestionsLoaded = false;
+        notifyListeners();
+        return;
+      }
+
+      final questions = (resp['questions'] as List?) ?? [];
+      _securityQuestions =
+          questions.map((e) => Map<String, dynamic>.from(e as Map)).toList();
+
+      _securityQuestionsLoaded = true;
+      notifyListeners();
+    } catch (e) {
+      _securityQuestionsLoaded = false;
+      // İstersen burada loglayabilirsin
+      notifyListeners();
+    }
+  }
+
+  // İstersen id ile tek soru metni bulma (UI tarafını kolaylaştırır)
+  String? securityQuestionTextById(String id) {
+    final q = _securityQuestions.where((x) => x['id'] == id).toList();
+    if (q.isEmpty) return null;
+    return q.first['text']?.toString();
   }
 
   Future<void> _checkAuthStatus() async {
@@ -68,13 +113,12 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
 
-      final challengeToken = (result['challengeToken'] ?? '').toString();
-      final securityQuestionText =
-          (result['securityQuestionText'] ?? '').toString();
+      debugPrint('login result => ' + result.toString());
+      final userId = (result['userId'] ?? '').toString();
       final securityQuestionId =
           (result['securityQuestionId'] ?? '').toString();
 
-      if (challengeToken.isEmpty) {
+      if (userId.isEmpty) {
         _error = 'Giriş doğrulama anahtarı alınamadı.';
         _status = AuthStatus.unauthenticated;
         notifyListeners();
@@ -82,11 +126,11 @@ class AuthProvider extends ChangeNotifier {
       }
 
       // 2. adım için geçici olarak sakla
-      await _storage.write(key: 'challenge_token', value: challengeToken);
+      await _storage.write(key: 'user_id', value: userId);
       await _storage.write(
           key: 'security_question_id', value: securityQuestionId);
 
-      _securityQuestion = securityQuestionText;
+      _securityQuestion = securityQuestionTextById(securityQuestionId);
       _tempUserId = null; // backend artık userId dönmüyor; token içinde var
 
       // Henüz authenticated değiliz; güvenlik sorusu adımı var
@@ -114,17 +158,16 @@ class AuthProvider extends ChangeNotifier {
     try {
       final api = ApiService();
 
-      final challengeToken = await _storage.read(key: 'challenge_token');
-      if (challengeToken == null || challengeToken.isEmpty) {
-        _error = 'Doğrulama oturumu bulunamadı. Lütfen tekrar giriş yapın.';
+      final tempUserId = await _storage.read(key: 'user_id');
+      if (tempUserId == null || tempUserId.isEmpty) {
+        _error = 'Bir yanlışlık oldu, Lütfen tekrar giriş yapın.';
         _status = AuthStatus.unauthenticated;
         notifyListeners();
         return false;
       }
 
       // 1) verify
-      final verifyRes =
-          await api.verifySecurityQuestion(challengeToken, answer);
+      final verifyRes = await api.verifySecurityQuestion(tempUserId, answer);
 
       final verifyOk = verifyRes is Map && verifyRes['ok'] == true;
       final verifyMsg =
@@ -137,7 +180,7 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
 
-      final accessToken = verifyRes['accessToken']?.toString() ?? '';
+      final accessToken = verifyRes['token']?.toString() ?? '';
       if (accessToken.isEmpty) {
         _error = 'Access token alınamadı.';
         _status = AuthStatus.unauthenticated;
@@ -148,7 +191,6 @@ class AuthProvider extends ChangeNotifier {
       // 2) token kaydet
       _token = accessToken;
       await _storage.write(key: 'auth_token', value: accessToken);
-      await _storage.delete(key: 'challenge_token');
 
       // 3) /me çağır ve user setle
       final meRes = await api.getMe();
@@ -169,7 +211,7 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
         return false;
       }
-
+      debugPrint('USER JSON: ' + userJson.toString());
       // User modelin hangi alanları bekliyorsa ona göre map et
       _user = User.fromJson(userJson); // Eğer fromJson yoksa aşağıya bak
 
@@ -260,6 +302,11 @@ class AuthProvider extends ChangeNotifier {
     String? language,
     String? currency,
     String? theme,
+    String? currentPassword,
+    String? password,
+    String? securityQuestionId,
+    String? securityAnswer,
+    String? newAnswer,
   }) async {
     if (_user == null) return false;
 
@@ -275,6 +322,11 @@ class AuthProvider extends ChangeNotifier {
         fullName: fullName, // fullName'i username'e map ediyoruz
         email: email,
         phone: phone,
+        password: password,
+        currentPassword: currentPassword,
+        securityQuestionId: securityQuestionId,
+        securityAnswer: securityAnswer,
+        newAnswer: newAnswer,
       );
 
       final ok = result is Map && result['ok'] == true;
@@ -293,17 +345,29 @@ class AuthProvider extends ChangeNotifier {
         // _user = User.fromJson(Map<String, dynamic>.from(userJson));
 
         // fromJson yoksa minimum alanlarla set et:
+
+        debugPrint('Profile update error: ' + userJson.toString());
         final m = Map<String, dynamic>.from(userJson);
         _user = _user!.copyWith(
-          username: (m['username'] ?? _user!.username).toString(),
-          email: (m['email'] ?? _user!.email).toString(),
-          phone: (m['phone'] ?? _user!.phone).toString(),
-        );
+            username: (m['username'] ?? _user!.username).toString(),
+            email: (m['email'] ?? _user!.email).toString(),
+            phone: (m['phone'] ?? _user!.phone).toString(),
+            securityQuestionId:
+                (m['securityQuestionId'] ?? _user!.securityQuestionId)
+                    .toString(),
+            securityQuestion: securityQuestionTextById(
+                    (m['securityQuestionId'] ?? _user!.securityQuestionId)
+                        .toString()) ??
+                _user!.securityQuestion);
 
         // (opsiyonel) storage user_id güncelle
         final userId = (m['_id'] ?? m['id'])?.toString();
         if (userId != null && userId.isNotEmpty) {
           await _storage.write(key: 'user_id', value: userId);
+          await _storage.write(
+              key: 'security_question_id',
+              value: (m['securityQuestionId'] ?? _user!.securityQuestionId)
+                  .toString());
         }
       }
 

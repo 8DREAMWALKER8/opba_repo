@@ -9,6 +9,7 @@ const { RegisterUser } = require("./application/usecases/RegisterUser");
 const { LoginStep1 } = require("./application/usecases/LoginStep1");
 const { LoginStep2 } = require("./application/usecases/LoginStep2");
 const { GetMe } = require("./application/usecases/GetMe");
+const { UpdateUser } = require("./application/usecases/UpdateUser");
 
 function buildUserModule() {
   const userRepo = new MongoUserRepository();
@@ -19,8 +20,9 @@ function buildUserModule() {
   const loginStep1 = new LoginStep1({ userRepo, hasher });
   const loginStep2 = new LoginStep2({ userRepo, hasher, tokenService });
   const getMe = new GetMe({ userRepo });
+  const updateUser = new UpdateUser({ userRepo, hasher });
 
-  const controller = new UserController({ registerUser, loginStep1, loginStep2, getMe });
+  const controller = new UserController({ registerUser, loginStep1, loginStep2, getMe, updateUser });
   const router = buildRoutes({ controller });
 
   return router;

@@ -7,6 +7,7 @@ class UserEntity {
     id,
     username,
     email,
+    phone,
     passwordHash,
     securityQuestionId,
     securityAnswerHash,
@@ -19,6 +20,19 @@ class UserEntity {
 
     if (!email || typeof email !== "string") {
       throw new Error("email is required");
+    }
+
+    if (phone !== undefined && phone !== null) {
+      if (typeof phone !== "string") {
+        throw new Error("phone must be a string");
+      }
+      const normalizedPhone = phone.trim();
+      if (!/^\d{10,15}$/.test(normalizedPhone)) {
+        throw new Error("phone must be digits (10-15)");
+      }
+      this.phone = normalizedPhone;
+    } else {
+      this.phone = undefined;
     }
 
     this.id = id;

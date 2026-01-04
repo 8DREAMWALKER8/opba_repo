@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:opba_app/providers/account_provider.dart';
+import 'package:opba_app/services/api_service.dart' hide ApiException;
 import '../models/transaction_model.dart';
 
 class TransactionProvider extends ChangeNotifier {
@@ -130,13 +132,27 @@ class TransactionProvider extends ChangeNotifier {
         .fold(0.0, (sum, t) => sum + t.amount);
   }
 
-  Future<void> fetchTransactions() async {
+  Future<void> fetchTransactions({String? accountId}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
-
+    final api = ApiService();
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      final body = await api.getTransactions(accountId: accountId);
+
+      // ✅ backend: { ok:true, transactions:[...] }
+      final rawList = (body is Map && body['transactions'] is List)
+          ? body['transactions'] as List
+          : <dynamic>[];
+
+      _transactions = rawList
+          .map((e) => Transaction.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList();
+
+      _isLoading = false;
+      notifyListeners();
+    } on ApiException catch (e) {
+      _error = e.message; // backend message
       _isLoading = false;
       notifyListeners();
     } catch (e) {

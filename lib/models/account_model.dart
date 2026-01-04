@@ -31,9 +31,12 @@ class Account {
 
   // görüntülemek için gizlenmiş kart numarası
   String get maskedCardNumber {
-    if (cardNumber.length >= 16) {
-      final cleaned = cardNumber.replaceAll(' ', '');
+    final cleaned = cardNumber.replaceAll(' ', '');
+    if (cleaned.length >= 16) {
       return '${cleaned.substring(0, 4)} ${cleaned.substring(4, 8)} ${cleaned.substring(8, 12)} ${cleaned.substring(12)}';
+    }
+    if (cleaned.isEmpty) {
+      return '•••• •••• •••• ••••';
     }
     return cardNumber;
   }
@@ -41,6 +44,7 @@ class Account {
   // son 4 rakamı al
   String get lastFourDigits {
     final cleaned = cardNumber.replaceAll(' ', '');
+    if (cleaned.isEmpty) return '••••';
     return cleaned.length >= 4
         ? cleaned.substring(cleaned.length - 4)
         : cleaned;
@@ -48,38 +52,51 @@ class Account {
 
   factory Account.fromJson(Map<String, dynamic> json) {
     return Account(
-      id: json['_id'] ?? json['id'],
-      userId: json['userId'] ?? '',
-      bankName: json['bankName'] ?? '',
-      cardNumber: json['cardNumber'] ?? '',
-      cardHolderName: json['cardHolderName'],
-      expiryDate: json['expiryDate'],
-      iban: json['iban'] ?? '',
+      id: (json['_id'] ?? json['id'])?.toString(),
+      userId: (json['userId'] ?? '').toString(),
+      bankName: (json['bankName'] ?? '').toString(),
+
+      // Backend'de cardNumber yok -> boş geç, UI'da placeholder/override ile yönet
+      cardNumber: (json['cardNumber'] ?? '').toString(),
+
+      // ✅ UI cardHolderName = backend accountName
+      cardHolderName:
+          (json['cardHolderName'] ?? json['accountName'])?.toString(),
+
+      // Backend'de expiryDate yok
+      expiryDate: json['expiryDate']?.toString(),
+
+      iban: (json['iban'] ?? '').toString(),
       balance: (json['balance'] ?? 0).toDouble(),
-      currency: json['currency'] ?? 'TRY',
-      accountType: json['accountType'] ?? 'checking',
-      isActive: json['isActive'] ?? true,
-      lastSyncAt: json['lastSyncAt'] != null
-          ? DateTime.parse(json['lastSyncAt'])
+      currency: (json['currency'] ?? 'TRY').toString(),
+
+      // Backend'de accountType yok (schema'da accountName var)
+      // UI'da accountType kullanıyorsan default kalsın
+      accountType: (json['accountType'] ?? 'checking').toString(),
+
+      isActive: (json['isActive'] ?? true) as bool,
+
+      // ✅ backend lastSyncedAt -> lastSyncAt
+      lastSyncAt: json['lastSyncedAt'] != null
+          ? DateTime.tryParse(json['lastSyncedAt'].toString())
+          : (json['lastSyncAt'] != null
+              ? DateTime.tryParse(json['lastSyncAt'].toString())
+              : null),
+
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'].toString())
           : null,
-      createdAt:
-          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJsonForCreate() {
     return {
-      'id': id,
-      'userId': userId,
       'bankName': bankName,
-      'cardNumber': cardNumber,
-      'cardHolderName': cardHolderName,
-      'expiryDate': expiryDate,
+      'accountName': (cardHolderName ?? '').trim(), // ✅ mapping
       'iban': iban,
       'balance': balance,
       'currency': currency,
-      'accountType': accountType,
-      'isActive': isActive,
+      'source': 'manual',
     };
   }
 

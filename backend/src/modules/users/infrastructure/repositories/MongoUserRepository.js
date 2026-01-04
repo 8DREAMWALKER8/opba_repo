@@ -17,6 +17,17 @@ class MongoUserRepository {
     const doc = await User.create(data);
     return doc;
   }
+  
+  async updateById(id, data) {
+    return User.findByIdAndUpdate(
+      id,
+      { $set: data },
+      {
+        new: true,          // güncellenmiş dökümanı döndür
+        runValidators: true // schema validation çalışsın
+      }
+    );
+  }
 }
 
 module.exports = { MongoUserRepository };

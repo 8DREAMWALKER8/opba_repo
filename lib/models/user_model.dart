@@ -8,6 +8,7 @@ class User {
   final String currency;
   final String theme;
   final String securityQuestion;
+  final String securityQuestionId;
   final DateTime? createdAt;
 
   User({
@@ -21,6 +22,7 @@ class User {
     this.theme = 'light',
     required this.securityQuestion,
     this.createdAt,
+    this.securityQuestionId = '',
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class User {
       currency: json['currency'] ?? 'TRY',
       theme: json['theme'] ?? 'light',
       securityQuestion: json['securityQuestion'] ?? '',
+      securityQuestionId: json['securityQuestionId'] ?? '',
       createdAt:
           json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
     );
@@ -50,6 +53,7 @@ class User {
       'currency': currency,
       'theme': theme,
       'securityQuestion': securityQuestion,
+      'securityQuestionId': securityQuestionId,
     };
   }
 
@@ -63,6 +67,7 @@ class User {
     String? currency,
     String? theme,
     String? securityQuestion,
+    String? securityQuestionId,
     DateTime? createdAt,
   }) {
     return User(
@@ -76,6 +81,7 @@ class User {
       theme: theme ?? this.theme,
       securityQuestion: securityQuestion ?? this.securityQuestion,
       createdAt: createdAt ?? this.createdAt,
+      securityQuestionId: securityQuestionId ?? this.securityQuestionId,
     );
   }
 }

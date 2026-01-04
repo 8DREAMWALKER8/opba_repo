@@ -26,6 +26,17 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    // initState içinde context erişimi için microtask patterni
+    Future.microtask(() async {
+      final auth = context.read<AuthProvider>();
+      await auth.initSecurityQuestions(lang: 'tr'); // veya dil seçimine göre
+    });
+  }
+
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
