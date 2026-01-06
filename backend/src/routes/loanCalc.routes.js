@@ -4,6 +4,9 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 
+// ✅ content helper
+const { t } = require("../shared/content");
+
 // CSV'yi basit şekilde parse etmek için helper.
 function parseCsv(content) {
   const lines = content.split(/\r?\n/).filter(Boolean);
@@ -14,7 +17,7 @@ function parseCsv(content) {
     .split(delimiter)
     .map((h) => h.replace(/^\uFEFF/, "").trim());
 
-// Her satırı başlıklara göre objeye çeviriyoruz {bank_name: "...", term_months: "..."}
+  // Her satırı başlıklara göre objeye çeviriyoruz {bank_name: "...", term_months: "..."}
   return lines.slice(1).map((line) => {
     const cols = line.split(delimiter).map((c) => c.trim());
     const obj = {};
@@ -47,7 +50,7 @@ function calcLoan({ principal, months, monthlyRate }) {
   let monthlyPayment;
   if (r === 0) monthlyPayment = P / n;
   else {
-  // annuite formülü
+    // annuite formülü
     const pow = Math.pow(1 + r, n);
     monthlyPayment = (P * r * pow) / (pow - 1);
   }
@@ -63,6 +66,7 @@ function calcLoan({ principal, months, monthlyRate }) {
     totalInterest: round2(totalInterest),
   };
 }
+
 /**
  * POST /api/loan/calc
  * Bu endpoint kredi hesaplar:
@@ -84,15 +88,28 @@ router.post("/calc", (req, res) => {
     const term = Number(term_months);
     const P = Number(principal);
 
-    if (!bank) return res.status(400).json({ ok: false, message: "bank_name required" });
-    if (!Number.isFinite(term) || term <= 0) return res.status(400).json({ ok: false, message: "term_months invalid" });
-    if (!Number.isFinite(P) || P <= 0) return res.status(400).json({ ok: false, message: "principal invalid" });
+    if (!bank)
+      return res.status(400).json({
+        ok: false,
+        message: t(req, "errors.BANK_NAME_REQUIRED", "bank_name required"),
+      });
+
+    if (!Number.isFinite(term) || term <= 0)
+      return res.status(400).json({
+        ok: false,
+        message: t(req, "errors.TERM_MONTHS_INVALID", "term_months invalid"),
+      });
+
+    if (!Number.isFinite(P) || P <= 0)
+      return res.status(400).json({
+        ok: false,
+        message: t(req, "errors.PRINCIPAL_INVALID", "principal invalid"),
+      });
 
     const rows = readRatesCsv();
-
     const bankLower = bank.toLowerCase();
 
-  // CSV'de: banka + kredi türü + para birimi + vade eşleşen satırı buluyoruz
+    // CSV'de: banka + kredi türü + para birimi + vade eşleşen satırı buluyoruz
     const match = rows.find((r) => {
       const bn = String(r.bank_name || "").toLowerCase();
       return (
@@ -106,20 +123,23 @@ router.post("/calc", (req, res) => {
     if (!match) {
       return res.status(404).json({
         ok: false,
-        message: "rate not found for given filters",
+        message: t(req, "errors.RATE_NOT_FOUND", "rate not found for given filters"),
         debug: { bank_name: bank, loan_type, currency, term_months: term },
       });
     }
 
     const monthlyRate = Number(String(match.monthly_rate).replace(",", ".")); // 0.03162
     if (!Number.isFinite(monthlyRate)) {
-      return res.status(500).json({ ok: false, message: "monthly_rate parse error" });
+      return res.status(500).json({
+        ok: false,
+        message: t(req, "errors.MONTHLY_RATE_PARSE_ERROR", "monthly_rate parse error"),
+      });
     }
 
     // Kredi sonuçlarını hesapla
     const result = calcLoan({ principal: P, months: term, monthlyRate });
 
-    res.json({
+    return res.json({
       ok: true,
       input: {
         bank_name: bank,
@@ -131,14 +151,20 @@ router.post("/calc", (req, res) => {
       rate: {
         monthly_rate: monthlyRate,
         monthly_rate_percent: Math.round(monthlyRate * 100000) / 1000, // ör: 3.162
-        annual_effective_rate: match.annual_effective_rate ? Number(match.annual_effective_rate) : null,
+        annual_effective_rate: match.annual_effective_rate
+          ? Number(match.annual_effective_rate)
+          : null,
         as_of_month: match.as_of_month,
         source: match.source,
       },
       result,
     });
   } catch (err) {
-    res.status(500).json({ ok: false, message: "calc error", error: err.message });
+    return res.status(500).json({
+      ok: false,
+      message: t(req, "errors.CALC_ERROR", "calc error"),
+      error: err.message,
+    });
   }
 });
 

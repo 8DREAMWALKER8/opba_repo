@@ -13,9 +13,10 @@ const loanCalcRoutes = require("./routes/loanCalc.routes");
 
 // auth middleware
 const { requireAuth } = require("./middleware/auth");
+const { contentLang } = require("./middleware/contentLang");
 
 // --------------------
-// CLEAN: Users ✅
+// CLEAN: Users 
 // --------------------
 const { buildUserModule } = require("./modules/users");
 
@@ -121,23 +122,24 @@ const fxRoutes = makeFxRatesRoutes(fxController);
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(contentLang);
 app.use(morgan("dev"));
 
 // --------------------
 // Routes
 // --------------------
 
-// ✅ clean users (register/login/me artık burada)
+//  clean users (register/login/me artık burada)
 app.use("/users", buildUserModule());
 
-// ✅ clean modules
+//  clean modules
 app.use("/accounts", accountsRouter);
 app.use("/transactions", transactionsRouter);
 app.use("/budgets", budgetsRouter);
 app.use("/notifications", notificationsRouter);
 app.use("/api/fx", fxRoutes);
 
-// ✅ legacy (şimdilik kalsın)
+//  legacy (şimdilik kalsın)
 app.use("/auth", passwordResetRoutes);
 app.use("/api/interest-rates", interestRatesRoutes);
 app.use("/api/loan", loanCalcRoutes);

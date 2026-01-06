@@ -8,12 +8,11 @@ class UpdateUser {
 
   async execute({ userId, data }) {
     if (!userId) throw new Error("userId is required");
-    if (!data || typeof data !== "object") throw new Error("data is required");
-
+    if (!data || typeof data !== "object") throw new Error("DATA_REQUIRED");
     const current = await this.userRepo.findById(userId);
     if (!current) throw new Error("User not found");
 
-    // ✅ phone eklendi
+
     const allowed = [
       "username",
       "email",
@@ -51,7 +50,7 @@ class UpdateUser {
       updateData.email = String(patch.email).toLowerCase();
     }
 
-    // ✅ phone update + basit doğrulama
+    //  phone update + basit doğrulama
     if (patch.phone !== undefined) {
       const phone = String(patch.phone).trim();
       if (!/^\d{10,15}$/.test(phone)) {

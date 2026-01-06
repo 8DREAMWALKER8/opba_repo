@@ -8,15 +8,19 @@ class TransactionEntity {
     currency = "TRY",
     occurredAt = new Date(),
   }) {
-    if (!userId) throw new Error("userId is required");
+    // ❗ Domain: sadece CODE fırlatıyoruz
+    if (!userId) throw new Error("USER_ID_REQUIRED");
+
     if (typeof amount !== "number" || !Number.isFinite(amount) || amount <= 0) {
-      throw new Error("amount must be a positive number");
+      throw new Error("AMOUNT_INVALID");
     }
+
     if (!category || typeof category !== "string") {
-      throw new Error("category is required");
+      throw new Error("CATEGORY_REQUIRED");
     }
-    if (!["expense", "income"].includes(type)) {
-      throw new Error("type must be 'expense' or 'income'");
+
+    if (!type || !["expense", "income"].includes(type)) {
+      throw new Error("TYPE_INVALID");
     }
 
     this.userId = userId;
@@ -29,4 +33,4 @@ class TransactionEntity {
   }
 }
 
-module.exports = TransactionEntity;
+module.exports = { TransactionEntity };
