@@ -35,7 +35,11 @@ router.post("/", requireAuth, async (req, res) => {
 
     const result = await createTransaction.execute({
       userId,
-      amount: req.body.amount,
+
+      accountId: req.body.accountId,
+
+      amount: Number(req.body.amount),
+
       category: req.body.category,
       description: req.body.description,
       type: req.body.type,
@@ -46,9 +50,23 @@ router.post("/", requireAuth, async (req, res) => {
     res.status(201).json({ ok: true, transaction: result });
   } catch (err) {
     console.error("CreateTransaction error:", err);
-    res.status(500).json({
+
+    const code = err.message;
+
+    const statusMap = {
+      AMOUNT_INVALID: 400,
+      CATEGORY_REQUIRED: 400,
+      TYPE_INVALID: 400,
+      ACCOUNT_ID_REQUIRED: 400,
+      ACCOUNT_NOT_FOUND: 404,
+      INSUFFICIENT_BALANCE: 400,
+    };
+
+    const status = statusMap[code] || 500;
+
+    res.status(status).json({
       ok: false,
-      message: err.message,
+      message: code,
     });
   }
 });

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const TransactionSchema = new mongoose.Schema(
   {
+    accountId: {type: require("mongoose").Schema.Types.ObjectId,ref: "BankAccount",required: true,index: true},
     userId: { type: mongoose.Schema.Types.ObjectId, required: true, index: true },
     amount: { type: Number, required: true },
     category: { type: String, required: true },

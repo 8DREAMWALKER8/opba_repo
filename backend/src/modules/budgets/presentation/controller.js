@@ -1,28 +1,51 @@
 console.log("BUDGET CONTROLLER LOADED");
+
 const BudgetRepositoryMongo = require("../infrastructure/persistence/repositories/BudgetRepositoryMongo");
 const GetBudgets = require("../application/usecases/GetBudgets");
 const SetBudgetLimit = require("../application/usecases/SetBudgetLimit");
 
 const budgetRepo = new BudgetRepositoryMongo();
-const getBudgetsUC = new GetBudgets(budgetRepo);
-const setBudgetLimitUC = new SetBudgetLimit(budgetRepo);
+
+const getBudgetsUC = new GetBudgets({ budgetRepo });
+const setBudgetLimitUC = new SetBudgetLimit({ budgetRepo });
 
 // GET /budgets
 async function getBudgets(req, res) {
   try {
-    const userId = req.user.userId;
+    const userId = req.user?.userId || req.user?.id || req.user?._id;
+
     const budgets = await getBudgetsUC.execute({ userId });
-    res.json({ ok: true, budgets });
+    return res.json({ ok: true, budgets });
   } catch (err) {
     console.error("getBudgets error:", err);
-    res.status(500).json({ ok: false, message: err.message });
+
+    // usecase/repo wiring hatası varsa fallback dene
+    try {
+      const userId = req.user?.userId || req.user?.id || req.user?._id;
+
+      // repo method isimleri farklı olabilir diye güvenli çağrı
+      const fn =
+        budgetRepo.findByUser ||
+        budgetRepo.findByUserId ||
+        budgetRepo.getByUser ||
+        budgetRepo.listByUser;
+
+      if (typeof fn === "function") {
+        const budgets = await fn.call(budgetRepo, userId);
+        return res.json({ ok: true, budgets });
+      }
+    } catch (e2) {
+      console.error("getBudgets fallback error:", e2);
+    }
+
+    return res.status(500).json({ ok: false, message: err.message });
   }
 }
 
 // POST /budgets
 async function setBudgetLimit(req, res) {
   try {
-    const userId = req.user.userId;
+    const userId = req.user?.userId || req.user?.id || req.user?._id;
 
     const budget = await setBudgetLimitUC.execute({
       userId,
@@ -33,10 +56,10 @@ async function setBudgetLimit(req, res) {
       period: req.body.period,
     });
 
-    res.json({ ok: true, budget });
+    return res.json({ ok: true, budget });
   } catch (err) {
     console.error("setBudgetLimit error:", err);
-    res.status(500).json({ ok: false, message: err.message });
+    return res.status(500).json({ ok: false, message: err.message });
   }
 }
 

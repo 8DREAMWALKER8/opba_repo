@@ -7,13 +7,16 @@ const createTx = new CreateTransaction(txRepo);
 const getMyTx = new GetMyTransactions(txRepo);
 
 async function createTransaction(req, res) {
+  console.log("controller HIT body.accountId =", req.body?.accountId);
   // requireAuth middleware req.user içine payload koyuyor (senin auth.js)
   const userId = req.user?.userId || req.user?.id || req.user?._id;
 
-  const { amount, category, description, type, currency, occurredAt } = req.body;
+  // EKLENDİ: accountId'yi body'den al
+ const { accountId, amount, category, description, type, currency, occurredAt } = req.body;
 
   const created = await createTx.execute({
     userId,
+    accountId,
     amount: Number(amount),
     category,
     description,
