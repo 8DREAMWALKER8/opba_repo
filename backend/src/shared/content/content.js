@@ -75,7 +75,11 @@ module.exports = {
       NOTIFICATION_NOT_FOUND: "Bildirim bulunamadı.",
 
       // FXRATE
-      NOT_IMPLEMENTED: "Uygulanamadı."
+      NOT_IMPLEMENTED: "Uygulanamadı.",
+
+      // BUDGET
+      NO_BUDGET: "Bu kategori için tanımlı bir bütçe bulunmuyor.",
+      INVALID_LIMIT: "Bütçe limiti geçersiz."
     },
 
     enums: {
@@ -175,7 +179,11 @@ module.exports = {
       NOTIFICATION_NOT_FOUND: "Notification not found",
 
       // FXRATE
-      NOT_IMPLEMENTED: "Not implemented"
+      NOT_IMPLEMENTED: "Not implemented",
+
+      // BUDGET
+      NO_BUDGET: "No budget defined for this category.",
+      INVALID_LIMIT: "Budget limit is invalid."
     },
 
     enums: {

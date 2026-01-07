@@ -1,13 +1,14 @@
-console.log("BUDGET CONTROLLER LOADED");
-
 const BudgetRepositoryMongo = require("../infrastructure/persistence/repositories/BudgetRepositoryMongo");
 const GetBudgets = require("../application/usecases/GetBudgets");
 const SetBudgetLimit = require("../application/usecases/SetBudgetLimit");
 
+const { t } = require("../../../shared/content");
+
 const budgetRepo = new BudgetRepositoryMongo();
 
-const getBudgetsUC = new GetBudgets({ budgetRepo });
-const setBudgetLimitUC = new SetBudgetLimit({ budgetRepo });
+// FIX: usecase'lere repo'yu direkt ver
+const getBudgetsUC = new GetBudgets(budgetRepo);
+const setBudgetLimitUC = new SetBudgetLimit(budgetRepo);
 
 // GET /budgets
 async function getBudgets(req, res) {
@@ -23,7 +24,6 @@ async function getBudgets(req, res) {
     try {
       const userId = req.user?.userId || req.user?.id || req.user?._id;
 
-      // repo method isimleri farklı olabilir diye güvenli çağrı
       const fn =
         budgetRepo.findByUser ||
         budgetRepo.findByUserId ||
@@ -59,7 +59,11 @@ async function setBudgetLimit(req, res) {
     return res.json({ ok: true, budget });
   } catch (err) {
     console.error("setBudgetLimit error:", err);
-    return res.status(500).json({ ok: false, message: err.message });
+     return res.status(err.statusCode || 400).json({
+      ok: false,
+      code: err.message,
+      message: t(req, `errors.${err.message}`, err.message),
+   });
   }
 }
 

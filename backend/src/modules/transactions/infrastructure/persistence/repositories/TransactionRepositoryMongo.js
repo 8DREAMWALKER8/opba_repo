@@ -4,6 +4,11 @@ const mongoose = require("mongoose");
 // BankAccount model (doğru path)
 const BankAccountModel = require("../../../../accounts/infrastructure/persistence/models/BankAccountModel");
 
+// regex kaçış
+function escapeRegex(str) {
+  return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 class TransactionRepositoryMongo {
   async create(txEntity) {
     // accountId / userId ObjectId'a çevrilir
@@ -120,6 +125,34 @@ class TransactionRepositoryMongo {
     ]);
 
     return res[0]?.total || 0;
+  }
+
+  /**
+   * Tekrarlayan işlem kontrolü için:
+   * Aynı ay aralığında aynı amount + currency ile aynı "key" (description veya category) kaç kez var?
+   * key: CreateTransaction tarafında lower-case gönderiyoruz.
+   * description eşleşmesini case-insensitive regex ile yapıyoruz.
+   */
+  async countSimilarExpensesBetween({ userId, key, amount, currency = "TRY", from, to }) {
+    const userObjectId =
+      typeof userId === "string" ? new mongoose.Types.ObjectId(userId) : userId;
+
+    const amt = Number(amount);
+    const safeKey = escapeRegex(String(key).trim());
+
+    return TransactionModel.countDocuments({
+      userId: userObjectId,
+      type: "expense",
+      currency,
+      amount: amt,
+      occurredAt: { $gte: from, $lt: to },
+
+      // description varsa onu yakalar, yoksa category için de şans tanır
+      $or: [
+        { description: { $regex: `^${safeKey}$`, $options: "i" } },
+        { category: String(key).trim() },
+      ],
+    });
   }
 }
 
