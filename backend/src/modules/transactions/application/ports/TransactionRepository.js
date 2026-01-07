@@ -1,10 +1,10 @@
 class TransactionRepository {
   async create(txEntity) {
-    throw new Error("Not implemented");
+    throw new Error("NOT_IMPLEMENTED");
   }
 
   async findByUserId(userId, opts = {}) {
-    throw new Error("Not implemented");
+    throw new Error("NOT_IMPLEMENTED");
   }
 }
 

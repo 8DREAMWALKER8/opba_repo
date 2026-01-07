@@ -8,11 +8,11 @@ class CreateTransaction {
     this.notificationRepo = notificationRepo;
   }
 
-  // ✅ accountId eklendi
+  //  accountId eklendi
   async execute({ userId, accountId, amount, category, description, type, currency, occurredAt }) {
     const entity = new TransactionEntity({
       userId,
-      accountId, // ✅ eklendi
+      accountId, 
       amount,
       category,
       description,

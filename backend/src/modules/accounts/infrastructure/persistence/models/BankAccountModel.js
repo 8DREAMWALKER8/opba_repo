@@ -22,7 +22,7 @@ const BankAccountSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Aynı kullanıcı aynı IBAN’ı iki kere ekleyemez ama farklı kullanıcılar aynı IBAN'ı ekleyebilir.
+// Aynı kullanıcı aynı IBAN’ı iki kere ekleyemez.
 BankAccountSchema.index({ userId: 1, iban: 1 }, { unique: true });
 
 module.exports = mongoose.model("BankAccount", BankAccountSchema);

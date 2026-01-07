@@ -26,9 +26,7 @@ console.log("Node:", process.version);
 console.log("MONGO_URI:", process.env.MONGO_URI ? "VAR" : "YOK");
 console.log("bcrypt:", bcrypt ? "VAR" : "YOK (sha256 fallback)");
 
-// -----------------------
 // CSV okuma
-// -----------------------
 function readCsv(filePath) {
   return new Promise((resolve, reject) => {
     if (!fs.existsSync(filePath)) return reject(new Error(`CSV bulunamadı: ${filePath}`));
@@ -158,7 +156,7 @@ async function main() {
     dbName: "opba",
   });
 
-  console.log("MongoDB bağlandı ✅");
+  console.log("MongoDB bağlandı ");
   console.log("HOST:", mongoose.connection.host);
   console.log("DB:", mongoose.connection.name);
 
@@ -179,7 +177,7 @@ async function main() {
     BankAccount.deleteMany({}),
     User.deleteMany({}),
   ]);
-  console.log("Temizlendi ✅");
+  console.log("Temizlendi");
 
   // -----------------------
   // USERS (MODEL UYUMLU)
@@ -221,9 +219,9 @@ async function main() {
 
   try {
     const inserted = await User.insertMany(userDocs, { ordered: false });
-    console.log("Users insert OK ✅:", inserted.length);
+    console.log("Users insert OK :", inserted.length);
   } catch (err) {
-    console.error("Users insert HATA ❌:", err?.message);
+    console.error("Users insert HATA :", err?.message);
     if (err?.writeErrors?.length) {
       console.error("Örnek writeError:", err.writeErrors[0]?.errmsg || err.writeErrors[0]);
     }
@@ -270,9 +268,9 @@ async function main() {
 
   try {
     const inserted = await BankAccount.insertMany(accDocs, { ordered: false });
-    console.log("BankAccounts insert OK ✅:", inserted.length);
+    console.log("BankAccounts insert OK :", inserted.length);
   } catch (err) {
-    console.error("BankAccounts insert HATA ❌:", err?.message);
+    console.error("BankAccounts insert HATA :", err?.message);
     if (err?.writeErrors?.length) {
       console.error("Örnek writeError:", err.writeErrors[0]?.errmsg || err.writeErrors[0]);
     }
@@ -328,22 +326,22 @@ async function main() {
 
   try {
     const inserted = await Transaction.insertMany(txDocs, { ordered: false });
-    console.log("Transactions insert OK ✅:", inserted.length);
+    console.log("Transactions insert OK :", inserted.length);
   } catch (err) {
-    console.error("Transactions insert HATA ❌:", err?.message);
+    console.error("Transactions insert HATA :", err?.message);
     if (err?.writeErrors?.length) {
       console.error("Örnek writeError:", err.writeErrors[0]?.errmsg || err.writeErrors[0]);
     }
     throw err;
   }
 
-  // ✅ Son kontrol
+  //  Son kontrol
   const [uCount, aCount, tCount] = await Promise.all([
     User.countDocuments(),
     BankAccount.countDocuments(),
     Transaction.countDocuments(),
   ]);
-  console.log("FINAL COUNTS ✅:", { users: uCount, bankaccounts: aCount, transactions: tCount });
+  console.log("FINAL COUNTS :", { users: uCount, bankaccounts: aCount, transactions: tCount });
 
   await mongoose.disconnect();
   console.log("Mongo bağlantısı kapandı.");

@@ -126,7 +126,7 @@ router.get("/", (req, res) => {
   } catch (err) {
     res.status(500).json({
       ok: false,
-      message: "Interest rates error",
+      message: "INTEREST_RATES_ERROR",
       error: err.message,
     });
   }
@@ -159,7 +159,7 @@ router.get("/banks/:bankName/terms", (req, res) => {
     if (!terms.length) {
       return res.status(404).json({
         ok: false,
-        message: "No terms found",
+        message: "TERMS_NOT_FOUND",
       });
     }
 
@@ -174,7 +174,7 @@ router.get("/banks/:bankName/terms", (req, res) => {
   } catch (err) {
     res.status(500).json({
       ok: false,
-      message: "Terms error",
+      message: "TERMS_ERROR",
       error: err.message,
     });
   }

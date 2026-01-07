@@ -6,7 +6,7 @@ class MarkNotificationAsRead {
   async execute({ userId, notificationId }) {
     const updated = await this.notificationRepo.markRead(userId, notificationId);
     if (!updated) {
-      const err = new Error("Notification not found");
+      const err = new Error("NOTIFICATION_NOT_FOUND");
       err.status = 404;
       throw err;
     }

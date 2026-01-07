@@ -10,7 +10,7 @@ async function connectDB() {
 
   mongoose.set("strictQuery", true);
   await mongoose.connect(uri);
-  console.log(" MongoDB connected");
+  console.log(" MongoDB bağlandı.");
 }
 
 module.exports = { connectDB };

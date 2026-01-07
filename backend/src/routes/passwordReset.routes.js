@@ -10,42 +10,35 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const { t } = require("../shared/content");
 
 const { PASSWORD_REGEX } = require("../utils/validators");
 
 const M = {
-  tr: {
-    resetSent: "Doğrulama kodu gönderildi.",
-    userNotFound: "Bu e-posta ile kayıtlı kullanıcı bulunamadı.",
-    invalidCode: "Kod hatalı.",
-    codeExpired: "Kodun süresi doldu.",
-    tooManyAttempts: "Çok fazla deneme yapıldı. Lütfen tekrar deneyin.",
-    passwordMismatch: "Şifreler eşleşmiyor.",
-    passwordUpdated: "Şifre başarıyla güncellendi.",
-    resetTokenInvalid: "Reset token geçersiz veya süresi dolmuş.",
-    jwtSecretMissing: "JWT_SECRET eksik. .env dosyanı kontrol et.",
-    sameAsOldPassword: "Yeni şifre mevcut şifreyle aynı olamaz.",
-  },
-  en: {
-    resetSent: "Verification code sent.",
-    userNotFound: "No user found with this email.",
-    invalidCode: "Invalid code.",
-    codeExpired: "Code expired.",
-    tooManyAttempts: "Too many attempts. Please try again later.",
-    passwordMismatch: "Passwords do not match.",
-    passwordUpdated: "Password updated successfully.",
-    resetTokenInvalid: "Reset token is invalid or expired.",
-    jwtSecretMissing: "JWT_SECRET is missing. Check your .env file.",
-    sameAsOldPassword: "New password cannot be the same as the current password.",
-  },
+  resetSent: "errors.RESET_SENT",
+  userNotFound: "errors.RESET_USER_NOT_FOUND",
+  invalidCode: "errors.RESET_INVALID_CODE",
+  codeExpired: "errors.RESET_CODE_EXPIRED",
+  tooManyAttempts: "errors.RESET_TOO_MANY_ATTEMPTS",
+  passwordMismatch: "errors.RESET_PASSWORD_MISMATCH",
+  passwordUpdated: "errors.PASSWORD_UPDATED",
+  resetTokenInvalid: "errors.RESET_TOKEN_INVALID",
+  jwtSecretMissing: "errors.JWT_SECRET_MISSING",
+  sameAsOldPassword: "errors.RESET_SAME_AS_OLD",
+  passwordWeak: "errors.PASSWORD_WEAK",
 };
 
 function getLang(req) {
   return req.query.lang === "en" ? "en" : "tr";
 }
 
+function msg(req, keyPath) {
+  return t(req, keyPath, keyPath);
+}
+
 function sha256(text) {
   return crypto.createHash("sha256").update(text).digest("hex");
+
 }
 
 // 1) Şifremi unuttum 

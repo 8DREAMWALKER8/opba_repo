@@ -5,7 +5,7 @@ class DeactivateAccount {
   async execute({ userId, accountId }) {
     const updated = await this.repo.deactivate(userId, accountId);
     if (!updated) {
-      const err = new Error("Account not found");
+      const err = new Error("ACCOUNT_NOT_FOUND");
       err.status = 404;
       throw err;
     }

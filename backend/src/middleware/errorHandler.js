@@ -2,9 +2,8 @@ const { ZodError } = require("zod");
 const { t } = require("../shared/content");
 
 function errorHandler(err, req, res, next) {
-  // --------------------
+
   // Zod validation error
-  // --------------------
   if (err instanceof ZodError) {
     return res.status(400).json({
       ok: false,
@@ -19,9 +18,7 @@ function errorHandler(err, req, res, next) {
     });
   }
 
-  // --------------------
-  // Mongo duplicate key (E11000)
-  // --------------------
+
   // Mongoose/MongoDB unique index çakışmaları burada yakalanır.
   // Örn: userId + iban unique ise aynı kullanıcı aynı iban'ı ekleyince code=11000 gelir.
   if (err && (err.code === 11000 || err.name === "MongoServerError")) {
@@ -37,8 +34,7 @@ function errorHandler(err, req, res, next) {
         ok: false,
         message: t(
           req,
-          "errors.ACCOUNT_DUPLICATE_IBAN",
-          "This IBAN is already added."
+          "errors.ACCOUNT_DUPLICATE_IBAN"
         ),
       });
     }
@@ -46,7 +42,7 @@ function errorHandler(err, req, res, next) {
     // Diğer unique çakışmalar için genel
     return res.status(409).json({
       ok: false,
-      message: t(req, "errors.DUPLICATE_KEY", "Duplicate value."),
+      message: t(req, "errors.DUPLICATE_KEY"),
     });
   }
 
@@ -59,7 +55,7 @@ function errorHandler(err, req, res, next) {
   const message =
     typeof err.message === "string"
       ? t(req, `errors.${err.message}`, err.message)
-      : t(req, "errors.INTERNAL_SERVER_ERROR", "Internal server error");
+      : t(req, "errors.INTERNAL_SERVER_ERROR");
 
   return res.status(status).json({
     ok: false,

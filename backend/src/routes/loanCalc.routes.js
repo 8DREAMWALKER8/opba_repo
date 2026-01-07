@@ -4,7 +4,7 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 
-// ✅ content helper
+//  content helper
 const { t } = require("../shared/content");
 
 // CSV'yi basit şekilde parse etmek için helper.
@@ -91,19 +91,19 @@ router.post("/calc", (req, res) => {
     if (!bank)
       return res.status(400).json({
         ok: false,
-        message: t(req, "errors.BANK_NAME_REQUIRED", "bank_name required"),
+        message: t(req, "errors.BANK_NAME_REQUIRED"),
       });
 
     if (!Number.isFinite(term) || term <= 0)
       return res.status(400).json({
         ok: false,
-        message: t(req, "errors.TERM_MONTHS_INVALID", "term_months invalid"),
+        message: t(req, "errors.TERM_MONTHS_INVALID"),
       });
 
     if (!Number.isFinite(P) || P <= 0)
       return res.status(400).json({
         ok: false,
-        message: t(req, "errors.PRINCIPAL_INVALID", "principal invalid"),
+        message: t(req, "errors.PRINCIPAL_INVALID"),
       });
 
     const rows = readRatesCsv();
@@ -123,7 +123,7 @@ router.post("/calc", (req, res) => {
     if (!match) {
       return res.status(404).json({
         ok: false,
-        message: t(req, "errors.RATE_NOT_FOUND", "rate not found for given filters"),
+        message: t(req, "errors.RATE_NOT_FOUND"),
         debug: { bank_name: bank, loan_type, currency, term_months: term },
       });
     }
@@ -132,7 +132,7 @@ router.post("/calc", (req, res) => {
     if (!Number.isFinite(monthlyRate)) {
       return res.status(500).json({
         ok: false,
-        message: t(req, "errors.MONTHLY_RATE_PARSE_ERROR", "monthly_rate parse error"),
+        message: t(req, "errors.MONTHLY_RATE_PARSE_ERROR"),
       });
     }
 
@@ -162,7 +162,7 @@ router.post("/calc", (req, res) => {
   } catch (err) {
     return res.status(500).json({
       ok: false,
-      message: t(req, "errors.CALC_ERROR", "calc error"),
+      message: t(req, "errors.CALC_ERROR"),
       error: err.message,
     });
   }

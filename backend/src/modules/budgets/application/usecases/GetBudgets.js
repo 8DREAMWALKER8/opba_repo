@@ -4,7 +4,7 @@ class GetBudgets {
   }
 
   async execute({ userId }) {
-    if (!userId) throw new Error("userId required");
+    if (!userId) throw new Error("USER_ID_REQUIRED");
     const budgets = await this.budgetRepo.findByUser(userId);
     return budgets;
   }

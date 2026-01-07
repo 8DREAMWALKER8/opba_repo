@@ -58,6 +58,9 @@ module.exports = {
       PHONE_INVALID: "Telefon numarası geçersiz.",
       PHONE_INVALID_FORMAT: "Telefon numarası sadece rakam olmalı (10-15).",
       DATA_REQUIRED: "Güncellenecek veri zorunludur.",
+      LIMIT_IS_REQUİRED: "Limit zorunludur.",
+      MONTH_IS_REQUIRED: "Ay girmek zorunludur.",
+      YEAR_IS_REQUIRED: "Yıl girmek zorunludur.",
 
       // Accounts 
       BANK_NAME_REQUIRED: "Banka adı zorunludur.",
@@ -66,9 +69,13 @@ module.exports = {
       IBAN_REQUIRED: "IBAN zorunludur.",
       IBAN_INVALID_FORMAT: "IBAN formatı geçersiz.",
       BALANCE_INVALID: "Bakiye 0 veya pozitif bir sayı olmalıdır.",
-
       ACCOUNT_DUPLICATE_IBAN: "Bu IBAN zaten ekli.",
-      DUPLICATE_KEY: "Bu değer zaten kullanılıyor."
+      DUPLICATE_KEY: "Bu değer zaten kullanılıyor.",
+      ACCOUNT_NOT_FOUND: "Hesap bulunamadı.",
+      NOTIFICATION_NOT_FOUND: "Bildirim bulunamadı.",
+
+      // FXRATE
+      NOT_IMPLEMENTED: "Uygulanamadı."
     },
 
     enums: {
@@ -151,6 +158,9 @@ module.exports = {
       PHONE_INVALID: "Invalid phone number.",
       PHONE_INVALID_FORMAT: "Phone must be digits only (10-15).",
       DATA_REQUIRED: "data is required.",
+      LIMIT_IS_REQUIRED: "Limit is required.",
+      MONTH_IS_REQUIRED: "month is required",
+      YEAR_IS_REQUIRED: "Year is required.",
 
       // Accounts
       BANK_NAME_REQUIRED: "Bank name is required.",
@@ -160,7 +170,12 @@ module.exports = {
       IBAN_INVALID_FORMAT: "Invalid IBAN format.",
       BALANCE_INVALID: "Balance must be zero or a positive number.",
       ACCOUNT_DUPLICATE_IBAN: "This IBAN is already added.",
-      DUPLICATE_KEY: "This value is already in use."
+      DUPLICATE_KEY: "This value is already in use.",
+      ACCOUNT_NOT_FOUND: "Account not found.",
+      NOTIFICATION_NOT_FOUND: "Notification not found",
+
+      // FXRATE
+      NOT_IMPLEMENTED: "Not implemented"
     },
 
     enums: {
