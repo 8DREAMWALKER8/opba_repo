@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 const LANGUAGES = ["tr", "en"];
-const CURRENCIES = ["TRY", "USD", "EUR"];
+const CURRENCIES = ["TRY", "USD", "EUR", "GBP"];
 const THEMES = ["light", "dark"];
 
 const UserSchema = new mongoose.Schema(

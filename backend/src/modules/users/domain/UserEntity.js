@@ -6,6 +6,7 @@ class UserEntity {
     phone,
     language = "tr",
     theme = "light",
+    currency = "TRY",
   }) {
     this.id = id;
     this.username = username;
@@ -22,6 +23,7 @@ class UserEntity {
 
     this.language = language;
     this.theme = theme;
+    this.currency = currency;
   }
 }
 

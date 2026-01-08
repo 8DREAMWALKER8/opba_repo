@@ -244,6 +244,53 @@ class Transaction {
     }
   }
 
+  Transaction copyWith({
+    String? id,
+    String? userId,
+    String? accountId,
+    String? merchant,
+    String? description,
+    double? amount,
+    String? currency,
+    TransactionType? type,
+    TransactionCategory? category,
+    DateTime? date,
+    bool? isRecurring,
+    DateTime? createdAt,
+  }) {
+    return Transaction(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      accountId: accountId ?? this.accountId,
+      merchant: merchant ?? this.merchant,
+      description: description ?? this.description,
+      amount: amount ?? this.amount,
+      currency: currency ?? this.currency,
+      type: type ?? this.type,
+      category: category ?? this.category,
+      date: date ?? this.date,
+      isRecurring: isRecurring ?? this.isRecurring,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  setUserId(String? userId) {
+    return Transaction(
+      id: id,
+      userId: userId ?? this.userId,
+      accountId: accountId,
+      merchant: merchant,
+      description: description,
+      amount: amount,
+      currency: currency,
+      type: type,
+      category: category,
+      date: date,
+      isRecurring: isRecurring,
+      createdAt: createdAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

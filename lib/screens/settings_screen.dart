@@ -128,17 +128,6 @@ class SettingsScreen extends StatelessWidget {
                     _showSecurityDialog(context);
                   },
                 ),
-                _buildDivider(isDark),
-                _buildSettingsItem(
-                  context,
-                  icon: Icons.notifications_outlined,
-                  title: l10n.notifications,
-                  trailing: Switch(
-                    value: true,
-                    onChanged: (value) {},
-                    activeThumbColor: AppColors.primaryBlue,
-                  ),
-                ),
               ],
             ),
             const SizedBox(height: 24),
@@ -156,6 +145,8 @@ class SettingsScreen extends StatelessWidget {
                     value: appProvider.isDarkMode,
                     onChanged: (value) {
                       appProvider.setDarkMode(value);
+                      authProvider.updateProfile(
+                          theme: value ? 'dark' : 'light');
                     },
                     activeThumbColor: AppColors.primaryBlue,
                   ),
@@ -169,7 +160,7 @@ class SettingsScreen extends StatelessWidget {
                       ? l10n.languageTurkish
                       : l10n.languageEnglish,
                   onTap: () {
-                    _showLanguageDialog(context, appProvider);
+                    _showLanguageDialog(context, appProvider, authProvider);
                   },
                 ),
                 _buildDivider(isDark),
@@ -179,7 +170,7 @@ class SettingsScreen extends StatelessWidget {
                   title: l10n.currency,
                   subtitle: appProvider.currency,
                   onTap: () {
-                    _showCurrencyDialog(context, appProvider);
+                    _showCurrencyDialog(context, appProvider, authProvider);
                   },
                 ),
               ],
@@ -1038,9 +1029,9 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void _showLanguageDialog(BuildContext context, AppProvider appProvider) {
+  void _showLanguageDialog(BuildContext context, AppProvider appProvider,
+      AuthProvider authProvider) {
     final l10n = context.l10n;
-
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -1052,7 +1043,9 @@ class SettingsScreen extends StatelessWidget {
               title: Text(l10n.languageTurkish),
               value: 'tr',
               groupValue: appProvider.language,
-              onChanged: (value) {
+              onChanged: (value) async {
+                debugPrint('Selected language: $value');
+                await authProvider.updateProfile(language: value!);
                 appProvider.setLanguage(value!);
                 Navigator.pop(context);
               },
@@ -1061,7 +1054,9 @@ class SettingsScreen extends StatelessWidget {
               title: Text(l10n.languageEnglish),
               value: 'en',
               groupValue: appProvider.language,
-              onChanged: (value) {
+              onChanged: (value) async {
+                debugPrint('Selected language: $value');
+                await authProvider.updateProfile(language: value!);
                 appProvider.setLanguage(value!);
                 Navigator.pop(context);
               },
@@ -1072,7 +1067,8 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  void _showCurrencyDialog(BuildContext context, AppProvider appProvider) {
+  void _showCurrencyDialog(BuildContext context, AppProvider appProvider,
+      AuthProvider authProvider) {
     final l10n = context.l10n;
 
     showDialog(
@@ -1086,7 +1082,8 @@ class SettingsScreen extends StatelessWidget {
               title: Text(l10n.currencyTryLabel),
               value: 'TRY',
               groupValue: appProvider.currency,
-              onChanged: (value) {
+              onChanged: (value) async {
+                await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
                 Navigator.pop(context);
               },
@@ -1095,7 +1092,8 @@ class SettingsScreen extends StatelessWidget {
               title: Text(l10n.currencyUsdLabel),
               value: 'USD',
               groupValue: appProvider.currency,
-              onChanged: (value) {
+              onChanged: (value) async {
+                await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
                 Navigator.pop(context);
               },
@@ -1104,7 +1102,8 @@ class SettingsScreen extends StatelessWidget {
               title: Text(l10n.currencyEurLabel),
               value: 'EUR',
               groupValue: appProvider.currency,
-              onChanged: (value) {
+              onChanged: (value) async {
+                await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
                 Navigator.pop(context);
               },
@@ -1113,7 +1112,8 @@ class SettingsScreen extends StatelessWidget {
               title: Text(l10n.currencyGbpLabel),
               value: 'GBP',
               groupValue: appProvider.currency,
-              onChanged: (value) {
+              onChanged: (value) async {
+                await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
                 Navigator.pop(context);
               },

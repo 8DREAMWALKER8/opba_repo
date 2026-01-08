@@ -22,7 +22,7 @@ const CreateAccountSchema = z
       .transform((v) => v.replace(/\s+/g, "").toUpperCase())
       .refine((v) => TR_IBAN_REGEX.test(v), { message: "IBAN_INVALID_FORMAT" }),
 
-    currency: z.enum(["TRY", "USD", "EUR"]).optional(),
+    currency: z.enum(["TRY", "USD", "EUR", "GBP"]).optional(),
     balance: z.number().nonnegative("BALANCE_INVALID").optional(),
     source: z.enum(["manual", "mock"]).optional(),
   })

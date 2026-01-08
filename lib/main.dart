@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:opba_app/screens/transactions_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -82,6 +83,7 @@ class OpbaApp extends StatelessWidget {
               '/credit': (context) => const CreditScreen(),
               '/settings': (context) => const SettingsScreen(),
               '/privacy': (context) => const PrivacyScreen(),
+              '/transactions': (context) => const ListTransactionScreen(),
             },
           );
         },

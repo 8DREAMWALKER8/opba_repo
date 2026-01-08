@@ -22,36 +22,7 @@ class AccountProvider extends ChangeNotifier {
   String _cardKey(String iban) => 'acct_card_$iban';
 
   AccountProvider() {
-    _loadDemoAccounts();
-  }
-
-  void _loadDemoAccounts() {
-    // demo hesapları yükle
-    _accounts = [
-      Account(
-        id: 'acc_1',
-        userId: 'user_123',
-        bankName: 'Ziraat Bankası',
-        cardNumber: '8843 2347 9512 6940',
-        cardHolderName: 'Ahmet Yılmaz',
-        expiryDate: '06/25',
-        iban: 'TR00 0001 0012 3456 7890 1234 56',
-        balance: 6000.00,
-        currency: 'TRY',
-      ),
-      Account(
-        id: 'acc_2',
-        userId: 'user_123',
-        bankName: 'İş Bankası',
-        cardNumber: '4532 1234 5678 9012',
-        cardHolderName: 'Ahmet Yılmaz',
-        expiryDate: '09/26',
-        iban: 'TR00 0006 4000 0012 3456 7890 12',
-        balance: 11350.00,
-        currency: 'TRY',
-      ),
-    ];
-    notifyListeners();
+    fetchAccounts();
   }
 
   Future<void> fetchAccounts() async {

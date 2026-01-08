@@ -3,8 +3,9 @@ class GetMyTransactions {
     this.transactionRepo = transactionRepo;
   }
 
-  async execute({ userId, limit, skip, type, category }) {
-    return await this.transactionRepo.findByUserId(userId, { limit, skip, type, category });
+  async execute({ userId, limit, skip, type, category, accountId }) {
+    console.log("usecase HIT accountId =", accountId);
+    return await this.transactionRepo.findByUserId(userId, { limit, skip, type, category, accountId });
   }
 }
 

@@ -327,6 +327,9 @@ class AuthProvider extends ChangeNotifier {
         securityQuestionId: securityQuestionId,
         securityAnswer: securityAnswer,
         newAnswer: newAnswer,
+        language: language,
+        currency: currency,
+        theme: theme,
       );
 
       final ok = result is Map && result['ok'] == true;

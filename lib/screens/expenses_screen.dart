@@ -199,7 +199,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/budget');
+                  Navigator.pushNamed(context, '/transactions');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryBlue,

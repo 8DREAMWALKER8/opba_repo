@@ -116,6 +116,7 @@ class UserController {
       throw e;
     }
   };
+  
   updateMe = async (req, res) => {
     try {
       const data = req.body || {};

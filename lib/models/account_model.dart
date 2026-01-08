@@ -13,6 +13,9 @@ class Account {
   final DateTime? lastSyncAt;
   final DateTime? createdAt;
 
+  // ✅ NEW: zorunlu description
+  final String description;
+
   Account({
     this.id,
     required this.userId,
@@ -27,6 +30,9 @@ class Account {
     this.isActive = true,
     this.lastSyncAt,
     this.createdAt,
+
+    // ✅ NEW
+    required this.description,
   });
 
   // görüntülemek için gizlenmiş kart numarası
@@ -86,6 +92,9 @@ class Account {
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt'].toString())
           : null,
+
+      // ✅ NEW: description (yoksa temp)
+      description: (json['description'] ?? 'temp').toString(),
     );
   }
 
@@ -96,6 +105,10 @@ class Account {
       'iban': iban,
       'balance': balance,
       'currency': currency,
+
+      // ✅ NEW
+      'description': description,
+
       'source': 'manual',
     };
   }
@@ -114,6 +127,9 @@ class Account {
     bool? isActive,
     DateTime? lastSyncAt,
     DateTime? createdAt,
+
+    // ✅ NEW
+    String? description,
   }) {
     return Account(
       id: id ?? this.id,
@@ -129,6 +145,9 @@ class Account {
       isActive: isActive ?? this.isActive,
       lastSyncAt: lastSyncAt ?? this.lastSyncAt,
       createdAt: createdAt ?? this.createdAt,
+
+      // ✅ NEW
+      description: description ?? this.description,
     );
   }
 }
@@ -146,18 +165,8 @@ class Bank {
   });
 
   static const List<Bank> turkishBanks = [
-    Bank(id: 'ziraat', name: 'Ziraat Bankası', code: 'TCZBTR'),
     Bank(id: 'isbank', name: 'İş Bankası', code: 'ISBKTR'),
     Bank(id: 'garanti', name: 'Garanti BBVA', code: 'GARTTR'),
-    Bank(id: 'yapikredi', name: 'Yapı Kredi', code: 'YAPITRT'),
     Bank(id: 'akbank', name: 'Akbank', code: 'AKBKTR'),
-    Bank(id: 'halkbank', name: 'Halkbank', code: 'TRHBTR'),
-    Bank(id: 'vakifbank', name: 'VakıfBank', code: 'TVBATR'),
-    Bank(id: 'qnb', name: 'QNB Finansbank', code: 'FNNBTR'),
-    Bank(id: 'denizbank', name: 'DenizBank', code: 'DENITRI'),
-    Bank(id: 'teb', name: 'TEB', code: 'TEBUTR'),
-    Bank(id: 'ing', name: 'ING', code: 'INGBTR'),
-    Bank(id: 'hsbc', name: 'HSBC', code: 'HSBCTR'),
-    Bank(id: 'enpara', name: 'Enpara', code: 'QNBFTR'),
   ];
 }

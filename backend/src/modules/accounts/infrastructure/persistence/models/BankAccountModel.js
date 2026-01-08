@@ -12,12 +12,13 @@ const BankAccountSchema = new mongoose.Schema(
     accountName: { type: String, required: true, trim: true }, // Hesap türü
     iban: { type: String, required: true, trim: true }, // IBAN bilgisi
 
-    currency: { type: String, enum: ["TRY", "USD", "EUR"], default: "TRY" }, // TRY, USD, EUR
+    currency: { type: String, enum: ["TRY", "USD", "EUR", "GBP"], default: "TRY" }, // TRY, USD, EUR
     balance: { type: Number, default: 0 }, // Hesap bakiyesi
 
     isActive: { type: Boolean, default: true },
     lastSyncedAt: { type: Date, default: null },
     source: { type: String, enum: ["manual", "mock", "openbanking"], default: "manual" },
+    description: { type: String, default: "" },
   },
   { timestamps: true }
 );

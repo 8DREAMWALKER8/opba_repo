@@ -22,6 +22,9 @@ class UpdateUser {
       "securityQuestionId",
       "securityAnswer",
       "newAnswer",
+      "language",
+      "currency",
+      "theme",
     ];
 
     const patch = {};
@@ -89,6 +92,11 @@ class UpdateUser {
         updateData.securityAnswerHash = await this.hasher.hash(String(patch.newAnswer));
     }
 
+    if (patch.language !== undefined) updateData.language = String(patch.language);
+    if (patch.currency !== undefined) updateData.currency = String(patch.currency);
+    if (patch.theme !== undefined) updateData.theme = String(patch.theme);
+
+    console.log(patch.currency)
     updateData.updatedAt = new Date();
 
     const updated = await this.userRepo.updateById(userId, updateData);

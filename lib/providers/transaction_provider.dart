@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:opba_app/providers/account_provider.dart';
 import 'package:opba_app/services/api_service.dart' hide ApiException;
 import '../models/transaction_model.dart';
@@ -11,74 +12,13 @@ class TransactionProvider extends ChangeNotifier {
   List<Transaction> get transactions => _transactions;
   bool get isLoading => _isLoading;
   String? get error => _error;
-
+  final _storage = const FlutterSecureStorage();
   List<Transaction> get recentTransactions => _transactions.take(5).toList();
 
   List<CategorySummary> get categorySummaries => getCategorySummary();
 
   TransactionProvider() {
-    _loadDemoTransactions();
-  }
-
-  void _loadDemoTransactions() {
-    _transactions = [
-      Transaction(
-        id: 'tx_1',
-        userId: 'user_123',
-        accountId: 'acc_1',
-        merchant: 'SonyPlaystation',
-        description: 'FIFA 2023 Game',
-        amount: 53.95,
-        type: TransactionType.expense,
-        category: TransactionCategory.entertainment,
-        date: DateTime(2025, 11, 18),
-      ),
-      Transaction(
-        id: 'tx_2',
-        userId: 'user_123',
-        accountId: 'acc_2',
-        merchant: 'Para Transferi',
-        description: 'Mart Ayı Maaş',
-        amount: 2500.00,
-        type: TransactionType.income,
-        category: TransactionCategory.salary,
-        date: DateTime(2025, 11, 7),
-      ),
-      Transaction(
-        id: 'tx_3',
-        userId: 'user_123',
-        accountId: 'acc_1',
-        merchant: 'Kahve Dükkanı',
-        description: 'Kahve Dünyası',
-        amount: 150.00,
-        type: TransactionType.expense,
-        category: TransactionCategory.food,
-        date: DateTime(2025, 11, 10),
-      ),
-      Transaction(
-        id: 'tx_4',
-        userId: 'user_123',
-        accountId: 'acc_1',
-        merchant: 'Migros',
-        description: 'Haftalık alışveriş',
-        amount: 850.00,
-        type: TransactionType.expense,
-        category: TransactionCategory.market,
-        date: DateTime(2025, 11, 5),
-      ),
-      Transaction(
-        id: 'tx_5',
-        userId: 'user_123',
-        accountId: 'acc_2',
-        merchant: 'İGDAŞ',
-        description: 'Doğalgaz faturası',
-        amount: 320.00,
-        type: TransactionType.expense,
-        category: TransactionCategory.bills,
-        date: DateTime(2025, 11, 3),
-      ),
-    ];
-    notifyListeners();
+    fetchTransactions();
   }
 
   // işlemleri kategoriye göre görüntüle
@@ -163,11 +103,173 @@ class TransactionProvider extends ChangeNotifier {
   }
 
   Future<bool> addTransaction(Transaction transaction) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    final api = ApiService();
+
     try {
-      _transactions.insert(0, transaction);
+      final userId = await _storage.read(key: 'user_id');
+      if (userId == null || userId.trim().isEmpty) {
+        _error = 'Kullanıcı bilgisi bulunamadı.';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
+      // ✅ userId'yi transaction'a ekle
+      transaction = transaction.setUserId(userId);
+
+      // ✅ Create payload (backend’in beklediği format)
+      final payload = <String, dynamic>{
+        'accountId': transaction.accountId,
+        'type': transaction
+            .type.name, // backend "expense"/"income" bekliyorsa uygun
+        'category':
+            transaction.category.name, // backend string bekliyorsa uygun
+        'amount': transaction.amount,
+        'currency': transaction.currency,
+        'description': (transaction.description ?? '').trim(),
+        'occurredAt': transaction.date.toIso8601String(),
+
+        // Opsiyonel alanlar (backend kabul ediyorsa)
+        if ((transaction.merchant ?? '').trim().isNotEmpty)
+          'merchant': transaction.merchant!.trim(),
+        'isRecurring': transaction.isRecurring,
+      };
+
+      // ✅ API çağrısı (senin yazdığın method)
+      final createdMap = await api.createTransaction(payload);
+
+      // ✅ response -> model
+      final createdTx =
+          Transaction.fromJson(Map<String, dynamic>.from(createdMap));
+
+      // ✅ listeye ekle (en üste)
+      _transactions.insert(0, createdTx);
+
+      _isLoading = false;
       notifyListeners();
       return true;
+    } on ApiException catch (e) {
+      _error = e.message;
+      _isLoading = false;
+      notifyListeners();
+      return false;
     } catch (e) {
+      _error = 'İşlem eklenirken hata oluştu.';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> updateTransaction(Transaction transaction) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    final api = ApiService();
+
+    try {
+      final userId = await _storage.read(key: 'user_id');
+      if (userId == null || userId.trim().isEmpty) {
+        _error = 'Kullanıcı bilgisi bulunamadı.';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
+      // ✅ Güvenlik: userId server’dan geliyor, yine de local modelde set kalsın
+      transaction = transaction.setUserId(userId);
+
+      final txId = (transaction.id ?? '').trim();
+      if (txId.isEmpty) {
+        _error = 'Transaction id bulunamadı.';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
+      // ✅ PATCH payload (backend route'un beklediği alanlar)
+      // PATCH mantığı: sadece değiştirdiğin alanları göndermek ideal
+      // ama şimdilik create ile aynı alanları göndermek de çalışır.
+      final payload = <String, dynamic>{
+        'accountId': transaction.accountId,
+        'type': transaction.type.name,
+        'category': transaction.category.name,
+        'amount': transaction.amount,
+        'currency': transaction.currency,
+        'description': (transaction.description ?? '').trim(),
+        'occurredAt': transaction.date.toIso8601String(),
+      };
+
+      // ✅ API çağrısı
+      final updatedMap = await api.patchTransaction(txId, payload);
+
+      // ✅ response -> model
+      final updatedTx =
+          Transaction.fromJson(Map<String, dynamic>.from(updatedMap));
+
+      // ✅ local list'te güncelle
+      final index = _transactions.indexWhere((t) => t.id == updatedTx.id);
+      if (index != -1) {
+        _transactions[index] = updatedTx;
+      } else {
+        // bulunamazsa en üste ekle (fallback)
+        _transactions.insert(0, updatedTx);
+      }
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } on ApiException catch (e) {
+      _error = e.message;
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _error = 'İşlem güncellenirken hata oluştu.';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> deleteTransaction(String id) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    final api = ApiService();
+
+    try {
+      if (id.trim().isEmpty) {
+        _error = 'Transaction id bulunamadı.';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
+      // ✅ API call
+      await api.deleteTransaction(id);
+
+      // ✅ local list’ten çıkar
+      _transactions.removeWhere((t) => (t.id ?? '').toString() == id);
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } on ApiException catch (e) {
+      _error = e.message;
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _error = 'İşlem silinirken hata oluştu.';
+      _isLoading = false;
+      notifyListeners();
       return false;
     }
   }

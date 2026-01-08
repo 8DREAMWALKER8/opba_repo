@@ -199,6 +199,30 @@ class ApiService {
     throw ApiException('Account deactivate failed', statusCode: 400);
   }
 
+  Future<Map<String, dynamic>> createTransaction(
+      Map<String, dynamic> data) async {
+    final resp = await post('/transactions', data);
+
+    if (resp is Map && resp['ok'] == true && resp['transaction'] is Map) {
+      return Map<String, dynamic>.from(resp['transaction'] as Map);
+    }
+
+    throw ApiException('Transaction create failed', statusCode: 400);
+  }
+
+  Future<Map<String, dynamic>> patchTransaction(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
+    final resp = await patch('/transactions/$id', data);
+
+    if (resp is Map && resp['ok'] == true && resp['transaction'] is Map) {
+      return Map<String, dynamic>.from(resp['transaction'] as Map);
+    }
+
+    throw ApiException('Transaction update failed', statusCode: 400);
+  }
+
   // işlem endpoint'leri
   Future<dynamic> getTransactions({String? accountId}) async {
     final endpoint = accountId != null
@@ -238,6 +262,20 @@ class ApiService {
     return get('/currency/convert?amount=$amount&from=$from&to=$to');
   }
 
+  Future<Map<String, dynamic>> deleteTransaction(String id) async {
+    final resp = await delete('/transactions/$id');
+
+    if (resp is Map && resp['ok'] == true && resp['transaction'] is Map) {
+      return Map<String, dynamic>.from(resp['transaction'] as Map);
+    }
+
+    final message = (resp is Map && resp['message'] != null)
+        ? resp['message'].toString()
+        : null;
+
+    throw ApiException(message ?? 'Transaction delete failed', statusCode: 400);
+  }
+
   Future<dynamic> patchProfile(
       {String? fullName,
       String? email,
@@ -246,7 +284,10 @@ class ApiService {
       String? currentPassword,
       String? securityQuestionId,
       String? securityAnswer,
-      String? newAnswer}) async {
+      String? newAnswer,
+      String? language,
+      String? currency,
+      String? theme}) async {
     final body = <String, dynamic>{};
 
     // Backend PATCH /me/profile => username/email/phone
@@ -273,6 +314,15 @@ class ApiService {
     }
     if (newAnswer != null && newAnswer.trim().isNotEmpty) {
       body['newAnswer'] = newAnswer.trim();
+    }
+    if (language != null && language.trim().isNotEmpty) {
+      body['language'] = language.trim();
+    }
+    if (currency != null && currency.trim().isNotEmpty) {
+      body['currency'] = currency.trim();
+    }
+    if (theme != null && theme.trim().isNotEmpty) {
+      body['theme'] = theme.trim();
     }
 
     if (body.isEmpty) {
