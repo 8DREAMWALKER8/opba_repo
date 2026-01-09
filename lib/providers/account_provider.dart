@@ -21,11 +21,7 @@ class AccountProvider extends ChangeNotifier {
 
   String _cardKey(String iban) => 'acct_card_$iban';
 
-  AccountProvider() {
-    fetchAccounts();
-  }
-
-  Future<void> fetchAccounts() async {
+  Future<void> fetchAccounts(currency) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -33,7 +29,7 @@ class AccountProvider extends ChangeNotifier {
     try {
       final api = ApiService();
 
-      final raw = await api.getAccounts(); // List<dynamic>
+      final raw = await api.getAccounts(currency: currency); // List<dynamic>
 
       final accounts = raw
           .whereType<
@@ -62,7 +58,7 @@ class AccountProvider extends ChangeNotifier {
       }
 
       _accounts = merged;
-      debugPrint('Fetched accounts: $_accounts');
+      // debugPrint('Fetched accounts: $_accounts');
       _isLoading = false;
       notifyListeners();
     } on ApiException catch (e) {

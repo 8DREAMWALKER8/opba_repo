@@ -2,10 +2,23 @@ const TransactionRepositoryMongo = require("../infrastructure/persistence/reposi
 const CreateTransaction = require("../application/usecases/CreateTransaction");
 const GetMyTransactions = require("../application/usecases/GetMyTransactions");
 const DeleteTransaction = require("../application/usecases/DeleteTransaction");
+const fxRateRepo = require("../../fxrates/infrastructure/persistence/repositories/FxRateRepositoryMongo");  
+const SyncTcbmRates = require("../../fxrates/application/usecases/SyncTcbmRates");
+const AxiosHttpClient = require("../../fxrates/infrastructure/services/AxiosHttpClient");
+const TcmbXmlParser = require("../../fxrates/infrastructure/services/TcmbXmlParser");
+
+// === Usecase instances ===
+
+const syncTcbmRates = new SyncTcbmRates({
+  httpClient: new AxiosHttpClient(),
+  xmlParser: new TcmbXmlParser(),
+  fxRateRepo,
+  tcmbUrl: process.env.TCMB_URL,
+});
 
 const txRepo = new TransactionRepositoryMongo();
 const createTx = new CreateTransaction(txRepo);
-const getMyTx = new GetMyTransactions(txRepo);
+const getMyTx = new GetMyTransactions(txRepo, fxRateRepo, syncTcbmRates);
 const deleteTx = new DeleteTransaction(txRepo);
 
 async function createTransaction(req, res) {
@@ -82,7 +95,7 @@ async function patchTransaction(req, res) {
 async function getMyTransactions(req, res) {
   const userId = req.user?.userId || req.user?.id || req.user?._id;
 
-  const { limit, skip, type, category, accountId } = req.query;
+  const { limit, skip, type, category, accountId, currency } = req.query;
   const items = await getMyTx.execute({
     userId,
     accountId,
@@ -90,6 +103,7 @@ async function getMyTransactions(req, res) {
     skip: skip ? Number(skip) : 0,
     type,
     category,
+    selectedCurrency: currency,
   });
 
   return res.json({ ok: true, transactions: items });

@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 const TYPES = ["expense", "income"];
-const CURRENCIES = ["TRY", "USD", "EUR"];
+const CURRENCIES = ["TRY", "USD", "EUR", "GBP"];
 const CATEGORIES = ["market", "transport", "food", "bills", "entertainment", "health", "education", "other"];
 const SOURCES = ["manual", "mock", "bank"];
 

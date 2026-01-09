@@ -5,7 +5,7 @@
  * Frontend'den gelen verileri standart hale getirmek
  */
 
-const ALLOWED_CURRENCIES = ["TRY", "USD", "EUR"];
+const ALLOWED_CURRENCIES = ["TRY", "USD", "EUR", "GBP"];
 const ALLOWED_LANGUAGES = ["tr", "en"];
 
 // En az 8 karakter, 1 büyük, 1 küçük, 1 özel karakter

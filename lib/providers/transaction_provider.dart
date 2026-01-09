@@ -17,10 +17,6 @@ class TransactionProvider extends ChangeNotifier {
 
   List<CategorySummary> get categorySummaries => getCategorySummary();
 
-  TransactionProvider() {
-    fetchTransactions();
-  }
-
   // işlemleri kategoriye göre görüntüle
   List<Transaction> getByCategory(TransactionCategory category) {
     return _transactions.where((t) => t.category == category).toList();
@@ -72,19 +68,19 @@ class TransactionProvider extends ChangeNotifier {
         .fold(0.0, (sum, t) => sum + t.amount);
   }
 
-  Future<void> fetchTransactions({String? accountId}) async {
+  Future<void> fetchTransactions({String? accountId, String? currency}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
     final api = ApiService();
     try {
-      final body = await api.getTransactions(accountId: accountId);
+      final body =
+          await api.getTransactions(accountId: accountId, currency: currency);
 
       // ✅ backend: { ok:true, transactions:[...] }
       final rawList = (body is Map && body['transactions'] is List)
           ? body['transactions'] as List
           : <dynamic>[];
-
       _transactions = rawList
           .map((e) => Transaction.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList();
@@ -155,6 +151,7 @@ class TransactionProvider extends ChangeNotifier {
     } on ApiException catch (e) {
       _error = e.message;
       _isLoading = false;
+      debugPrint('add transaction API Exception: ${e.message}');
       notifyListeners();
       return false;
     } catch (e) {

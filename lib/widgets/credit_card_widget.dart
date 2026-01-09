@@ -17,12 +17,18 @@ class CreditCardWidget extends StatefulWidget {
 class _CreditCardWidgetState extends State<CreditCardWidget> {
   bool _showFullIban = false;
 
+  // ✅ Sağ taraftaki ikon kolonunun sabit genişliği (üst ve alt satır aynı hizaya gelsin)
+  static const double _actionColWidth = 44;
+
   @override
   Widget build(BuildContext context) {
     final account = widget.account;
 
     final ibanText =
         _showFullIban ? _formatIban(account.iban) : _maskIban(account.iban);
+
+    final description = (account.description ?? '').trim();
+    final descriptionText = description.isEmpty ? '—' : description;
 
     return Container(
       width: double.infinity,
@@ -45,54 +51,94 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // kart tipi
-          const Text(
-            'VISA',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2,
-            ),
+          // ✅ ÜST SATIR: Description (sol) + Edit (sağ) -> aynı hizada
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center, // ✅ dikey merkez
+            children: [
+              Expanded(
+                child: Text(
+                  descriptionText,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: _actionColWidth, // ✅ sabit kolon
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(999),
+                    onTap: () {
+                      // TODO: edit event (şimdilik boş)
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.18),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
+
           const SizedBox(height: 20),
 
-          // ✅ IBAN + göz butonu (kart numarası kaldırıldı)
+          // ✅ ALT SATIR: IBAN (sol) + Göz (sağ) -> Edit ile tam aynı hizada
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center, // ✅ dikey merkez
             children: [
               Expanded(
                 child: Text(
                   ibanText.isEmpty ? '—' : ibanText,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize:
-                        _showFullIban ? 14 : 16, // ✅ açılınca biraz küçült
+                    fontSize: _showFullIban ? 14 : 15,
                     fontWeight: FontWeight.w500,
-                    letterSpacing:
-                        _showFullIban ? 0.6 : 1.2, // ✅ açılınca spacing azalt
+                    letterSpacing: _showFullIban ? 0.6 : 1.2,
                     height: 1.2,
                   ),
-                  maxLines: _showFullIban ? 2 : 1, // ✅ açılınca 2 satır
+                  maxLines: _showFullIban ? 2 : 1,
                   overflow: _showFullIban
                       ? TextOverflow.visible
-                      : TextOverflow.ellipsis, // ✅ kapalıyken ellipsis
-                  softWrap: true, // ✅ satıra böl
+                      : TextOverflow.ellipsis,
+                  softWrap: true,
                 ),
               ),
               const SizedBox(width: 10),
-              InkWell(
-                borderRadius: BorderRadius.circular(999),
-                onTap: () => setState(() => _showFullIban = !_showFullIban),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.18),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    _showFullIban ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.white,
-                    size: 18,
+              SizedBox(
+                width: _actionColWidth, // ✅ üst satır ile aynı kolon
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(999),
+                    onTap: () => setState(() => _showFullIban = !_showFullIban),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.18),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _showFullIban ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -101,31 +147,19 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
 
           const SizedBox(height: 16),
 
-          // kart detayları satırı
+          // hesap adı
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // hesap adı (UI'daki cardHolderName = accountName)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    account.cardHolderName ?? 'Hesap Adı',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
+              Expanded(
+                child: Text(
+                  account.cardHolderName ?? 'Hesap Adı',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
-                ],
-              ),
-              // para birimi
-              Text(
-                account.currency,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
                 ),
               ),
             ],
@@ -170,7 +204,6 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
         );
   }
 
-  // TRxx xxxx xxxx ... gibi okunabilir IBAN formatı
   String _formatIban(String iban) {
     final raw = iban.replaceAll(' ', '').trim();
     if (raw.isEmpty) return '';
@@ -182,15 +215,13 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
     return buffer.toString();
   }
 
-  // IBAN maskeleme: TR12 **** **** **** **** **34
   String _maskIban(String iban) {
     final raw = iban.replaceAll(' ', '').trim();
     if (raw.isEmpty) return '';
-
     if (raw.length <= 8) return raw;
 
-    final start = raw.substring(0, 4); // TR12
-    final end = raw.substring(raw.length - 4); // son 4
+    final start = raw.substring(0, 4);
+    final end = raw.substring(raw.length - 4);
     return '$start **** **** **** **** $end';
   }
 }

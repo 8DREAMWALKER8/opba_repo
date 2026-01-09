@@ -22,9 +22,10 @@ function parseTcmbRates(xml) {
   // USD
   const usdBlock = xml.match(/<Currency[^>]*CurrencyCode="USD"[\s\S]*?<\/Currency>/);
   const eurBlock = xml.match(/<Currency[^>]*CurrencyCode="EUR"[\s\S]*?<\/Currency>/);
+  const gbpBlock = xml.match(/<Currency[^>]*CurrencyCode="GBP"[\s\S]*?<\/Currency>/);
 
-  if (!usdBlock || !eurBlock) {
-    throw new Error("TCMB XML içinde USD/EUR bulunamadı.");
+  if (!usdBlock || !eurBlock || !gbpBlock) {
+    throw new Error("TCMB XML içinde USD/EUR/GBP bulunamadı.");
   }
 
   // ForexSelling veya BanknoteSelling vs.
@@ -41,6 +42,7 @@ function parseTcmbRates(xml) {
   return {
     USD: getRate(usdBlock),
     EUR: getRate(eurBlock),
+    GBP: getRate(gbpBlock),
     TRY: 1,
   };
 }

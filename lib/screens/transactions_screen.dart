@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:opba_app/providers/account_provider.dart';
+import 'package:opba_app/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/transaction_provider.dart';
@@ -22,9 +23,9 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
     super.initState();
     Future.microtask(() async {
       final accountProvider = context.read<AccountProvider>();
-
+      final authProvider = context.read<AuthProvider>();
       // 1) Accounts'ı çek
-      await accountProvider.fetchAccounts();
+      await accountProvider.fetchAccounts(authProvider.user?.currency);
 
       // 2) İlk account id
       final accounts = accountProvider.accounts;
@@ -33,6 +34,7 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
       // 3) Transactions'ı ilk account'a göre çek
       await context.read<TransactionProvider>().fetchTransactions(
             accountId: firstAccountId,
+            currency: authProvider.user?.currency,
           );
 
       // 4) Screen state’inde de seçimi tutuyorsan set et
@@ -82,7 +84,9 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
               error: accountProvider.error,
               onChanged: (id) {
                 setState(() => _selectedAccountId = id);
-                txProvider.fetchTransactions(accountId: id);
+                final authProvider = context.read<AuthProvider>();
+                txProvider.fetchTransactions(
+                    accountId: id, currency: authProvider.user?.currency);
                 // İstersen seçilen account'a göre tx filtreleme:
                 // context.read<TransactionProvider>().fetchTransactions(accountId: id);
               },

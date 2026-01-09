@@ -56,6 +56,21 @@ const makeAccountsRoutes = require("./modules/accounts/presentation/routes");
 const budgetsRouter = require("./modules/budgets/presentation/routes");
 
 // --------------------
+// Clean FX wiring
+// --------------------
+const fxRateRepo = new FxRateRepositoryMongo();
+
+const syncTcbmRates = new SyncTcbmRates({
+  httpClient: new AxiosHttpClient(),
+  xmlParser: new TcmbXmlParser(),
+  fxRateRepo,
+  tcmbUrl: process.env.TCMB_URL,
+});
+
+const fxController = makeFxRatesController({ syncTcbmRates, fxRateRepo });
+const fxRoutes = makeFxRatesRoutes(fxController);
+
+// --------------------
 // CLEAN: Transactions
 // --------------------
 const transactionsRouter = require("./modules/transactions/presentation/routes");
@@ -66,7 +81,8 @@ const app = express();
 // Clean Accounts wiring
 // --------------------
 const accountRepo = new BankAccountRepositoryMongo();
-const listAccounts = new ListAccounts({ repo: accountRepo });
+
+const listAccounts = new ListAccounts({ repo: accountRepo, syncTcbmRates, fxRateRepo });
 const createAccount = new CreateAccount({ repo: accountRepo });
 const deactivateAccount = new DeactivateAccount({ repo: accountRepo });
 
@@ -101,20 +117,6 @@ const notificationsRouter = makeNotificationsRoutes({
   protect: requireAuth,
 });
 
-// --------------------
-// Clean FX wiring
-// --------------------
-const fxRateRepo = new FxRateRepositoryMongo();
-
-const syncTcbmRates = new SyncTcbmRates({
-  httpClient: new AxiosHttpClient(),
-  xmlParser: new TcmbXmlParser(),
-  fxRateRepo,
-  tcmbUrl: process.env.TCMB_URL,
-});
-
-const fxController = makeFxRatesController({ syncTcbmRates, fxRateRepo });
-const fxRoutes = makeFxRatesRoutes(fxController);
 
 // --------------------
 // Middlewares

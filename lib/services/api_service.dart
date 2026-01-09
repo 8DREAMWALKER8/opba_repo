@@ -52,6 +52,7 @@ class ApiService {
       );
       return _handleResponse(response);
     } on ApiException {
+      debugPrint('ApiException in POST $endpoint');
       rethrow; // server hatasıysa olduğu gibi yukarı fırlat
     } catch (e) {
       // burada gerçek network/parsing vb kalır
@@ -137,7 +138,8 @@ class ApiService {
       message = (response.body.isNotEmpty ? response.body : null) ??
           (response.reasonPhrase ?? 'Server error');
     }
-
+    debugPrint(
+        'API Error ${response.statusCode}: $message'); // Hata mesajını konsola yazdır
     throw ApiException(message, statusCode: response.statusCode);
   }
 
@@ -171,10 +173,13 @@ class ApiService {
   }
 
   // hesap endpoint'leri
-  Future<List<dynamic>> getAccounts() async {
-    final resp = await get('/accounts');
+  Future<List<dynamic>> getAccounts({required String currency}) async {
+    final resp = await get(
+      currency != null && currency.isNotEmpty
+          ? '/accounts?currency=$currency'
+          : '/accounts',
+    );
     debugPrint('account response ' + resp.toString());
-
     if (resp is Map && resp['ok'] == true) {
       return (resp['accounts'] as List?) ?? [];
     }
@@ -224,10 +229,11 @@ class ApiService {
   }
 
   // işlem endpoint'leri
-  Future<dynamic> getTransactions({String? accountId}) async {
+  Future<dynamic> getTransactions({String? accountId, String? currency}) async {
+    debugPrint('currency in ApiService getTransactions: $currency');
     final endpoint = accountId != null
-        ? '/transactions?accountId=$accountId'
-        : '/transactions';
+        ? '/transactions?currency=${currency ?? ''}&accountId=$accountId'
+        : '/transactions?currency=${currency ?? ''}';
     return get(endpoint);
   }
 

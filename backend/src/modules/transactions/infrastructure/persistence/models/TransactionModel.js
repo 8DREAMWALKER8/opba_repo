@@ -8,7 +8,7 @@ const TransactionSchema = new mongoose.Schema(
     category: { type: String, required: true },
     description: { type: String, default: "" },
     type: { type: String, enum: ["expense", "income"], required: true },
-    currency: { type: String, enum: ["TRY", "USD", "EUR"], default: "TRY" },
+    currency: { type: String, enum: ["TRY", "USD", "EUR", "GBP"], default: "TRY" },
     occurredAt: { type: Date, default: Date.now, index: true },
   },
   { timestamps: true }

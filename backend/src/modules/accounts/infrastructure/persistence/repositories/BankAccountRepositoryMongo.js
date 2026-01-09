@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 class BankAccountRepositoryMongo {
   async listActiveByUser(userId) {
-    return BankAccount.find({ userId, isActive: true }).sort({ createdAt: -1 });
+    return BankAccount.find({ userId, isActive: true }).sort({ createdAt: -1 }).lean();
   }
 
   async createForUser(userId, data) {

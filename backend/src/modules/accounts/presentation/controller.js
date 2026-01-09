@@ -31,7 +31,9 @@ const CreateAccountSchema = z
 module.exports = ({ listAccounts, createAccount, deactivateAccount }) => ({
   list: async (req, res) => {
     const userId = req.user.userId || req.user._id || req.user.id;
-    const accounts = await listAccounts.execute({ userId });
+    const currency = req.query.currency;          // "TRY"
+    console.log("Currency in controller:", req.query); 
+    const accounts = await listAccounts.execute({ userId, selectedCurrency: currency });
     res.json({ ok: true, accounts });
   },
 

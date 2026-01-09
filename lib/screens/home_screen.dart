@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opba_app/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/account_provider.dart';
 import '../providers/transaction_provider.dart';
@@ -27,18 +28,22 @@ class _HomeScreenState extends State<HomeScreen> {
     Future.microtask(() async {
       final accountProvider = context.read<AccountProvider>();
       final transactionProvider = context.read<TransactionProvider>();
-      await accountProvider.fetchAccounts();
-      await transactionProvider.fetchTransactions();
+      final authProvider = context.read<AuthProvider>();
+      await accountProvider.fetchAccounts(authProvider.user?.currency);
+      await transactionProvider.fetchTransactions(
+          currency: authProvider.user?.currency);
     });
   }
 
   Future<void> _refreshData() async {
     final accountProvider = context.read<AccountProvider>();
     final transactionProvider = context.read<TransactionProvider>();
+    final authProvider = context.read<AuthProvider>();
 
     await Future.wait([
-      accountProvider.fetchAccounts(),
-      transactionProvider.fetchTransactions(),
+      accountProvider.fetchAccounts(authProvider.user?.currency),
+      transactionProvider.fetchTransactions(
+          currency: authProvider.user?.currency),
     ]);
   }
 
@@ -49,6 +54,27 @@ class _HomeScreenState extends State<HomeScreen> {
     final accountProvider = Provider.of<AccountProvider>(context);
     final transactionProvider = Provider.of<TransactionProvider>(context);
     final appProvider = Provider.of<AppProvider>(context);
+    final authProvider = context.read<AuthProvider>();
+    final userCurrency = authProvider.user?.currency;
+
+    String currencySymbol(String code) {
+      switch (code) {
+        case 'USD':
+          return '\$';
+        case 'EUR':
+          return '€';
+        case 'GBP':
+          return '£';
+        case 'TRY':
+        default:
+          return '₺';
+      }
+    }
+
+    final isPrefix =
+        userCurrency == 'USD' || userCurrency == 'EUR' || userCurrency == 'GBP';
+
+    final symbol = currencySymbol(userCurrency!);
 
     return Scaffold(
       backgroundColor:
@@ -72,7 +98,15 @@ class _HomeScreenState extends State<HomeScreen> {
               color: isDark ? Colors.white : AppColors.primaryBlue,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/settings');
+              Navigator.pushNamed(context, '/settings').then((_) async {
+                final accountProvider = context.read<AccountProvider>();
+                final transactionProvider = context.read<TransactionProvider>();
+                final authProvider = context.read<AuthProvider>();
+                await accountProvider
+                    .fetchAccounts(authProvider.user?.currency);
+                await transactionProvider.fetchTransactions(
+                    currency: authProvider.user?.currency);
+              });
             },
           ),
         ],
@@ -198,7 +232,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const Spacer(),
                     Text(
-                      '${_formatNumber(accountProvider.totalBalance)} ${appProvider.getCurrencySymbol().replaceAll('\$', 'TL')}',
+                      isPrefix
+                          ? '$symbol${_formatNumber(accountProvider.totalBalance)}'
+                          : '${_formatNumber(accountProvider.totalBalance)} $symbol',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -481,7 +517,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            '${transaction.isExpense ? '-' : '+'}${transaction.amount.toStringAsFixed(2)}TL',
+                            isPrefix
+                                ? '$symbol${_formatNumber(transaction.amount)}'
+                                : '${_formatNumber(transaction.amount)} $symbol',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: transaction.isExpense

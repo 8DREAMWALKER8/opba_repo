@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opba_app/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import '../providers/transaction_provider.dart';
@@ -34,6 +35,14 @@ class _ExpensesScreenState extends State<ExpensesScreen>
       ),
     );
     _animationController.forward();
+    Future.microtask(() async {
+      final authProvider = context.read<AuthProvider>();
+
+      // 3) Transactions'ı ilk account'a göre çek
+      await context.read<TransactionProvider>().fetchTransactions(
+            currency: authProvider.user?.currency,
+          );
+    });
   }
 
   @override
@@ -47,7 +56,27 @@ class _ExpensesScreenState extends State<ExpensesScreen>
     final l10n = context.l10n;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final transactionProvider = Provider.of<TransactionProvider>(context);
+    final auth = context.watch<AuthProvider>();
+    final userCurrency = (auth.user?.currency ?? 'TRY').toUpperCase();
 
+    String currencySymbol(String code) {
+      switch (code) {
+        case 'USD':
+          return '\$';
+        case 'EUR':
+          return '€';
+        case 'GBP':
+          return '£';
+        case 'TRY':
+        default:
+          return '₺';
+      }
+    }
+
+    final isPrefix =
+        userCurrency == 'USD' || userCurrency == 'EUR' || userCurrency == 'GBP';
+
+    final symbol = currencySymbol(userCurrency);
     final categorySummaries = transactionProvider.categorySummaries;
 
     return Scaffold(
@@ -72,7 +101,14 @@ class _ExpensesScreenState extends State<ExpensesScreen>
               color: isDark ? Colors.white : AppColors.primaryBlue,
             ),
             onPressed: () {
-              Navigator.pushNamed(context, '/settings');
+              Navigator.pushNamed(context, '/settings').then((_) async {
+                // geri dönüldüğünde bu ekranı yenile
+                final authProvider = context.read<AuthProvider>();
+
+                await context.read<TransactionProvider>().fetchTransactions(
+                      currency: authProvider.user?.currency,
+                    );
+              });
             },
           ),
         ],
@@ -109,7 +145,9 @@ class _ExpensesScreenState extends State<ExpensesScreen>
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '${_formatNumber(transactionProvider.totalExpenses)} TL',
+                    isPrefix
+                        ? '$symbol${_formatNumber(transactionProvider.totalExpenses)}'
+                        : '${_formatNumber(transactionProvider.totalExpenses)} $symbol',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 32,
@@ -199,7 +237,14 @@ class _ExpensesScreenState extends State<ExpensesScreen>
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/transactions');
+                  Navigator.pushNamed(context, '/transactions').then((_) async {
+                    // geri dönüldüğünde bu ekranı yenile
+                    final authProvider = context.read<AuthProvider>();
+
+                    await context.read<TransactionProvider>().fetchTransactions(
+                          currency: authProvider.user?.currency,
+                        );
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryBlue,
@@ -238,6 +283,27 @@ class _ExpensesScreenState extends State<ExpensesScreen>
     required double percentage,
     required String currencySymbol,
   }) {
+    final auth = context.watch<AuthProvider>();
+    final userCurrency = (auth.user?.currency ?? 'TRY').toUpperCase();
+
+    String currencySymbol(String code) {
+      switch (code) {
+        case 'USD':
+          return '\$';
+        case 'EUR':
+          return '€';
+        case 'GBP':
+          return '£';
+        case 'TRY':
+        default:
+          return '₺';
+      }
+    }
+
+    final symbol = currencySymbol(userCurrency);
+
+    final isPrefix =
+        userCurrency == 'USD' || userCurrency == 'EUR' || userCurrency == 'GBP';
     final l10n = context.l10n;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -299,7 +365,9 @@ class _ExpensesScreenState extends State<ExpensesScreen>
           ),
           // miktar
           Text(
-            '${_formatNumber(amount)} $currencySymbol',
+            isPrefix
+                ? '$symbol${_formatNumber(amount)}'
+                : '${_formatNumber(amount)} $symbol',
             style: TextStyle(
               color: isDark ? Colors.white : Colors.black87,
               fontSize: 16,

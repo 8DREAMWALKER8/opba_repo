@@ -137,6 +137,9 @@ class UserController {
         email: user.email,
         phone: user.phone,
         securityQuestionId: user.securityQuestionId,
+        currency: user.currency,
+        language: user.language,
+        theme: user.theme,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
       };

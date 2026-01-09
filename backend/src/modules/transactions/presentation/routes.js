@@ -14,12 +14,17 @@ const CreateTransaction = require("../application/usecases/CreateTransaction");
 const GetMyTransactions = require("../application/usecases/GetMyTransactions");
 const PatchTransaction = require("../application/usecases/PatchTransaction");
 const DeleteTransaction = require("../application/usecases/DeleteTransaction");
+const FxRateRepositoryMongo = require("../../fxrates/infrastructure/persistence/repositories/FxRateRepositoryMongo");
+const SyncTcbmRates = require("../../fxrates/application/usecases/SyncTcbmRates");
+const AxiosHttpClient = require("../../fxrates/infrastructure/services/AxiosHttpClient");
+const TcmbXmlParser = require("../../fxrates/infrastructure/services/TcmbXmlParser");
 
 // === Repo instances ===
 const transactionRepo = new TransactionRepositoryMongo();
 const accountRepo = new BankAccountRepositoryMongo();
 const budgetRepo = new BudgetRepositoryMongo();
 const notificationRepo = new NotificationRepositoryMongo();
+const fxRateRepo = new FxRateRepositoryMongo();
 
 
 // === Usecase instances ===
@@ -35,7 +40,14 @@ const patchTransaction = new PatchTransaction(
   notificationRepo
 );
 
-const getMyTransactions = new GetMyTransactions(transactionRepo);
+const syncTcbmRates = new SyncTcbmRates({
+  httpClient: new AxiosHttpClient(),
+  xmlParser: new TcmbXmlParser(),
+  fxRateRepo,
+  tcmbUrl: process.env.TCMB_URL,
+});
+
+const getMyTransactions = new GetMyTransactions({transactionRepo, fxRateRepo, syncTcbmRates});
 
 const deleteTransaction = new DeleteTransaction(transactionRepo, accountRepo);
 
@@ -62,7 +74,6 @@ router.post("/", requireAuth, async (req, res) => {
 
     res.status(201).json({ ok: true, transaction: result });
   } catch (err) {
-    console.error("CreateTransaction error:", err);
 
     const code = err.message;
 
@@ -109,7 +120,6 @@ router.patch("/:id", requireAuth, async (req, res) => {
 
     res.status(200).json({ ok: true, transaction: result });
   } catch (err) {
-    console.error("PatchTransaction error:", err);
 
     const code = err.message;
 
@@ -140,7 +150,8 @@ router.patch("/:id", requireAuth, async (req, res) => {
 router.get("/", requireAuth, async (req, res) => {
   try {
     const userId = req.user.userId;
-    console.log("router HIT query.accountId =", req.query?.accountId);
+    console.log("Currency in routes:", req.query.currency);
+    const { limit, skip, type, category, accountId, currency } = req.query;
     const items = await getMyTransactions.execute({
       userId,
       ...req.query,

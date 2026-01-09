@@ -349,12 +349,15 @@ class AuthProvider extends ChangeNotifier {
 
         // fromJson yoksa minimum alanlarla set et:
 
-        debugPrint('Profile update error: ' + userJson.toString());
+        debugPrint('Profile update json: ' + userJson.toString());
         final m = Map<String, dynamic>.from(userJson);
         _user = _user!.copyWith(
             username: (m['username'] ?? _user!.username).toString(),
             email: (m['email'] ?? _user!.email).toString(),
             phone: (m['phone'] ?? _user!.phone).toString(),
+            currency: (m['currency'] ?? _user!.currency).toString(),
+            language: (m['language'] ?? _user!.language).toString(),
+            theme: (m['theme'] ?? _user!.theme).toString(),
             securityQuestionId:
                 (m['securityQuestionId'] ?? _user!.securityQuestionId)
                     .toString(),
