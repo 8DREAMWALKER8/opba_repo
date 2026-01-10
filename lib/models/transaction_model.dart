@@ -193,8 +193,9 @@ class Transaction {
       currency: json['currency'] ?? 'TRY',
       type: _parseTransactionType(json['type']),
       category: _parseCategory(json['category']),
-      date:
-          json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
+      date: json['occurredAt'] != null
+          ? DateTime.parse(json['occurredAt'])
+          : DateTime.now(),
       isRecurring: json['isRecurring'] ?? false,
       createdAt:
           json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,

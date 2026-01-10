@@ -205,6 +205,7 @@ class AuthProvider extends ChangeNotifier {
       }
 
       final userJson = meRes['user'];
+      debugPrint('ME RESPONSE: ' + userJson.toString());
       if (userJson is! Map<String, dynamic>) {
         _error = 'Kullanıcı verisi beklenmeyen formatta.';
         _status = AuthStatus.unauthenticated;

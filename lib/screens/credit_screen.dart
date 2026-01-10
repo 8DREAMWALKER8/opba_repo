@@ -1,7 +1,12 @@
+// credit_screen.dart
 import 'package:flutter/material.dart';
+import 'package:opba_app/models/loan_rate_model.dart';
+import 'package:provider/provider.dart';
+
 import '../theme/app_theme.dart';
 import '../utils/app_localizations.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../providers/loan_provider.dart';
 
 class CreditScreen extends StatefulWidget {
   const CreditScreen({super.key});
@@ -13,70 +18,46 @@ class CreditScreen extends StatefulWidget {
 class _CreditScreenState extends State<CreditScreen> {
   int _currentIndex = 2;
 
-  // demo kredi faiz oranları
-  final List<Map<String, dynamic>> _loanRates = [
-    {
-      'bankName': 'Halkbank',
-      'bankCode': 'halkbank',
-      'interestRate': 3.89,
-      'color': const Color(0xFF0066B3),
-      'isBest': true,
-    },
-    {
-      'bankName': 'Vakıfbank',
-      'bankCode': 'vakifbank',
-      'interestRate': 3.95,
-      'color': const Color(0xFF003366),
-      'isBest': false,
-    },
-    {
-      'bankName': 'Ziraat Bankası',
-      'bankCode': 'ziraat',
-      'interestRate': 3.99,
-      'color': const Color(0xFF1A5F2A),
-      'isBest': false,
-    },
-    {
-      'bankName': 'İş Bankası',
-      'bankCode': 'isbank',
-      'interestRate': 4.09,
-      'color': const Color(0xFF0A4D92),
-      'isBest': false,
-    },
-    {
-      'bankName': 'Akbank',
-      'bankCode': 'akbank',
-      'interestRate': 4.15,
-      'color': const Color(0xFFE30613),
-      'isBest': false,
-    },
-    {
-      'bankName': 'Garanti BBVA',
-      'bankCode': 'garanti',
-      'interestRate': 4.19,
-      'color': const Color(0xFF006A4D),
-      'isBest': false,
-    },
-    {
-      'bankName': 'Yapı Kredi',
-      'bankCode': 'yapikredi',
-      'interestRate': 4.29,
-      'color': const Color(0xFF004A8F),
-      'isBest': false,
-    },
-    {
-      'bankName': 'QNB Finansbank',
-      'bankCode': 'qnb',
-      'interestRate': 4.39,
-      'color': const Color(0xFF6F2C91),
-      'isBest': false,
-    },
-  ];
+  // Banka renkleri (mock'tan uyarlanmış). Backend renk göndermediği için burada map'liyoruz.
+  static const Map<String, Color> _bankColors = {
+    'Halkbank': Color(0xFF0066B3),
+    'Vakıfbank': Color(0xFF003366),
+    'Ziraat Bankası': Color(0xFF1A5F2A),
+    'İş Bankası': Color(0xFF0A4D92),
+    'Akbank': Color(0xFFE30613),
+    'Garanti BBVA': Color(0xFF006A4D),
+    'Yapı Kredi': Color(0xFF004A8F),
+    'QNB Finansbank': Color(0xFF6F2C91),
+  };
+
+  Color _colorForBank(String bankName) {
+    return _bankColors[bankName] ?? AppColors.primaryBlue;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Ekran açılır açılmaz faizleri çek
+    Future.microtask(() async {
+      // İstersen burada AuthProvider/AppProvider'dan currency alıp gönderebilirsin
+      // final currency = context.read<AuthProvider>().user?.currency ?? 'TRY';
+      const currency = 'TRY';
+
+      await context.read<LoanProvider>().fetchRates(
+            loanType: 'consumer',
+            currency: currency,
+            sort: 'asc',
+          );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final loanProvider = context.watch<LoanProvider>();
 
     return Scaffold(
       backgroundColor:
@@ -198,17 +179,48 @@ class _CreditScreenState extends State<CreditScreen> {
             ),
             const SizedBox(height: 16),
 
-            // kredi faiz oranları listesi
-            ..._loanRates.map((rate) {
-              return _buildLoanRateCard(
-                context,
-                bankName: rate['bankName'],
-                interestRate: (rate['interestRate'] as num).toDouble(),
-                color: rate['color'],
-                isBest: rate['isBest'],
-                isDark: isDark,
-              );
-            }),
+            // RATE LIST STATE
+            if (loanProvider.isLoadingRates)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 32),
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else if (loanProvider.errorRates != null)
+              _ErrorBox(
+                message: loanProvider.errorRates!,
+                onRetry: () async {
+                  const currency = 'TRY';
+                  await context.read<LoanProvider>().fetchRates(
+                        loanType: 'consumer',
+                        currency: currency,
+                        sort: 'asc',
+                      );
+                },
+              )
+            else if (loanProvider.rates.isEmpty)
+              const _InfoBox(
+                message: 'Kredi faiz oranı bulunamadı.',
+              )
+            else ...[
+              // kredi faiz oranları listesi
+              ...loanProvider.rates.map((r) {
+                final best = loanProvider.bestRate;
+                final isBest = best != null &&
+                    r.bankName == best.bankName &&
+                    r.currency == best.currency &&
+                    r.loanType == best.loanType &&
+                    r.termMonths == best.termMonths;
+
+                return _buildLoanRateCard(
+                  context,
+                  bankName: r.bankName,
+                  interestRate: r.monthlyRatePercent,
+                  color: _colorForBank(r.bankName),
+                  isBest: isBest,
+                  isDark: isDark,
+                );
+              }),
+            ],
 
             const SizedBox(height: 24),
 
@@ -217,9 +229,11 @@ class _CreditScreenState extends State<CreditScreen> {
               width: double.infinity,
               height: 50,
               child: OutlinedButton.icon(
-                onPressed: () {
-                  _showCalculatorBottomSheet(context);
-                },
+                onPressed: (loanProvider.bestRate == null)
+                    ? null
+                    : () {
+                        _showCalculatorBottomSheet(context);
+                      },
                 icon: const Icon(Icons.calculate),
                 label: Text(l10n.loanCalculator),
                 style: OutlinedButton.styleFrom(
@@ -247,7 +261,7 @@ class _CreditScreenState extends State<CreditScreen> {
   Widget _buildLoanRateCard(
     BuildContext context, {
     required String bankName,
-    required double interestRate,
+    required double interestRate, // monthlyRatePercent
     required Color color,
     required bool isBest,
     required bool isDark,
@@ -370,8 +384,6 @@ class _CreditScreenState extends State<CreditScreen> {
 
     final amountController = TextEditingController();
     final termController = TextEditingController(text: '12');
-    double? monthlyPayment;
-    double? totalPayment;
 
     showModalBottomSheet(
       context: context,
@@ -382,24 +394,32 @@ class _CreditScreenState extends State<CreditScreen> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
-            void calculate() {
-              final amount = double.tryParse(amountController.text);
-              final term = int.tryParse(termController.text);
+            final loanProvider = context.watch<LoanProvider>();
+            final best = loanProvider.bestRate;
 
-              if (amount != null && term != null && amount > 0 && term > 0) {
-                // en düşük faiz oranı ile hesaplama
-                final rate =
-                    (_loanRates.first['interestRate'] as num).toDouble() / 100;
-                final n = term;
-                final monthly = (amount * rate * _pow(1 + rate, n)) /
-                    (_pow(1 + rate, n) - 1);
+            Future<void> calculate() async {
+              if (best == null) return;
 
-                setModalState(() {
-                  monthlyPayment = monthly;
-                  totalPayment = monthly * n;
-                });
+              final amount = double.tryParse(amountController.text.trim());
+              final term = int.tryParse(termController.text.trim());
+
+              if (amount == null || term == null || amount <= 0 || term <= 0) {
+                // geçersiz input: mevcut sonucu silmek istemiyorsan dokunma
+                return;
               }
+
+              final input = LoanCalcInput(
+                bankName: best.bankName,
+                loanType: best.loanType,
+                currency: best.currency,
+                termMonths: term,
+                principal: amount,
+              );
+
+              await context.read<LoanProvider>().calculate(input);
             }
+
+            final calcRes = loanProvider.calcResponse;
 
             return Padding(
               padding: EdgeInsets.only(
@@ -428,14 +448,32 @@ class _CreditScreenState extends State<CreditScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
+                  if (best == null)
+                    const _InfoBox(
+                      message: 'Faiz oranı bulunamadı. Önce listeyi yükleyin.',
+                    )
+                  else
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryBlue.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '${best.bankName} • %${best.monthlyRatePercent.toStringAsFixed(2)}',
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: amountController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: l10n.loanAmount,
                       hintText: '100000',
-                      suffixText: 'TL',
+                      suffixText: best?.currency ?? 'TRY',
                     ),
                     onChanged: (_) => calculate(),
                   ),
@@ -450,8 +488,12 @@ class _CreditScreenState extends State<CreditScreen> {
                     ),
                     onChanged: (_) => calculate(),
                   ),
-                  const SizedBox(height: 24),
-                  if (monthlyPayment != null) ...[
+                  const SizedBox(height: 18),
+                  if (loanProvider.isCalculating)
+                    const Center(child: CircularProgressIndicator())
+                  else if (loanProvider.calcError != null)
+                    _ErrorInline(message: loanProvider.calcError!)
+                  else if (calcRes != null) ...[
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
@@ -461,35 +503,23 @@ class _CreditScreenState extends State<CreditScreen> {
                       ),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                l10n.installmentMonthly,
-                              ),
-                              Text(
-                                '${monthlyPayment!.toStringAsFixed(2)} TL',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
+                          _kvRow(
+                            left: l10n.installmentMonthly,
+                            right:
+                                '${calcRes.result.monthlyPayment.toStringAsFixed(2)} ${best?.currency ?? 'TRY'}',
+                            rightBold: true,
                           ),
                           const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                l10n.totalPayment,
-                              ),
-                              Text(
-                                '${totalPayment!.toStringAsFixed(2)} TL',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
+                          _kvRow(
+                            left: l10n.totalPayment,
+                            right:
+                                '${calcRes.result.totalPayment.toStringAsFixed(2)} ${best?.currency ?? 'TRY'}',
+                          ),
+                          const SizedBox(height: 8),
+                          _kvRow(
+                            left: 'Toplam Faiz',
+                            right:
+                                '${calcRes.result.totalInterest.toStringAsFixed(2)} ${best?.currency ?? 'TRY'}',
                           ),
                         ],
                       ),
@@ -505,12 +535,24 @@ class _CreditScreenState extends State<CreditScreen> {
     );
   }
 
-  double _pow(double base, int exponent) {
-    double result = 1.0;
-    for (int i = 0; i < exponent; i++) {
-      result *= base;
-    }
-    return result;
+  Widget _kvRow({
+    required String left,
+    required String right,
+    bool rightBold = false,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(left),
+        Text(
+          right,
+          style: TextStyle(
+            fontWeight: rightBold ? FontWeight.bold : FontWeight.w600,
+            fontSize: rightBold ? 18 : 14,
+          ),
+        ),
+      ],
+    );
   }
 
   void _navigateToScreen(int index) {
@@ -525,5 +567,112 @@ class _CreditScreenState extends State<CreditScreen> {
         // zaten kredili
         break;
     }
+  }
+}
+
+// -------------------
+// Small UI helpers
+// -------------------
+class _ErrorBox extends StatelessWidget {
+  final String message;
+  final VoidCallback onRetry;
+
+  const _ErrorBox({required this.message, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardDark : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.error.withOpacity(0.35)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            message,
+            style: const TextStyle(
+              color: AppColors.error,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            height: 44,
+            child: OutlinedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh, color: AppColors.primaryBlue),
+              label: const Text(
+                'Tekrar Dene',
+                style: TextStyle(
+                  color: AppColors.primaryBlue,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: AppColors.primaryBlue),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InfoBox extends StatelessWidget {
+  final String message;
+  const _InfoBox({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.cardDark : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primaryBlue.withOpacity(0.25)),
+      ),
+      child: Text(
+        message,
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+}
+
+class _ErrorInline extends StatelessWidget {
+  final String message;
+  const _ErrorInline({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.error.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        message,
+        style: const TextStyle(
+          color: AppColors.error,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
   }
 }

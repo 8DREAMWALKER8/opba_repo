@@ -46,6 +46,7 @@ const makeFxRatesRoutes = require("./modules/fxrates/presentation/routes");
 const BankAccountRepositoryMongo = require("./modules/accounts/infrastructure/persistence/repositories/BankAccountRepositoryMongo");
 const ListAccounts = require("./modules/accounts/application/usecases/ListAccounts");
 const CreateAccount = require("./modules/accounts/application/usecases/CreateAccount");
+const UpdateAccount = require("./modules/accounts/application/usecases/UpdateAccount");
 const DeactivateAccount = require("./modules/accounts/application/usecases/DeactivateAccount");
 const makeAccountsController = require("./modules/accounts/presentation/controller");
 const makeAccountsRoutes = require("./modules/accounts/presentation/routes");
@@ -82,14 +83,18 @@ const app = express();
 // --------------------
 const accountRepo = new BankAccountRepositoryMongo();
 
+// updateAccount.execute(...) artık çalışır
+
 const listAccounts = new ListAccounts({ repo: accountRepo, syncTcbmRates, fxRateRepo });
 const createAccount = new CreateAccount({ repo: accountRepo });
 const deactivateAccount = new DeactivateAccount({ repo: accountRepo });
+const updateAccount = new UpdateAccount({ repo: accountRepo })
 
 const accountsController = makeAccountsController({
   listAccounts,
   createAccount,
   deactivateAccount,
+  updateAccount
 });
 
 const accountsRouter = makeAccountsRoutes({

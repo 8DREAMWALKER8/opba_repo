@@ -230,8 +230,8 @@ async function main() {
 
   // -----------------------
   // BANK ACCOUNTS (MODEL UYUMLU)
-  // required: userId, bankName, accountName, iban
-  // CSV eskiden: bankName, cardNumber, cardHolderName, expiryDate, iban, balance, currency...
+  // required: userId, bankName, accountName, cardNumber
+  // CSV eskiden: bankName, cardNumber, cardHolderName, expiryDate, cardNumber, balance, currency...
   // Biz accountName'i CSV’de varsa alırız; yoksa cardHolderName ya da "Main Account"
   // -----------------------
   console.log("BankAccounts hazırlanıyor...");
@@ -240,7 +240,7 @@ async function main() {
   for (const a of accRows) {
     const userId = toObjectId(a.userId);
     const bankName = toStr(a.bankName);
-    const iban = toStr(a.iban);
+    const cardNumber = toStr(a.cardNumber);
 
     const accountName =
       toStr(a.accountName) ||
@@ -248,14 +248,13 @@ async function main() {
       toStr(a.cardHolderName) ||
       "Main Account";
 
-    if (!userId || !bankName || !iban || !accountName) continue;
-
+    if (!userId || !bankName || !cardNumber || !accountName) continue;
     accDocs.push({
       _id: toObjectId(a._id) || undefined,
       userId,
       bankName,
-      accountName,
-      iban,
+      cardHolderName,
+      cardNumber,
       currency: toStr(a.currency) || "TRY",
       balance: toNum(a.balance) ?? 0,
       isActive: a.isActive != null ? toBool(a.isActive) : true,

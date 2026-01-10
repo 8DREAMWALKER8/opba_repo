@@ -4,6 +4,7 @@ import '../providers/app_provider.dart';
 import '../providers/auth_provider.dart';
 import '../theme/app_theme.dart';
 import '../utils/app_localizations.dart';
+import 'package:flutter/services.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -336,24 +337,24 @@ class SettingsScreen extends StatelessWidget {
     bool obscureNew = true;
     bool obscureConfirm = true;
 
-    // ✅ Kurallar ilk açılışta görünmesin
     bool showPasswordRules = false;
     List<String> passwordRuleErrors = [];
 
-    // ✅ Register ekranındaki kuralları buraya birebir taşı
     List<String> validatePassword(String password) {
       final errors = <String>[];
       final p = password.trim();
 
-      // ÖRNEK KURAL SETİ (register ile aynı yap)
-      if (p.length < 8) errors.add('En az 8 karakter olmalı');
-      if (!RegExp(r'[A-Z]').hasMatch(p))
-        errors.add('En az 1 büyük harf içermeli');
-      if (!RegExp(r'[a-z]').hasMatch(p))
-        errors.add('En az 1 küçük harf içermeli');
-      if (!RegExp(r'\d').hasMatch(p)) errors.add('En az 1 rakam içermeli');
-      if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(p))
-        errors.add('En az 1 özel karakter içermeli');
+      if (p.length < 8) errors.add('En az 8 karakter olmalı.');
+      if (!RegExp(r'[A-Z]').hasMatch(p)) {
+        errors.add('En az 1 büyük harf içermeli.');
+      }
+      if (!RegExp(r'[a-z]').hasMatch(p)) {
+        errors.add('En az 1 küçük harf içermeli.');
+      }
+      if (!RegExp(r'\d').hasMatch(p)) errors.add('En az 1 rakam içermeli.');
+      if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(p)) {
+        errors.add('En az 1 özel karakter içermeli.');
+      }
 
       return errors;
     }
@@ -373,6 +374,7 @@ class SettingsScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
+                  // ignore: deprecated_member_use
                   color: AppColors.primaryBlue.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -474,9 +476,11 @@ class SettingsScreen extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
+                    // ignore: deprecated_member_use
                     color: AppColors.error.withOpacity(isDark ? 0.12 : 0.08),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
+                      // ignore: deprecated_member_use
                       color: AppColors.error.withOpacity(isDark ? 0.35 : 0.25),
                     ),
                   ),
@@ -484,7 +488,7 @@ class SettingsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Şifre kuralları:',
+                        'Şifre kuralları :',
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 13,
@@ -565,8 +569,8 @@ class SettingsScreen extends StatelessWidget {
 
                 if (next != confirm) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Yeni şifreler eşleşmiyor.'),
+                    SnackBar(
+                      content: Text(l10n.newPasswordsNotMatch),
                       backgroundColor: AppColors.error,
                     ),
                   );
@@ -583,7 +587,7 @@ class SettingsScreen extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content:
-                          Text(authProvider.error ?? 'Şifre güncellenemedi.'),
+                          Text(authProvider.error ?? l10n.passwordUpdateFailed),
                       backgroundColor: AppColors.error,
                     ),
                   );
@@ -591,8 +595,8 @@ class SettingsScreen extends StatelessWidget {
                 }
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Şifre başarıyla güncellendi.'),
+                  SnackBar(
+                    content: Text(l10n.passwordUpdatedSuccessfully),
                     backgroundColor: AppColors.success,
                   ),
                 );
@@ -668,7 +672,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'Güvenlik Sorusu',
+                  l10n.securityQuestion,
                   style: TextStyle(
                     color: isDark ? Colors.white : AppColors.primaryBlue,
                     fontWeight: FontWeight.w700,
@@ -683,9 +687,8 @@ class SettingsScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 6),
 
-                  // Mevcut soru (read-only görünüm)
                   Text(
-                    'Mevcut Güvenlik Sorusu',
+                    l10n.currentSecurityQuestion,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -723,7 +726,7 @@ class SettingsScreen extends StatelessWidget {
                     controller: currentAnswerController,
                     obscureText: obscureCurrent,
                     decoration: InputDecoration(
-                      labelText: 'Mevcut Cevap',
+                      labelText: l10n.currentAnswer,
                       prefixIcon: const Icon(Icons.lock_outline),
                       filled: true,
                       fillColor: isDark
@@ -748,7 +751,7 @@ class SettingsScreen extends StatelessWidget {
 
                   // Yeni soru seçimi
                   Text(
-                    'Yeni Güvenlik Sorusu',
+                    l10n.newSecurityQuestion,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -790,7 +793,7 @@ class SettingsScreen extends StatelessWidget {
                     controller: newAnswerController,
                     obscureText: obscureNew,
                     decoration: InputDecoration(
-                      labelText: 'Yeni Cevap',
+                      labelText: l10n.newAnswer,
                       prefixIcon: const Icon(Icons.lock),
                       filled: true,
                       fillColor: isDark
@@ -860,7 +863,6 @@ class SettingsScreen extends StatelessWidget {
                     return;
                   }
 
-                  // ✅ Backend çağrısı (AuthProvider'da method yazacağız)
                   final ok = await authProvider.updateProfile(
                     securityAnswer: currentAnswer,
                     securityQuestionId: newQid,
@@ -879,8 +881,8 @@ class SettingsScreen extends StatelessWidget {
 
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Güvenlik sorusu başarıyla güncellendi.'),
+                    SnackBar(
+                      content: Text(l10n.securityQuestionSuccessfullyUpdated),
                       backgroundColor: AppColors.success,
                     ),
                   );
@@ -903,7 +905,7 @@ class SettingsScreen extends StatelessWidget {
 
   void _showEditProfileDialog(BuildContext context, AuthProvider authProvider) {
     final l10n = context.l10n;
-
+    String? _localError;
     final fullNameController =
         TextEditingController(text: authProvider.user?.username);
     final emailController =
@@ -942,7 +944,10 @@ class SettingsScreen extends StatelessWidget {
                 prefixIcon: const Icon(Icons.phone_outlined),
               ),
               keyboardType: TextInputType.phone,
-            ),
+              inputFormatters: [
+                _PhoneDigitsFormatter(maxDigits: 10),
+              ],
+            )
           ],
         ),
         actions: [
@@ -1042,7 +1047,9 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.languageTurkish),
               value: 'tr',
+              // ignore: deprecated_member_use
               groupValue: appProvider.language,
+              // ignore: deprecated_member_use
               onChanged: (value) async {
                 debugPrint('Selected language: $value');
                 await authProvider.updateProfile(language: value!);
@@ -1053,7 +1060,9 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.languageEnglish),
               value: 'en',
+              // ignore: deprecated_member_use
               groupValue: appProvider.language,
+              // ignore: deprecated_member_use
               onChanged: (value) async {
                 debugPrint('Selected language: $value');
                 await authProvider.updateProfile(language: value!);
@@ -1081,7 +1090,9 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.currencyTryLabel),
               value: 'TRY',
+              // ignore: deprecated_member_use
               groupValue: appProvider.currency,
+              // ignore: deprecated_member_use
               onChanged: (value) async {
                 await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
@@ -1091,7 +1102,9 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.currencyUsdLabel),
               value: 'USD',
+              // ignore: deprecated_member_use
               groupValue: appProvider.currency,
+              // ignore: deprecated_member_use
               onChanged: (value) async {
                 await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
@@ -1101,7 +1114,9 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.currencyEurLabel),
               value: 'EUR',
+              // ignore: deprecated_member_use
               groupValue: appProvider.currency,
+              // ignore: deprecated_member_use
               onChanged: (value) async {
                 await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
@@ -1111,7 +1126,9 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.currencyGbpLabel),
               value: 'GBP',
+              // ignore: deprecated_member_use
               groupValue: appProvider.currency,
+              // ignore: deprecated_member_use
               onChanged: (value) async {
                 await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
@@ -1125,6 +1142,8 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showAboutDialog(BuildContext context) {
+    final l10n = context.l10n;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -1135,28 +1154,28 @@ class SettingsScreen extends StatelessWidget {
             Text('OPBA'),
           ],
         ),
-        content: const Column(
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Open Personal Banking Application',
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
-              'OPBA, kişisel finans yönetiminizi kolaylaştırmak için tasarlanmış açık kaynaklı bir mobil bankacılık uygulamasıdır.',
+              l10n.aboutUsMessage,
               style: TextStyle(fontSize: 14),
             ),
-            SizedBox(height: 12),
-            Text('Sürüm: 1.0.0'),
-            Text('© 2024 OPBA'),
+            const SizedBox(height: 12),
+            Text('${l10n.version} : 1.0.0'),
+            const Text('© 2025 OPBA'),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Kapat'),
+            child: Text(l10n.close),
           ),
         ],
       ),
@@ -1192,6 +1211,32 @@ class SettingsScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _PhoneDigitsFormatter extends TextInputFormatter {
+  final int maxDigits;
+
+  _PhoneDigitsFormatter({this.maxDigits = 15});
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final text = newValue.text;
+
+    final digitsOnly = text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // max uzunluk
+    final limited = digitsOnly.length > maxDigits
+        ? digitsOnly.substring(0, maxDigits)
+        : digitsOnly;
+
+    return TextEditingValue(
+      text: limited,
+      selection: TextSelection.collapsed(offset: limited.length),
     );
   }
 }

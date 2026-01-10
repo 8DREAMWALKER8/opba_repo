@@ -1,20 +1,22 @@
-/**
- * Bu model kullanıcının banka hesaplarını temsil eder.
- * Her hesap bir kullanıcıya aittir ve bakiye bilgisi içerir.
- */
 const mongoose = require("mongoose");
 
 const BankAccountSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
 
-    bankName: { type: String, required: true, trim: true }, // Banka adı
-    accountName: { type: String, required: true, trim: true }, // Hesap türü
-    iban: { type: String, required: true, trim: true }, // IBAN bilgisi
+    bankName: { type: String, required: true, trim: true },
+    cardHolderName: { type: String, required: true, trim: true },
+    cardNumber: { type: String, required: true, trim: true },
 
-    currency: { type: String, enum: ["TRY", "USD", "EUR", "GBP"], default: "TRY" }, // TRY, USD, EUR
-    balance: { type: Number, default: 0 }, // Hesap bakiyesi
-
+    currency: { type: String, enum: ["TRY", "USD", "EUR", "GBP"], default: "TRY" },
+    balance: { type: Number, default: 0 },
+    limit: { type: Number, required: true, min: 0 },
+    period: { type: String, enum: ["monthly"], default: "monthly" },
     isActive: { type: Boolean, default: true },
     lastSyncedAt: { type: Date, default: null },
     source: { type: String, enum: ["manual", "mock", "openbanking"], default: "manual" },
@@ -23,7 +25,6 @@ const BankAccountSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Aynı kullanıcı aynı IBAN’ı iki kere ekleyemez.
-BankAccountSchema.index({ userId: 1, iban: 1 }, { unique: true });
+BankAccountSchema.index({ userId: 1, cardNumber: 1 }, { unique: true });
 
 module.exports = mongoose.model("BankAccount", BankAccountSchema);

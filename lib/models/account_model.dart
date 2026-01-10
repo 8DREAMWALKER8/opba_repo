@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Account {
   final String? id;
   final String userId;
@@ -5,7 +7,6 @@ class Account {
   final String cardNumber;
   final String? cardHolderName;
   final String? expiryDate;
-  final String iban;
   final double balance;
   final String currency;
   final String accountType;
@@ -23,7 +24,6 @@ class Account {
     required this.cardNumber,
     this.cardHolderName,
     this.expiryDate,
-    required this.iban,
     this.balance = 0.0,
     this.currency = 'TRY',
     this.accountType = 'checking',
@@ -71,8 +71,6 @@ class Account {
 
       // Backend'de expiryDate yok
       expiryDate: json['expiryDate']?.toString(),
-
-      iban: (json['iban'] ?? '').toString(),
       balance: (json['balance'] ?? 0).toDouble(),
       currency: (json['currency'] ?? 'TRY').toString(),
 
@@ -102,7 +100,7 @@ class Account {
     return {
       'bankName': bankName,
       'accountName': (cardHolderName ?? '').trim(), // ✅ mapping
-      'iban': iban,
+      'cardNumber': cardNumber,
       'balance': balance,
       'currency': currency,
 
@@ -120,7 +118,6 @@ class Account {
     String? cardNumber,
     String? cardHolderName,
     String? expiryDate,
-    String? iban,
     double? balance,
     String? currency,
     String? accountType,
@@ -138,7 +135,6 @@ class Account {
       cardNumber: cardNumber ?? this.cardNumber,
       cardHolderName: cardHolderName ?? this.cardHolderName,
       expiryDate: expiryDate ?? this.expiryDate,
-      iban: iban ?? this.iban,
       balance: balance ?? this.balance,
       currency: currency ?? this.currency,
       accountType: accountType ?? this.accountType,

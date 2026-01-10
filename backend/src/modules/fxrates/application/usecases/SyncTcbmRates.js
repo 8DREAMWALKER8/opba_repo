@@ -21,7 +21,7 @@ class SyncTcbmRates {
     const date = this.dayStartUTC();
     await this.fxRateRepo.upsertMany(rates, date);
 
-    console.log(`TCMB rates synced for ${date.toISOString().slice(0, 10)} rates:`, rates);
+    // console.log(`TCMB rates synced for ${date.toISOString().slice(0, 10)} rates:`, rates);
     return { date, rates };
   }
 }

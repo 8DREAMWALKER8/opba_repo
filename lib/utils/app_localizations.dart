@@ -17,7 +17,9 @@ class AppLocalizations {
       'app_name': 'OPBA',
       'welcome': 'Hoş Geldiniz',
       'continue_btn': 'İlerle',
-      'cancel': 'İptal',
+      'add': 'Ekle',
+      'yes': 'Evet',
+      'cancel': 'Vazgeç',
       'save': 'Kaydet',
       'delete': 'Sil',
       'edit': 'Düzenle',
@@ -65,7 +67,7 @@ class AppLocalizations {
       'sq_favorite_movie': 'En sevdiğiniz film hangisidir?',
       'home': 'Ana Sayfa',
       'accounts': 'Hesaplar',
-      'expenses': 'Harcama',
+      'expenses': 'Harcamalar',
       'credit': 'Kredi',
       'settings': 'Ayarlar',
       'total_balance': 'Toplam Bakiye',
@@ -94,7 +96,7 @@ class AppLocalizations {
       'ing': 'ING',
       'hsbc': 'HSBC',
       'enpara': 'Enpara',
-      'expenses_screen': 'Harcama Ekranı',
+      'category': 'Kategori',
       'category_market': 'Market',
       'category_bills': 'Faturalar',
       'category_entertainment': 'Eğlence',
@@ -104,6 +106,10 @@ class AppLocalizations {
       'category_shopping': 'Alışveriş',
       'category_other': 'Diğer',
       'budget_management': 'Bütçe Yönetimi',
+      'all_transactions': 'Tüm İşlemler',
+      'add_transaction': 'İşlem Ekle',
+      'transactions': 'İşlemler',
+      'no_transaction_found': 'Henüz bir işlem bulunmuyor.',
       'select_category': 'Kategori Seç',
       'set_limit': 'Üst Limit Belirle',
       'limit_hint': 'Örn: 5000 TL',
@@ -122,6 +128,7 @@ class AppLocalizations {
       'monthly_interest': 'aylık faiz',
       'loan_calculator': 'Kredi Hesaplama',
       'best': 'EN İYİ',
+      'amount': 'Tutar',
       'loan_amount': 'Kredi Tutarı',
       'loan_term_months': 'Vade (Ay)',
       'installment_monthly': 'Aylık Taksit:',
@@ -147,6 +154,7 @@ class AppLocalizations {
       'invalid_email': 'Geçersiz e-posta adresi',
       'password_too_short': 'Şifre en az 6 karakter olmalıdır.',
       'passwords_not_match': 'Şifreler eşleşmiyor.',
+      'new_passwords_not_match': 'Yeni şifreler eşleşmiyor.',
       'invalid_card_number': 'Geçersiz kart numarası',
       'invalid_iban': 'Geçersiz IBAN',
       'logout_title': 'Çıkış Yap',
@@ -156,11 +164,81 @@ class AppLocalizations {
       'this_month': 'Bu ay',
       'categories_title': 'Kategoriler',
       'no_expense_data': 'Henüz harcama verisi yok',
+      'opba_privacy_policy': 'OPBA Gizlilik Politikası',
+      'last_update': 'Son Güncelleme : Kasım 2025',
+      'entry1': '1. Giriş',
+      'entry2': '2. Toplanan Veriler',
+      'entry3': '3. Verilerin Kullanımı',
+      'entry4': '4. Veri Güvenliği',
+      'entry5': '5. Veri Paylaşımı',
+      'entry6': '6. Kullanıcı Hakları',
+      'entry7': '7. Çerezler',
+      'entry8': '8. Politika Güncellemeleri',
+      'entry9': '9. İletişim',
+      'entry1_message':
+          'OPBA (Open Personal Banking Application) olarak, kullanıcılarımızın gizliliğine büyük önem veriyoruz. Bu gizlilik politikası, kişisel verilerinizin nasıl toplandığını, kullanıldığını ve korunduğunu açıklamaktadır.',
+      'entry2_message': 'Uygulamamız aşağıdaki verileri toplamaktadır :\n\n'
+          '• Kimlik bilgileri (ad, e-posta, telefon)\n'
+          '• Hesap bilgileri (banka hesapları, kart numaraları)\n'
+          '• İşlem geçmişi ve harcama verileri\n'
+          '• Cihaz bilgileri ve uygulama kullanım verileri\n'
+          '• Konum bilgileri (izin verildiğinde)',
+      'entry3_message': 'Toplanan veriler şu amaçlarla kullanılmaktadır :\n\n'
+          '• Hesap yönetimi ve işlem takibi\n'
+          '• Bütçe analizi ve harcama raporları\n'
+          '• Kişiselleştirilmiş öneriler sunma\n'
+          '• Uygulama güvenliğinin sağlanması\n'
+          '• Müşteri desteği hizmetleri',
+      'entry4_message':
+          'Kişisel verilerinizi korumak için aşağıdaki güvenlik önlemleri uyguluyoruz :\n\n'
+              '• Uçtan uca şifreleme\n'
+              '• İki faktörlü kimlik doğrulama\n'
+              '• SSL/TLS protokolleri\n'
+              '• Düzenli güvenlik denetimleri\n',
+      'entry5_message':
+          'Kişisel verileriniz, aşağıdaki durumlar dışında üçüncü kişilerle paylaşılmaz :\n\n'
+              '• Yasal zorunluluklar\n'
+              '• Kullanıcı onayı ile\n'
+              '• Hizmet sağlayıcılarla (güvenlik standartlarına uygun)',
+      'entry6_message': 'KVKK kapsamında aşağıdaki haklara sahipsiniz :\n\n'
+          '• Verilerinize erişim hakkı\n'
+          '• Verilerin düzeltilmesini talep etme\n'
+          '• Verilerin silinmesini talep etme\n'
+          '• Veri işlemeye itiraz etme\n'
+          '• Veri taşınabilirliği',
+      'entry7_message':
+          'Uygulamamız, kullanıcı deneyimini iyileştirmek için çerezler ve benzer teknolojiler kullanmaktadır. Çerez tercihlerinizi ayarlardan yönetebilirsiniz.',
+      'entry8_message':
+          'Bu gizlilik politikası zaman zaman güncellenebilir. Önemli değişiklikler olması durumunda kullanıcılarımızı bilgilendireceğiz.',
+      'entry9_message': 'Gizlilik politikamız hakkında sorularınız için :\n\n'
+          '📧 privacy@opba.com\n'
+          '📞 0850 XXX XX XX\n'
+          '🌐 www.opba.com/privacy',
+      'about_us_message':
+          'OPBA, kişisel finans yönetiminizi kolaylaştırmak için tasarlanmış açık kaynaklı bir mobil bankacılıık uygulamasıdır.',
+      'close': 'Kapat',
+      'security_question_successfully_updated':
+          'Güvenlik sorusu başarıyla güncellendi.',
+      'new_security_question': 'Yeni Güvenlik Sorusu',
+      'new_answer': 'Yeni Cevap',
+      'current_security_question': 'Mevcut Güvenlik Sorusu',
+      'current_answer': 'Mevcut Cevap',
+      'password_updated_successfully': 'Şifre başarıyla güncellendi.',
+      'password_update_failed': 'Şifre güncellenemedi.',
+      'description': 'Açıklama',
+      'example_description': 'Örn: Migros alışverişi',
+      'all_fields_required': 'Tüm alanlar zorunludur.',
+      'successfully_register': 'Kayıt başarılı, lütfen giriş yapın.',
+      'delete_confirmation': 'Silme Onayı',
+      'delete_confirm_message': 'İşlemi silmek istediğinize emin misiniz?',
+      'edit_transaction': 'İşlemi Düzenle',
     },
     'en': {
       'app_name': 'OPBA',
       'welcome': 'Welcome',
       'continue_btn': 'Continue',
+      'add': 'Add',
+      'yes': 'Yes',
       'cancel': 'Cancel',
       'save': 'Save',
       'delete': 'Delete',
@@ -238,7 +316,7 @@ class AppLocalizations {
       'ing': 'ING',
       'hsbc': 'HSBC',
       'enpara': 'Enpara',
-      'expenses_screen': 'Expenses',
+      'category': 'Category',
       'category_market': 'Market',
       'category_bills': 'Bills',
       'category_entertainment': 'Entertainment',
@@ -248,6 +326,10 @@ class AppLocalizations {
       'category_shopping': 'Shopping',
       'category_other': 'Other',
       'budget_management': 'Budget Management',
+      'all_transactions': 'All Transactions',
+      'add_transaction': 'Add Transaction',
+      'transactions': 'Transactions',
+      'no_transaction_found': 'No action has been taken yet.',
       'select_category': 'Select Category',
       'set_limit': 'Set Limit',
       'limit_hint': 'Ex: 5000 TL',
@@ -266,6 +348,7 @@ class AppLocalizations {
       'monthly_interest': 'monthly interest',
       'loan_calculator': 'Loan Calculator',
       'best': 'BEST',
+      'amount': 'Amount',
       'loan_amount': 'Loan Amount',
       'loan_term_months': 'Term (Months)',
       'installment_monthly': 'Monthly Installment:',
@@ -289,8 +372,9 @@ class AppLocalizations {
       'privacy_policy': 'Privacy Policy',
       'field_required': 'This field is required',
       'invalid_email': 'Invalid email address',
-      'password_too_short': 'Password must be at least 6 characters',
-      'passwords_not_match': 'Passwords do not match',
+      'password_too_short': 'Password must be at least 6 characters.',
+      'passwords_not_match': 'Passwords do not match.',
+      'new_passwords_not_match': 'New passwords do not match.',
       'invalid_card_number': 'Invalid card number',
       'invalid_iban': 'Invalid IBAN',
       'logout_title': 'Logout',
@@ -300,6 +384,76 @@ class AppLocalizations {
       'this_month': 'This month',
       'categories_title': 'Categories',
       'no_expense_data': 'No expense data yet',
+      'opba_privacy_policy': 'OPBA Privacy Policy',
+      'last_update': 'Last Update : November 2025',
+      'entry1': '1. Introduction',
+      'entry2': '2. Data Collected',
+      'entry3': '3. Use of Data',
+      'entry4': '4. Data Security',
+      'entry5': '5. Data Sharing',
+      'entry6': '6. User Rights',
+      'entry7': '7. Cookies',
+      'entry8': '8. Policy Updates',
+      'entry9': '9. Contact',
+      'entry1_message':
+          'At OPBA (Open Personal Banking Application), we highly value the privacy of our users. This privacy policy explains how your personal data is collected, used, and protected.',
+      'entry2_message': 'Our application collects the following data :\n\n'
+          '• Identity information (name, email, phone)\n'
+          '• Account information (bank accounts, card numbers)\n'
+          '• Transaction history and spending data\n'
+          '• Device information and application usage data\n'
+          '• Location information (when permitted)',
+      'entry3_message':
+          'The collected data is used for the following purposes :\n\n'
+              '• Account management and transaction tracking\n'
+              '• Budget analysis and spending reports\n'
+              '• Providing personalized recommendations\n'
+              '• Ensuring application security\n'
+              '• Customer support services',
+      'entry4_message':
+          'We implement the following security measures to protect your personal data :\n\n'
+              '• End-to-end encryption\n'
+              '• Two-factor authentication\n'
+              '• SSL/TLS protocols\n'
+              '• Regular security audits',
+      'entry5_message':
+          'Your personal data is not shared with third parties except in the following cases :\n\n'
+              '• Legal obligations\n'
+              '• With user consent\n'
+              '• With service providers (in compliance with security standards)',
+      'entry6_message': 'Under the KVKK, you have the following rights :\n\n'
+          '• Right to access your data\n'
+          '• Request correction of your data\n'
+          '• Request deletion of your data\n'
+          '• Object to data processing\n'
+          '• Data portability',
+      'entry7_message':
+          'Our application uses cookies and similar technologies to enhance user experience. You can manage your cookie preferences in the settings.',
+      'entry8_message':
+          'This privacy policy may be updated from time to time. We will inform our users of any significant changes.',
+      'entry9_message': 'For questions regarding our privacy policy :\n\n'
+          '📧 privacy@opba.com\n'
+          '📞 0850 XXX XX XX\n'
+          '🌐 www.opba.com/privacy',
+      'about_us_message':
+          'OPBA is an open-source mobile banking application designed to simplify your personal finance management.',
+      'close': 'Close',
+      'security_question_successfully_updated':
+          'Security question updated successfully.',
+      'new_security_question': 'New Security Question',
+      'new_answer': 'New Answer',
+      'current_security_question': 'Current Security Question',
+      'current_answer': 'Current Answer',
+      'password_updated_successfully': 'Password updated successfully.',
+      'password_update_failed': 'Password update failed.',
+      'description': 'Description',
+      'example_description': 'Ex: Shopping at Migros',
+      'all_fields_required': 'All fields are required.',
+      'successfully_register': 'Registration successful, please log in.',
+      'delete_confirmation': 'Delete Confirmation',
+      'delete_confirm_message':
+          'Are you sure you want to delete the transaction?',
+      'edit_transaction': 'Edit Transaction',
     },
   };
 
@@ -310,6 +464,8 @@ class AppLocalizations {
   String get appName => translate('app_name');
   String get welcome => translate('welcome');
   String get continueBtn => translate('continue_btn');
+  String get add => translate('add');
+  String get yes => translate('yes');
   String get cancel => translate('cancel');
   String get save => translate('save');
   String get delete => translate('delete');
@@ -369,7 +525,20 @@ class AppLocalizations {
   String get bankSelect => translate('bank_select');
   String get balance => translate('balance');
   String get createAccount => translate('create_account');
+  String get category => translate('category');
+  // String get category_market => translate('category_market');
+  // String get category_bills => translate('category_bills');
+  // String get category_entertainment => translate('category_entertainment');
+  // String get category_transport => translate('category_transport');
+  // String get category_food => translate('category_food');
+  // String get category_health => translate('category_health');
+  // String get category_shopping => translate('category_shopping');
+  // String get category_other => translate('category_other');
   String get budgetManagement => translate('budget_management');
+  String get allTransactions => translate('all_transactions');
+  String get addTransaction => translate('add_transaction');
+  String get transactions => translate('transactions');
+  String get noTransactionFound => translate('no_transaction_found');
   String get selectCategory => translate('select_category');
   String get setLimit => translate('set_limit');
   String get limitHint => translate('limit_hint');
@@ -387,6 +556,7 @@ class AppLocalizations {
   String get monthlyInterest => translate('monthly_interest');
   String get loanCalculator => translate('loan_calculator');
   String get best => translate('best');
+  String get amount => translate('amount');
   String get loanAmount => translate('loan_amount');
   String get loanTermMonths => translate('loan_term_months');
   String get installmentMonthly => translate('installment_monthly');
@@ -411,6 +581,51 @@ class AppLocalizations {
   String get logoutTitle => translate('logout_title');
   String get logoutConfirm => translate('logout_confirm');
   String get backToLogin => translate('back_to_login');
+  String get opbaPrivacyPolicy => translate('opba_privacy_policy');
+  String get lastUpdate => translate('last_update');
+  String get entry1 => translate('entry1');
+  String get entry2 => translate('entry2');
+  String get entry3 => translate('entry3');
+  String get entry4 => translate('entry4');
+  String get entry5 => translate('entry5');
+  String get entry6 => translate('entry6');
+  String get entry7 => translate('entry7');
+  String get entry8 => translate('entry8');
+  String get entry9 => translate('entry9');
+  String get entry1Message => translate('entry1_message');
+  String get entry2Message => translate('entry2_message');
+  String get entry3Message => translate('entry3_message');
+  String get entry4Message => translate('entry4_message');
+  String get entry5Message => translate('entry5_message');
+  String get entry6Message => translate('entry6_message');
+  String get entry7Message => translate('entry7_message');
+  String get entry8Message => translate('entry8_message');
+  String get entry9Message => translate('entry9_message');
+  String get aboutUsMessage => translate('about_us_message');
+  String get close => translate('close');
+  String get securityQuestionSuccessfullyUpdated =>
+      translate('security_question_successfully_updated');
+  String get newSecurityQuestion => translate('new_security_question');
+  String get newAnswer => translate('new_answer');
+  String get currentSecurityQuestion => translate('current_security_question');
+  String get currentAnswer => translate('current_answer');
+  String get passwordUpdatedSuccessfully =>
+      translate('password_updated_successfully');
+  String get passwordUpdateFailed => translate('password_update_failed');
+  String get passwordNotMatch => translate('passwords_not_match');
+  String get newPasswordsNotMatch => translate('new_passwords_not_match');
+  String get fieldRequired => translate('field_required');
+  String get invalidEmail => translate('invalid_email');
+  String get passwordTooShort => translate('password_too_short');
+  String get invalidCardNumber => translate('invalid_card_number');
+  String get invalidIban => translate('invalid_iban');
+  String get description => translate('description');
+  String get exampleDescription => translate('example_description');
+  String get allFieldsRequired => translate('all_fields_required');
+  String get successfullyRegister => translate('successfully_register');
+  String get deleteConfirmation => translate('delete_confirmation');
+  String get deleteConfirmMessage => translate('delete_confirm_message');
+  String get editTransaction => translate('edit_transaction');
 
   List<Map<String, String>> get securityQuestions => [
         {'id': 'q1', 'text': translate('sq_mother_maiden')},

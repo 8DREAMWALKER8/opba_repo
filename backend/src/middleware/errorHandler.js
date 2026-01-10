@@ -20,21 +20,24 @@ function errorHandler(err, req, res, next) {
 
 
   // Mongoose/MongoDB unique index çakışmaları burada yakalanır.
-  // Örn: userId + iban unique ise aynı kullanıcı aynı iban'ı ekleyince code=11000 gelir.
+  // Örn: userId + cardNumber unique ise aynı kullanıcı aynı cardNumber'ı ekleyince code=11000 gelir.
   if (err && (err.code === 11000 || err.name === "MongoServerError")) {
     const keyPattern = err.keyPattern || {};
     const msg = String(err.message || "");
+  console.log("DUPLICATE keyPattern:", err.keyPattern);
+  console.log("DUPLICATE keyValue:", err.keyValue);      // ✅ en kritik
+  console.log("DUPLICATE message:", err.message);
 
-    const isUserIdIbanDuplicate =
-      (("userId" in keyPattern) && ("iban" in keyPattern)) ||
-      msg.includes("userId_1_iban_1");
+    const isUserIdCardNumberDuplicate =
+      (("userId" in keyPattern) && ("cardNumber" in keyPattern)) ||
+      msg.includes("userId_1_cardNumber_1");
 
-    if (isUserIdIbanDuplicate) {
+    if (isUserIdCardNumberDuplicate) {
       return res.status(409).json({
         ok: false,
         message: t(
           req,
-          "errors.ACCOUNT_DUPLICATE_IBAN"
+          "errors.ACCOUNT_DUPLICATE_CARD_NUMBER"
         ),
       });
     }

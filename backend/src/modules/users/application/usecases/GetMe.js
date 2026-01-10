@@ -13,6 +13,9 @@ class GetMe {
       email: user.email,
       phone: user.phone,
       securityQuestionId: user.securityQuestionId,
+      currency: user.currency,
+      theme: user.theme,
+      language: user.language,
     };
   }
 }

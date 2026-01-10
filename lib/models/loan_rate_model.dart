@@ -1,108 +1,100 @@
-class LoanRate {
-  final String? id;
+class LoanRateItem {
   final String bankName;
   final String loanType;
-  final double interestRate;
+  final String currency;
   final int termMonths;
-  final double? minAmount;
-  final double? maxAmount;
-  final double? monthlyPayment;
-  final DateTime? lastUpdate;
+  final double monthlyRate; // 0.03162 gibi
+  final double monthlyRatePercent; // 3.162 gibi
+  final double? annualEffectiveRate;
+  final String? asOfMonth;
+  final String? source;
 
-  LoanRate({
-    this.id,
+  LoanRateItem({
     required this.bankName,
     required this.loanType,
-    required this.interestRate,
-    this.termMonths = 12,
-    this.minAmount,
-    this.maxAmount,
-    this.monthlyPayment,
-    this.lastUpdate,
+    required this.currency,
+    required this.termMonths,
+    required this.monthlyRate,
+    required this.monthlyRatePercent,
+    this.annualEffectiveRate,
+    this.asOfMonth,
+    this.source,
   });
 
-  // belirli bir kredi tutarı için aylık ödemeyi hesaplama
-  double calculateMonthlyPayment(double principal) {
-    if (interestRate == 0) {
-      return principal / termMonths;
-    }
-    final monthlyRate = interestRate / 100 / 12;
-    final factor = (monthlyRate * _pow(1 + monthlyRate, termMonths)) /
-        (_pow(1 + monthlyRate, termMonths) - 1);
-    return principal * factor;
-  }
-
-  double _pow(double base, int exponent) {
-    double result = 1.0;
-    for (int i = 0; i < exponent; i++) {
-      result *= base;
-    }
-    return result;
-  }
-
-  factory LoanRate.fromJson(Map<String, dynamic> json) {
-    return LoanRate(
-      id: json['_id'] ?? json['id'],
-      bankName: json['bankName'] ?? '',
-      loanType: json['loanType'] ?? 'personal',
-      interestRate: (json['interestRate'] ?? 0).toDouble(),
-      termMonths: json['termMonths'] ?? 12,
-      minAmount: json['minAmount']?.toDouble(),
-      maxAmount: json['maxAmount']?.toDouble(),
-      monthlyPayment: json['monthlyPayment']?.toDouble(),
-      lastUpdate: json['lastUpdate'] != null
-          ? DateTime.parse(json['lastUpdate'])
-          : null,
+  factory LoanRateItem.fromJson(Map<String, dynamic> json) {
+    return LoanRateItem(
+      bankName: (json['bankName'] ?? '').toString(),
+      loanType: (json['loanType'] ?? 'consumer').toString(),
+      currency: (json['currency'] ?? 'TRY').toString(),
+      termMonths: (json['termMonths'] as num?)?.toInt() ?? 0,
+      monthlyRate: (json['monthlyRate'] as num?)?.toDouble() ?? 0.0,
+      monthlyRatePercent:
+          (json['monthlyRatePercent'] as num?)?.toDouble() ?? 0.0,
+      annualEffectiveRate: (json['annualEffectiveRate'] as num?)?.toDouble(),
+      asOfMonth: json['asOfMonth']?.toString(),
+      source: json['source']?.toString(),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'bankName': bankName,
-      'loanType': loanType,
-      'interestRate': interestRate,
-      'termMonths': termMonths,
-      'minAmount': minAmount,
-      'maxAmount': maxAmount,
-      'monthlyPayment': monthlyPayment,
-    };
   }
 }
 
-class CurrencyRate {
-  final String code;
-  final String name;
-  final double buyRate;
-  final double sellRate;
-  final DateTime asOf;
+class LoanCalcInput {
+  final String bankName;
+  final String loanType; // consumer vs mortgage vs ...
+  final String currency; // TRY vs ...
+  final int termMonths;
+  final double principal;
 
-  CurrencyRate({
-    required this.code,
-    required this.name,
-    required this.buyRate,
-    required this.sellRate,
-    required this.asOf,
+  LoanCalcInput({
+    required this.bankName,
+    required this.loanType,
+    required this.currency,
+    required this.termMonths,
+    required this.principal,
   });
 
-  factory CurrencyRate.fromJson(Map<String, dynamic> json) {
-    return CurrencyRate(
-      code: json['code'] ?? '',
-      name: json['name'] ?? '',
-      buyRate: (json['buyRate'] ?? 0).toDouble(),
-      sellRate: (json['sellRate'] ?? 0).toDouble(),
-      asOf:
-          json['asOf'] != null ? DateTime.parse(json['asOf']) : DateTime.now(),
+  Map<String, dynamic> toJson() => {
+        'bank_name': bankName,
+        'loan_type': loanType,
+        'currency': currency,
+        'term_months': termMonths,
+        'principal': principal,
+      };
+}
+
+class LoanCalcResult {
+  final double monthlyPayment;
+  final double totalPayment;
+  final double totalInterest;
+
+  LoanCalcResult({
+    required this.monthlyPayment,
+    required this.totalPayment,
+    required this.totalInterest,
+  });
+
+  factory LoanCalcResult.fromJson(Map<String, dynamic> json) {
+    return LoanCalcResult(
+      monthlyPayment: (json['monthlyPayment'] as num).toDouble(),
+      totalPayment: (json['totalPayment'] as num).toDouble(),
+      totalInterest: (json['totalInterest'] as num).toDouble(),
     );
   }
+}
 
-  Map<String, dynamic> toJson() {
-    return {
-      'code': code,
-      'name': name,
-      'buyRate': buyRate,
-      'sellRate': sellRate,
-      'asOf': asOf.toIso8601String(),
-    };
+class LoanCalcResponse {
+  final LoanRateItem? rate; // backend "rate" objesi
+  final LoanCalcResult result;
+
+  LoanCalcResponse({required this.rate, required this.result});
+
+  factory LoanCalcResponse.fromJson(Map<String, dynamic> json) {
+    final rateJson = json['rate'];
+    return LoanCalcResponse(
+      rate: (rateJson is Map)
+          ? LoanRateItem.fromJson(Map<String, dynamic>.from(rateJson))
+          : null,
+      result: LoanCalcResult.fromJson(
+          Map<String, dynamic>.from(json['result'] as Map)),
+    );
   }
 }

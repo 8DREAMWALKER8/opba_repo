@@ -54,6 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => _isLoading = true);
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final l10n = context.l10n;
     final success = await authProvider.register(
       username:
           "${_nameController.text.trim()} ${_surnameController.text.trim()}",
@@ -69,8 +70,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('kayıt başarılı, lütfen giriş yapın.'),
+        SnackBar(
+          content: Text(l10n.successfullyRegister),
           backgroundColor: AppColors.success,
         ),
       );

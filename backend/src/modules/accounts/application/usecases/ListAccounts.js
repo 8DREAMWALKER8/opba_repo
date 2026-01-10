@@ -11,7 +11,7 @@ class ListAccounts {
   _buildRateMap(rates) {
     const map = { TRY: 1 };
 
-    console.log("Rates fetched for conversion:", rates);
+    // console.log("Rates fetched for conversion:", rates);
 
     for (const r of rates || []) {
       // Mongoose doc gelebilir -> _doc fallback
@@ -51,9 +51,9 @@ class ListAccounts {
     const amt = Number(amount) || 0;
     const from = (fromCurrency || "TRY").toUpperCase();
     const to = (toCurrency || "TRY").toUpperCase();
-    console.log(`Converting ${amt} from ${from} to ${to}`);
+    // console.log(`Converting ${amt} from ${from} to ${to}`);
     if (from === to) return amt;
-    console.log("Rate map:", rateMap);
+    // console.log("Rate map:", rateMap);
     const fromRate = rateMap[from]; // 1 FROM = fromRate TRY
     const toRate = rateMap[to];     // 1 TO   = toRate   TRY
 

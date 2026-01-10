@@ -47,13 +47,19 @@ class _HomeScreenState extends State<HomeScreen> {
     ]);
   }
 
+  String _formatDate(DateTime d) {
+    final dd = d.day.toString().padLeft(2, '0');
+    final mm = d.month.toString().padLeft(2, '0');
+    final yyyy = d.year.toString();
+    return '$dd/$mm/$yyyy';
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accountProvider = Provider.of<AccountProvider>(context);
     final transactionProvider = Provider.of<TransactionProvider>(context);
-    final appProvider = Provider.of<AppProvider>(context);
     final authProvider = context.read<AuthProvider>();
     final userCurrency = authProvider.user?.currency;
 
@@ -194,7 +200,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ...accountProvider.accounts.map((account) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16),
-                  child: CreditCardWidget(account: account),
+                  child: CreditCardWidget(
+                      account: account, currency: userCurrency),
                 );
               }),
 
@@ -499,16 +506,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // ✅ Kategori adı (description'un üstünde)
                             Text(
-                              transaction.merchant ?? '',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(fontWeight: FontWeight.w500),
+                              transaction.category
+                                  .name, // enum extension'ında name varsa
+                              style: TextStyle(
+                                color: isDark ? Colors.white : Colors.black87,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
+
+                            const SizedBox(height: 2),
+
+                            // ✅ Description (alt satır)
                             Text(
-                              transaction.description ?? '',
+                              (transaction.description ?? '').trim().isEmpty
+                                  ? '—'
+                                  : transaction.description!.trim(),
                               style: Theme.of(context).textTheme.bodyMedium,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
@@ -528,7 +548,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            '${transaction.date.day} ${_getMonthName(transaction.date.month)} ${transaction.date.year}',
+                            _formatDate(transaction.date),
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],

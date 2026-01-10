@@ -1,32 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:opba_app/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/account_provider.dart';
 import '../models/account_model.dart';
+import '../providers/account_provider.dart';
+import '../providers/auth_provider.dart';
 import '../theme/app_theme.dart';
 import '../utils/app_localizations.dart';
 
-class AddAccountScreen extends StatefulWidget {
-  const AddAccountScreen({super.key});
+class EditAccountScreen extends StatefulWidget {
+  final Account account;
+
+  const EditAccountScreen({
+    super.key,
+    required this.account,
+  });
 
   @override
-  State<AddAccountScreen> createState() => _AddAccountScreenState();
+  State<EditAccountScreen> createState() => _EditAccountScreenState();
 }
 
-class _AddAccountScreenState extends State<AddAccountScreen> {
-  static const double _fieldGap = 20;
-
+class _EditAccountScreenState extends State<EditAccountScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final _cardNumberController = TextEditingController();
-  final _cardHolderController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _balanceController = TextEditingController();
+  late final TextEditingController _cardNumberController;
+  late final TextEditingController _cardHolderController;
+  late final TextEditingController _descriptionController;
+  late final TextEditingController _balanceController;
 
   String? _selectedBank;
   bool _isLoading = false;
+
+  static const _gap = 20.0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _selectedBank = widget.account.bankName;
+
+    _cardNumberController = TextEditingController(
+      text: _group4((widget.account.cardNumber ?? '').trim()),
+    );
+
+    _cardHolderController = TextEditingController(
+      text: (widget.account.cardHolderName ?? '').trim(),
+    );
+
+    _descriptionController = TextEditingController(
+      text: (widget.account.description ?? '').trim(),
+    );
+
+    _balanceController = TextEditingController(
+      text: widget.account.balance.toStringAsFixed(2),
+    );
+  }
 
   @override
   void dispose() {
@@ -54,31 +82,112 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
 
     setState(() => _isLoading = true);
 
-    final accountProvider =
-        Provider.of<AccountProvider>(context, listen: false);
+    final accountProvider = context.read<AccountProvider>();
 
     final cardNumber = _cleanCardNumber(_cardNumberController.text);
-    final balance = double.tryParse(_balanceController.text) ?? 0.0;
+    final balance =
+        double.tryParse(_balanceController.text) ?? widget.account.balance;
 
-    final success = await accountProvider.addAccount(
+    final updated = widget.account.copyWith(
       bankName: _selectedBank!,
-      cardHolderName:
-          _cardHolderController.text.trim(), // ✅ accountName => cardHolderName
-      cardNumber: cardNumber, // ✅ iban => cardNumber
-      description: _descriptionController.text.trim(), // ✅ description eklendi
+      cardNumber: cardNumber,
+      cardHolderName: _cardHolderController.text.trim(),
+      description: _descriptionController.text.trim(),
       balance: balance,
     );
 
+    final ok = await accountProvider.updateAccount(updated);
+
     setState(() => _isLoading = false);
 
-    if (success && mounted) {
+    if (!mounted) return;
+
+    if (ok) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Hesap başarıyla eklendi.'),
+          content: Text('Hesap güncellendi.'),
           backgroundColor: AppColors.success,
         ),
       );
       Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Hesap güncellenemedi.'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
+  }
+
+  Future<void> _handleDelete() async {
+    // ✅ AuthProvider’a bağla (oturum kontrolü)
+    final auth = context.read<AuthProvider>();
+    if (auth.user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Oturum bulunamadı. Lütfen tekrar giriş yapın.'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('Hesabı Sil'),
+          content: const Text(
+            'Bu hesabı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Vazgeç'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.error,
+                foregroundColor: Colors.white,
+                elevation: 0,
+              ),
+              child: const Text('Sil'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true) return;
+
+    setState(() => _isLoading = true);
+
+    final accountProvider = context.read<AccountProvider>();
+    final ok = await accountProvider.deleteAccount(widget.account.id!);
+
+    setState(() => _isLoading = false);
+
+    if (!mounted) return;
+
+    if (ok) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Hesap silindi.'),
+          backgroundColor: AppColors.success,
+        ),
+      );
+      Navigator.pop(context);
+    } else {
+      final err = accountProvider.error ?? 'Hesap silinemedi.';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(err),
+          backgroundColor: AppColors.error,
+        ),
+      );
     }
   }
 
@@ -86,26 +195,19 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final auth = context.watch<AuthProvider>();
-    final userCurrency = (auth.user?.currency ?? 'TRY').toUpperCase();
-
-    String currencySymbol(String code) {
-      switch (code) {
-        case 'USD':
-          return '\$';
-        case 'EUR':
-          return '€';
-        case 'GBP':
-          return '£';
-        case 'TRY':
-        default:
-          return '₺';
-      }
-    }
-
-    final symbol = currencySymbol(userCurrency);
+    final userCurrency =
+        (auth.user?.currency ?? widget.account.currency ?? 'TRY').toUpperCase();
+    final symbol = _currencySymbol(userCurrency);
     final isPrefix =
         userCurrency == 'USD' || userCurrency == 'EUR' || userCurrency == 'GBP';
+
+    // ✅ dropdown value fix: items listesinde yoksa null
+    final selected = (_selectedBank ?? '').trim();
+    final bankNames =
+        Bank.turkishBanks.map((b) => b.name.trim()).toSet().toList()..sort();
+    final dropdownValue = bankNames.contains(selected) ? selected : null;
 
     return Scaffold(
       backgroundColor:
@@ -121,7 +223,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          l10n.addAccount,
+          l10n.translate('edit_account') ?? 'Hesabı Düzenle',
           style: TextStyle(
             color: isDark ? Colors.white : AppColors.primaryBlue,
             fontWeight: FontWeight.w600,
@@ -136,7 +238,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // banka seç
+              // Banka
               _buildLabel(l10n.bankSelect),
               const SizedBox(height: 8),
               Container(
@@ -150,21 +252,21 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   ),
                 ),
                 child: DropdownButtonFormField<String>(
-                  initialValue: _selectedBank,
+                  value: dropdownValue,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 16),
                   ),
                   hint: Text(l10n.bankSelect),
-                  items: Bank.turkishBanks.map((bank) {
-                    return DropdownMenuItem(
-                      value: bank.name,
+                  items: bankNames.map((name) {
+                    return DropdownMenuItem<String>(
+                      value: name,
                       child: Row(
                         children: [
                           const Icon(Icons.account_balance,
                               color: AppColors.primaryBlue, size: 20),
                           const SizedBox(width: 12),
-                          Text(bank.name),
+                          Text(name),
                         ],
                       ),
                     );
@@ -173,25 +275,23 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                 ),
               ),
 
-              const SizedBox(height: _fieldGap),
+              const SizedBox(height: _gap),
 
-              // kart numarası
+              // Kart Numarası
               _buildLabel('Kart Numarası'),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _cardNumberController,
                 keyboardType: TextInputType.number,
-                inputFormatters: [
-                  _CardNumberFormatter(),
-                ],
+                inputFormatters: [_CardNumberFormatter()],
                 decoration: InputDecoration(
                   hintText: '1234 5678 9012 3456',
                   prefixIcon: const Icon(Icons.credit_card),
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
-                  counterText: '', // ✅ 0/16 yazısını kaldırır
+                  counterText: '',
                 ),
-                maxLength: 19, // 16 hane + 3 boşluk
+                maxLength: 19,
                 validator: (value) {
                   final v = _cleanCardNumber(value ?? '');
                   if (v.isEmpty) return l10n.translate('field_required');
@@ -200,12 +300,12 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   }
                   return null;
                 },
-                onChanged: (_) => setState(() {}), // preview refresh
+                onChanged: (_) => setState(() {}),
               ),
 
-              const SizedBox(height: _fieldGap),
+              const SizedBox(height: _gap),
 
-              // kart sahibi adı
+              // Kart Sahibi
               _buildLabel('Kart Sahibi'),
               const SizedBox(height: 8),
               TextFormField(
@@ -226,32 +326,26 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                 onChanged: (_) => setState(() {}),
               ),
 
-              const SizedBox(height: _fieldGap),
+              const SizedBox(height: _gap),
 
-              // açıklama (description)
+              // Description
               _buildLabel('Açıklama'),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _descriptionController,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
-                  hintText: 'Örn: Ana Kart / Maaş Kartı',
-                  prefixIcon: const Icon(Icons.description_outlined),
+                  hintText: 'Örn: Maaş hesabım',
+                  prefixIcon: const Icon(Icons.edit_note),
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
                 ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return l10n.translate('field_required');
-                  }
-                  return null;
-                },
                 onChanged: (_) => setState(() {}),
               ),
 
-              const SizedBox(height: _fieldGap),
+              const SizedBox(height: _gap),
 
-              // bakiye
+              // Balance
               _buildLabel(l10n.balance),
               const SizedBox(height: 8),
               TextFormField(
@@ -264,56 +358,22 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                 ],
                 decoration: InputDecoration(
                   hintText: '0.00',
-
-                  // ❌ Sabit dolar iconunu kaldır
-                  // prefixIcon: const Icon(Icons.attach_money),
-
-                  // ✅ Dinamik currency sembolü
-                  prefix: isPrefix
-                      ? Padding(
-                          padding: const EdgeInsets.only(left: 12, right: 8),
-                          child: Text(
-                            symbol,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        )
-                      : null,
-
-                  suffix: isPrefix
-                      ? null
-                      : Padding(
-                          padding: const EdgeInsets.only(left: 8, right: 12),
-                          child: Text(
-                            symbol,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-
+                  prefixIcon: const Icon(Icons.attach_money),
+                  prefixText: isPrefix ? '$symbol ' : null,
+                  suffixText: isPrefix ? null : ' $symbol',
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
                 ),
+                onChanged: (_) => setState(() {}),
               ),
-              const SizedBox(height: _fieldGap),
-              // önizleme kartı
-              if (_selectedBank != null) ...[
-                Text(
-                  'Önizleme',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-                const SizedBox(height: 12),
-                _buildPreviewCard(),
-                const SizedBox(height: 24),
-              ],
 
-              // gönder butonu
+              const SizedBox(height: 18),
+
+              _buildPreviewCard(isDark),
+
+              const SizedBox(height: 24),
+
+              // Save
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -338,12 +398,34 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                           ),
                         )
                       : Text(
-                          l10n.createAccount,
+                          l10n.save,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // ✅ Delete (red)
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: OutlinedButton(
+                  onPressed: _isLoading ? null : _handleDelete,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.error,
+                    side: const BorderSide(color: AppColors.error, width: 1.2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    'Hesabı Sil',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
             ],
@@ -367,24 +449,20 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
         const SizedBox(width: 8),
         Text(
           text,
-          style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-          ),
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         ),
       ],
     );
   }
 
-  Widget _buildPreviewCard() {
-    final maskedCard = _cardNumberController.text.isEmpty
+  Widget _buildPreviewCard(bool isDark) {
+    final bank = (_selectedBank ?? '').trim();
+    final masked = _cardNumberController.text.trim().isEmpty
         ? '**** **** **** ****'
-        : _cardNumberController.text;
-
+        : _cardNumberController.text.trim();
     final holder = _cardHolderController.text.trim().isEmpty
         ? 'AD SOYAD'
         : _cardHolderController.text.trim();
-
     final desc = _descriptionController.text.trim().isEmpty
         ? '—'
         : _descriptionController.text.trim();
@@ -398,7 +476,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
           end: Alignment.bottomRight,
           colors: [
             AppColors.primaryGradientStart,
-            AppColors.primaryGradientEnd,
+            AppColors.primaryGradientEnd
           ],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -414,27 +492,16 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _selectedBank ?? '',
+            bank,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 22),
           Text(
-            desc,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.85),
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 18),
-          Text(
-            maskedCard,
+            masked,
             style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -445,14 +512,44 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
           const SizedBox(height: 16),
           Text(
             holder,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 14,
+            style: const TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            desc,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.85),
+              fontSize: 13,
             ),
           ),
         ],
       ),
     );
+  }
+
+  String _currencySymbol(String code) {
+    switch (code) {
+      case 'USD':
+        return '\$';
+      case 'EUR':
+        return '€';
+      case 'GBP':
+        return '£';
+      case 'TRY':
+      default:
+        return '₺';
+    }
+  }
+
+  String _group4(String digitsRaw) {
+    final digits = digitsRaw.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.isEmpty) return '';
+    final b = StringBuffer();
+    for (int i = 0; i < digits.length; i++) {
+      b.write(digits[i]);
+      if ((i + 1) % 4 == 0 && (i + 1) != digits.length) b.write(' ');
+    }
+    return b.toString();
   }
 }
 
@@ -467,18 +564,14 @@ class _DotDecimalTextInputFormatter extends TextInputFormatter {
   ) {
     final text = newValue.text;
     if (text.isEmpty) return newValue;
-
     if ('.'.allMatches(text).length > 1) return oldValue;
 
     final parts = text.split('.');
-    if (parts.length == 2 && parts[1].length > decimalRange) {
-      return oldValue;
-    }
+    if (parts.length == 2 && parts[1].length > decimalRange) return oldValue;
     return newValue;
   }
 }
 
-/// ✅ Kart numarası: sadece rakam + 4'lü gruplama, imleç stabil
 class _CardNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
@@ -486,11 +579,9 @@ class _CardNumberFormatter extends TextInputFormatter {
     TextEditingValue newValue,
   ) {
     final digits = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
-
     final limited = digits.length > 16 ? digits.substring(0, 16) : digits;
 
     final formatted = _group4(limited);
-
     return TextEditingValue(
       text: formatted,
       selection: TextSelection.collapsed(offset: formatted.length),

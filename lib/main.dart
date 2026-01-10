@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:opba_app/providers/interest_rate_provider.dart';
+import 'package:opba_app/providers/loan_provider.dart';
 import 'package:opba_app/screens/transactions_screen.dart';
+import 'package:opba_app/services/api_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -16,7 +19,8 @@ import 'screens/login_screen.dart';
 import 'screens/security_question_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/home_screen.dart';
-import 'screens/accounts_screen.dart';
+// import 'screens/accounts_screen.dart';
+import '../screens/edit_account_screen.dart';
 import 'screens/add_account_screen.dart';
 import 'screens/expenses_screen.dart';
 import 'screens/budget_screen.dart';
@@ -48,6 +52,10 @@ class OpbaApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AccountProvider()),
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
         ChangeNotifierProvider(create: (_) => BudgetProvider()),
+        // ChangeNotifierProvider(create: (_) => InterestRatesProvider()),
+        ChangeNotifierProvider(
+            create: (_) =>
+                LoanProvider(ApiService())..fetchRates(currency: 'TRY')),
       ],
       child: Consumer<AppProvider>(
         builder: (context, appProvider, child) {
@@ -76,7 +84,7 @@ class OpbaApp extends StatelessWidget {
               '/security-question': (context) => const SecurityQuestionScreen(),
               '/register': (context) => const RegisterScreen(),
               '/home': (context) => const HomeScreen(),
-              '/accounts': (context) => const AccountsScreen(),
+              // '/accounts': (context) => const AccountsScreen(),
               '/add-account': (context) => const AddAccountScreen(),
               '/expenses': (context) => const ExpensesScreen(),
               '/budget': (context) => const BudgetScreen(),

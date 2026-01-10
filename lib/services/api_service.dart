@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:opba_app/models/account_model.dart';
+import 'package:opba_app/models/interest_rate_model.dart';
+import 'package:opba_app/models/loan_rate_model.dart';
 
 class ApiService {
   // base url
@@ -172,6 +174,20 @@ class ApiService {
     return get('/users/security-questions?lang=$lang');
   }
 
+  /// PATCH /accounts/:id  (update)
+  Future<Map<String, dynamic>> patchAccount(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
+    final resp = await patch('/accounts/$id', data);
+
+    if (resp is Map && resp['ok'] == true && resp['account'] is Map) {
+      return Map<String, dynamic>.from(resp['account'] as Map);
+    }
+
+    throw ApiException('Account update failed', statusCode: 400);
+  }
+
   // hesap endpoint'leri
   Future<List<dynamic>> getAccounts({required String currency}) async {
     final resp = await get(
@@ -239,6 +255,104 @@ class ApiService {
 
   Future<dynamic> getTransactionSummary() async {
     return get('/transactions/summary');
+  }
+
+  // =========================
+// Interest Rates
+// GET /api/interest-rates?loan_type=...&currency=...&term_months=...&bank_name=...&sort=asc|desc
+// =========================
+  Future<Map<String, dynamic>> getInterestRates({
+    String? loanType,
+    String? currency,
+    int? termMonths,
+    String? bankName,
+    String sort = 'asc',
+  }) async {
+    final query = <String, String>{};
+
+    if (loanType != null && loanType.trim().isNotEmpty) {
+      query['loan_type'] = loanType.trim();
+    }
+    if (currency != null && currency.trim().isNotEmpty) {
+      query['currency'] = currency.trim();
+    }
+    if (termMonths != null && termMonths > 0) {
+      query['term_months'] = termMonths.toString();
+    }
+    if (bankName != null && bankName.trim().isNotEmpty) {
+      query['bank_name'] = bankName.trim();
+    }
+    if (sort.trim().isNotEmpty) {
+      query['sort'] = sort.trim();
+    }
+
+    final uri = Uri.parse('$baseUrl/api/interest-rates').replace(
+      queryParameters: query.isEmpty ? null : query,
+    );
+
+    // ApiService içindeki _getHeaders() kullanmak için doğrudan get() yerine küçük bir override:
+    final headers = await _getHeaders();
+    final response = await http.get(uri, headers: headers);
+    final resp = _handleResponse(response);
+    if (resp is Map && resp['ok'] == true) {
+      debugPrint(response.body);
+      return Map<String, dynamic>.from(resp);
+    }
+
+    throw ApiException('INTEREST_RATES_ERROR', statusCode: 400);
+  }
+
+  // GET /interest-rates/banks/:bankName/terms?loan_type=...&currency=...
+  Future<Map<String, dynamic>> getBankTerms(
+    String bankName, {
+    String loanType = 'consumer',
+    String currency = 'TRY',
+  }) async {
+    final endpoint =
+        '/interest-rates/banks/${Uri.encodeComponent(bankName)}/terms?loan_type=$loanType&currency=$currency';
+
+    final resp = await get(endpoint);
+
+    if (resp is Map && resp['ok'] == true) {
+      return Map<String, dynamic>.from(resp as Map);
+    }
+    throw ApiException('TERMS_NOT_FOUND', statusCode: 404);
+  }
+
+  // =========================
+  // Loan Calc
+  // POST /loan/calc
+  // =========================
+  Future<Map<String, dynamic>> calcLoan({
+    required String bankName,
+    String loanType = 'consumer',
+    String currency = 'TRY',
+    required int termMonths,
+    required double principal,
+  }) async {
+    final resp = await post('/api/loan/calc', {
+      'bank_name': bankName,
+      'loan_type': loanType,
+      'currency': currency,
+      'term_months': termMonths,
+      'principal': principal,
+    });
+
+    if (resp is Map && resp['ok'] == true) {
+      return Map<String, dynamic>.from(resp as Map);
+    }
+    throw ApiException('CALC_ERROR', statusCode: 400);
+  }
+
+  // İstersen model ile çağırmak için helper:
+  Future<Map<String, dynamic>> calcLoanFromInput(LoanCalcInput input) {
+    return calcLoan(
+      bankName: input.bankName,
+      loanType: input.loanType,
+      currency: input.currency,
+      termMonths: input.termMonths,
+      principal: input.principal,
+    );
   }
 
   // bütçe endpoint'leri
@@ -339,6 +453,11 @@ class ApiService {
     debugPrint('Patching profile with body: $body');
     return patch('/users/me/update', body);
   }
+
+  Future<BankTermsResponse?> getInterestRateBankTerms(
+      {required String bankName,
+      required String loanType,
+      required String currency}) async {}
 }
 
 class ApiException implements Exception {

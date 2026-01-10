@@ -87,7 +87,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Text(
-          l10n.translate('expenses_screen'),
+          l10n.expenses,
           style: TextStyle(
             color: isDark ? Colors.white : AppColors.primaryBlue,
             fontWeight: FontWeight.w600,
@@ -255,7 +255,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
                   elevation: 0,
                 ),
                 child: Text(
-                  l10n.budgetManagement,
+                  l10n.allTransactions,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -419,6 +419,23 @@ class PieChartPainter extends CustomPainter {
     final radius = math.min(size.width, size.height) / 2;
     final innerRadius = radius * 0.6;
 
+    if (categories.length == 1) {
+      final c = categories.first;
+
+      final outerPaint = Paint()
+        ..color = c.category.color
+        ..style = PaintingStyle.fill;
+
+      canvas.drawCircle(center, radius, outerPaint);
+
+      final innerPaint = Paint()
+        ..color = isDark ? AppColors.backgroundDark : Colors.white
+        ..style = PaintingStyle.fill;
+
+      canvas.drawCircle(center, innerRadius - 5, innerPaint);
+      return;
+    }
+
     double startAngle = -math.pi / 2;
 
     for (var category in categories) {
@@ -460,22 +477,24 @@ class PieChartPainter extends CustomPainter {
       canvas.drawPath(path, paint);
 
       // beyaz ayırıcı çizgi ekle
-      final separatorPaint = Paint()
-        ..color = isDark ? AppColors.backgroundDark : Colors.white
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2;
+      if (categories.length > 1 && sweepAngle > 0) {
+        final separatorPaint = Paint()
+          ..color = isDark ? AppColors.backgroundDark : Colors.white
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2;
 
-      canvas.drawLine(
-        Offset(
-          center.dx + innerRadius * math.cos(startAngle),
-          center.dy + innerRadius * math.sin(startAngle),
-        ),
-        Offset(
-          center.dx + radius * math.cos(startAngle),
-          center.dy + radius * math.sin(startAngle),
-        ),
-        separatorPaint,
-      );
+        canvas.drawLine(
+          Offset(
+            center.dx + innerRadius * math.cos(startAngle),
+            center.dy + innerRadius * math.sin(startAngle),
+          ),
+          Offset(
+            center.dx + radius * math.cos(startAngle),
+            center.dy + radius * math.sin(startAngle),
+          ),
+          separatorPaint,
+        );
+      }
 
       startAngle += sweepAngle;
     }

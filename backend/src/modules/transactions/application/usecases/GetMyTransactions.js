@@ -9,7 +9,7 @@ class GetMyTransactions {
   _buildRateMap(rates) {
     // DB şeman: { currency, rateToTRY }
     const map = { TRY: 1 };
-    console.log("Rates fetched for conversion:", rates); 
+    // console.log("Rates fetched for conversion:", rates); 
     for (const r of rates || []) {
       const obj = r?._doc ? r._doc : r;
 
@@ -87,7 +87,7 @@ class GetMyTransactions {
         // ÖRNEK: fxRateRepo.getLatest(today) -> [{ code:'USD', rate: 32.1 }, ...]
         const rates = await this.fxRateRepo.getLatest();
         rateMap = this._buildRateMap(rates);
-        console.log("Built rate map:", rateMap);
+        // console.log("Built rate map:", rateMap);
       } catch (_) {
         // rate okunamazsa convert etmeden devam
       }
@@ -98,9 +98,9 @@ class GetMyTransactions {
       const obj = tx?._doc ? tx._doc : tx;
 
       const from = (obj.currency || "TRY").toUpperCase();
-      console.log(`Converting transaction ${obj._id} amount from ${from} to ${target}`);
+      // console.log(`Converting transaction ${obj._id} amount from ${from} to ${target}`);
       const converted = this._convertAmount(obj.amount, from, target, rateMap);
-      console.log(`Converted amount: ${converted}`);
+      // console.log(`Converted amount: ${converted}`);
       return {
         ...obj,
 

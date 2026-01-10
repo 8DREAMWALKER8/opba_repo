@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import '../models/account_model.dart';
 import '../theme/app_theme.dart';
+import '../screens/edit_account_screen.dart';
 
 class CreditCardWidget extends StatefulWidget {
   final Account account;
+  final String currency;
 
   const CreditCardWidget({
     super.key,
     required this.account,
+    required this.currency,
   });
 
   @override
@@ -15,17 +18,24 @@ class CreditCardWidget extends StatefulWidget {
 }
 
 class _CreditCardWidgetState extends State<CreditCardWidget> {
-  bool _showFullIban = false;
+  bool _showFullCardNumber = false;
 
-  // ✅ Sağ taraftaki ikon kolonunun sabit genişliği (üst ve alt satır aynı hizaya gelsin)
   static const double _actionColWidth = 44;
 
   @override
   Widget build(BuildContext context) {
     final account = widget.account;
+    final currency = widget.currency;
 
-    final ibanText =
-        _showFullIban ? _formatIban(account.iban) : _maskIban(account.iban);
+    // ✅ Yeni alan: cardNumber
+    // ✅ Eski datalar için fallback:
+    // - Eğer Account modelinde eski alanı map'lediğin bir property varsa buraya ekle (örn: account.legacyIban)
+    // - Yoksa sadece cardNumber üzerinden devam eder (null/empty ise '—' gösterir)
+    final rawCardNumber = (account.cardNumber ?? '').trim();
+
+    final cardText = _showFullCardNumber
+        ? _formatCardNumber(rawCardNumber)
+        : _maskCardNumber(rawCardNumber);
 
     final description = (account.description ?? '').trim();
     final descriptionText = description.isEmpty ? '—' : description;
@@ -51,9 +61,9 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ✅ ÜST SATIR: Description (sol) + Edit (sağ) -> aynı hizada
+          // ÜST SATIR: Description + Edit
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center, // ✅ dikey merkez
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Text(
@@ -70,13 +80,18 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
               ),
               const SizedBox(width: 10),
               SizedBox(
-                width: _actionColWidth, // ✅ sabit kolon
+                width: _actionColWidth,
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(999),
                     onTap: () {
-                      // TODO: edit event (şimdilik boş)
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => EditAccountScreen(account: account),
+                        ),
+                      );
                     },
                     child: Container(
                       padding: const EdgeInsets.all(8),
@@ -98,35 +113,34 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
 
           const SizedBox(height: 20),
 
-          // ✅ ALT SATIR: IBAN (sol) + Göz (sağ) -> Edit ile tam aynı hizada
+          // ALT SATIR: Card Number + Eye
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center, // ✅ dikey merkez
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Text(
-                  ibanText.isEmpty ? '—' : ibanText,
+                  cardText.isEmpty ? '—' : cardText,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: _showFullIban ? 14 : 15,
+                    fontSize: _showFullCardNumber ? 14 : 15,
                     fontWeight: FontWeight.w500,
-                    letterSpacing: _showFullIban ? 0.6 : 1.2,
+                    letterSpacing: 2,
                     height: 1.2,
                   ),
-                  maxLines: _showFullIban ? 2 : 1,
-                  overflow: _showFullIban
-                      ? TextOverflow.visible
-                      : TextOverflow.ellipsis,
-                  softWrap: true,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
                 ),
               ),
               const SizedBox(width: 10),
               SizedBox(
-                width: _actionColWidth, // ✅ üst satır ile aynı kolon
+                width: _actionColWidth,
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(999),
-                    onTap: () => setState(() => _showFullIban = !_showFullIban),
+                    onTap: () => setState(
+                        () => _showFullCardNumber = !_showFullCardNumber),
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -134,7 +148,9 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        _showFullIban ? Icons.visibility_off : Icons.visibility,
+                        _showFullCardNumber
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                         color: Colors.white,
                         size: 18,
                       ),
@@ -147,29 +163,25 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
 
           const SizedBox(height: 16),
 
-          // hesap adı
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  account.cardHolderName ?? 'Hesap Adı',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
+          // Kart sahibi adı
+          Text(
+            (account.cardHolderName ?? '').trim().isEmpty
+                ? 'Kart Sahibi'
+                : account.cardHolderName!.trim(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ),
 
           const SizedBox(height: 8),
 
-          // bakiye
+          // Bakiye
           Text(
-            'Bakiye: ${_formatNumber(account.balance)} ${account.currency}',
+            'Bakiye: ${_formatNumber(account.balance)} ${currency}',
             style: const TextStyle(
               color: Colors.white70,
               fontSize: 14,
@@ -180,11 +192,11 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
     );
   }
 
+  // ---------- helpers ----------
+
   List<Color> _getGradientColors(Account account) {
     final bankName = account.bankName.toLowerCase();
-    if (bankName.contains('ziraat')) {
-      return [const Color(0xFF1E3A8A), const Color(0xFF3B82F6)];
-    } else if (bankName.contains('iş') || bankName.contains('is')) {
+    if (bankName.contains('iş') || bankName.contains('is')) {
       return [const Color(0xFF1E40AF), const Color(0xFF60A5FA)];
     } else if (bankName.contains('garanti')) {
       return [const Color(0xFF065F46), const Color(0xFF10B981)];
@@ -204,24 +216,24 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
         );
   }
 
-  String _formatIban(String iban) {
-    final raw = iban.replaceAll(' ', '').trim();
-    if (raw.isEmpty) return '';
+  String _formatCardNumber(String cardNumber) {
+    final digits = cardNumber.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.isEmpty) return '';
     final buffer = StringBuffer();
-    for (int i = 0; i < raw.length; i++) {
-      buffer.write(raw[i]);
-      if ((i + 1) % 4 == 0 && (i + 1) != raw.length) buffer.write(' ');
+    for (int i = 0; i < digits.length; i++) {
+      buffer.write(digits[i]);
+      if ((i + 1) % 4 == 0 && (i + 1) != digits.length) buffer.write(' ');
     }
     return buffer.toString();
   }
 
-  String _maskIban(String iban) {
-    final raw = iban.replaceAll(' ', '').trim();
-    if (raw.isEmpty) return '';
-    if (raw.length <= 8) return raw;
+  String _maskCardNumber(String cardNumber) {
+    final digits = cardNumber.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digits.isEmpty) return '';
+    if (digits.length < 8) return digits;
 
-    final start = raw.substring(0, 4);
-    final end = raw.substring(raw.length - 4);
-    return '$start **** **** **** **** $end';
+    final start = digits.substring(0, 4);
+    final end = digits.substring(digits.length - 4);
+    return '$start **** **** $end';
   }
 }
