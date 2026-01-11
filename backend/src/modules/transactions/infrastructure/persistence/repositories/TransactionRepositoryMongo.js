@@ -1,18 +1,18 @@
+// Bu sınıf Transaction işlemlerinin MongoDB tarafındaki veritabanı işlerini yapar.
+// İş eklenince/silinince hesap bakiyesini de günceller; update’te ise transaction + bakiye değişiklikleri tutarlı olsun diye session/transaction kullanır.
+
 const TransactionModel = require("../models/TransactionModel");
 const mongoose = require("mongoose");
 const { Types } = mongoose;
 
-// BankAccount model (doğru path)
 const BankAccountModel = require("../../../../accounts/infrastructure/persistence/models/BankAccountModel");
 
-// regex kaçış
 function escapeRegex(str) {
   return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 class TransactionRepositoryMongo {
   async create(txEntity) {
-    // accountId / userId ObjectId'a çevrilir
     const accountId =
       typeof txEntity.accountId === "string"
         ? new mongoose.Types.ObjectId(txEntity.accountId)
@@ -23,7 +23,6 @@ class TransactionRepositoryMongo {
         ? new mongoose.Types.ObjectId(txEntity.userId)
         : txEntity.userId;
 
-    // account mevcut mu / user’a mı ait?
     const account = await BankAccountModel.findOne({
       _id: accountId,
       userId: userObjectId,
@@ -34,7 +33,6 @@ class TransactionRepositoryMongo {
       throw new Error("ACCOUNT_NOT_FOUND");
     }
 
-    // expense ise insufficient kontrol
     if (txEntity.type === "expense") {
       const currentBalance = Number(account.balance) || 0;
       if (currentBalance < Number(txEntity.amount)) {
@@ -42,7 +40,6 @@ class TransactionRepositoryMongo {
       }
     }
 
-    // Transaction kaydet (accountId dahil)
     const doc = await TransactionModel.create({
       accountId,
       userId: userObjectId,
@@ -54,7 +51,6 @@ class TransactionRepositoryMongo {
       occurredAt: txEntity.occurredAt,
     });
 
-    // balance update (atomic $inc)
     const delta =
       txEntity.type === "income"
         ? Number(txEntity.amount)
@@ -94,7 +90,6 @@ class TransactionRepositoryMongo {
       let updatedDoc;
 
       await session.withTransaction(async () => {
-        // 1) Eski transaction'ı bul (user'a ait olmalı)
         const existing = await TransactionModel.findOne({
           _id: txObjectId,
           userId: userObjectId,
@@ -111,7 +106,6 @@ class TransactionRepositoryMongo {
             ? new mongoose.Types.ObjectId(existing.accountId)
             : existing.accountId;
 
-        // 2) Yeni account aktif mi / user'a ait mi?
         const newAccount = await BankAccountModel.findOne({
           _id: newAccountId,
           userId: userObjectId,
@@ -124,14 +118,11 @@ class TransactionRepositoryMongo {
           throw new Error("ACCOUNT_NOT_FOUND");
         }
 
-        // 3) Bakiye düzeltmeleri için delta hesapla
-        // Eski transaction'ın bakiyeye etkisi:
         const oldDelta =
           existing.type === "income"
             ? Number(existing.amount)
             : -Number(existing.amount);
 
-        // Yeni transaction'ın bakiyeye etkisi:
         const nextType = txEntity.type ?? existing.type;
         const nextAmount =
           txEntity.amount !== undefined ? Number(txEntity.amount) : Number(existing.amount);
@@ -141,12 +132,8 @@ class TransactionRepositoryMongo {
 
         const sameAccount = String(oldAccountId) === String(newAccountId);
 
-        // 4) INSUFFICIENT kontrolü (expense ise, update sonrası düşüş kadar kontrol)
-        // Mantık: ilgili account'ta uygulanacak net değişim negatif ise bakiyeyi kontrol et.
-        // sameAccount: netChange = -oldDelta + newDelta
-        // farklı hesap: new account’a newDelta uygulanacak, old account’a -oldDelta uygulanacak
         if (sameAccount) {
-          const netChange = (-oldDelta) + newDelta; // iade + yeni uygulama
+          const netChange = (-oldDelta) + newDelta;
           if (netChange < 0) {
             const currentBalance = Number(newAccount.balance) || 0;
             if (currentBalance < Math.abs(netChange)) {
@@ -154,7 +141,6 @@ class TransactionRepositoryMongo {
             }
           }
         } else {
-          // Yeni account tarafında negatif etki varsa kontrol et
           if (newDelta < 0) {
             const currentBalance = Number(newAccount.balance) || 0;
             if (currentBalance < Math.abs(newDelta)) {
@@ -162,7 +148,6 @@ class TransactionRepositoryMongo {
             }
           }
 
-          // Eski account aktif mi? (iade edeceğiz; aktif değilse de iade etmemek tutarsız olur)
           const oldAccount = await BankAccountModel.findOne({
             _id: oldAccountId,
             userId: userObjectId,
@@ -176,7 +161,6 @@ class TransactionRepositoryMongo {
           }
         }
 
-        // 5) Transaction document update
         const updatePayload = {
           accountId: newAccountId,
           userId: userObjectId,
@@ -200,9 +184,8 @@ class TransactionRepositoryMongo {
 
         updatedDoc = updTx.toObject();
 
-        // 6) Balance update
         if (sameAccount) {
-          const netChange = (-oldDelta) + newDelta; // iade + yeni
+          const netChange = (-oldDelta) + newDelta;
           const updAcc = await BankAccountModel.updateOne(
             { _id: newAccountId, userId: userObjectId, isActive: true },
             { $inc: { balance: netChange } },
@@ -211,7 +194,6 @@ class TransactionRepositoryMongo {
 
           if (updAcc.matchedCount === 0) throw new Error("ACCOUNT_NOT_FOUND");
         } else {
-          // Eski hesaba iade (oldDelta'yı geri al -> -oldDelta)
           const updOld = await BankAccountModel.updateOne(
             { _id: oldAccountId, userId: userObjectId, isActive: true },
             { $inc: { balance: -oldDelta } },
@@ -219,7 +201,6 @@ class TransactionRepositoryMongo {
           );
           if (updOld.matchedCount === 0) throw new Error("ACCOUNT_NOT_FOUND");
 
-          // Yeni hesaba yeni delta uygula
           const updNew = await BankAccountModel.updateOne(
             { _id: newAccountId, userId: userObjectId, isActive: true },
             { $inc: { balance: newDelta } },
@@ -296,7 +277,6 @@ class TransactionRepositoryMongo {
       .limit(Number(limit))
       .lean();
 
-    // _id bazlı tekilleştirme
     const seen = new Set();
     const unique = [];
     for (const t of items) {
@@ -309,10 +289,6 @@ class TransactionRepositoryMongo {
     return unique;
   }
 
-  /**
-   * Budget entegrasyonu için: belli tarih aralığında (örn. ay) belirli kategori expense toplamını döner.
-   * from inclusive, to exclusive.
-   */
   async sumExpensesByUserAndCategoryBetween(
     userId,
     category,
@@ -436,12 +412,6 @@ class TransactionRepositoryMongo {
     return total;
   }
 
-  /**
-   * Tekrarlayan işlem kontrolü için:
-   * Aynı ay aralığında aynı amount + currency ile aynı "key" (description veya category) kaç kez var?
-   * key: CreateTransaction tarafında lower-case gönderiyoruz.
-   * description eşleşmesini case-insensitive regex ile yapıyoruz.
-   */
   async countSimilarExpensesBetween({ userId, key, amount, currency = "TRY", from, to }) {
     const userObjectId =
       typeof userId === "string" ? new mongoose.Types.ObjectId(userId) : userId;
@@ -456,7 +426,6 @@ class TransactionRepositoryMongo {
       amount: amt,
       occurredAt: { $gte: from, $lt: to },
 
-      // description varsa onu yakalar, yoksa category için de şans tanır
       $or: [
         { description: { $regex: `^${safeKey}$`, $options: "i" } },
         { category: String(key).trim() },

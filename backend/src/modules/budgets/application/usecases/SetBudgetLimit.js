@@ -9,8 +9,8 @@ class SetBudgetLimit {
     return err;
   }
 
-  async execute({ userId, category, limit, month, year, period, currency }) {
-    // basit validasyon
+  async execute({ userId, category, limit, month, year, period }) {
+    // asagidaki durumlarda badRequest döndürür:
     if (!userId) throw this._badRequest("USER_ID_REQUIRED");
     if (!category) throw this._badRequest("CATEGORY_REQUIRED");
     if (limit === undefined || limit === null) throw this._badRequest("LIMIT_IS_REQUIRED");
@@ -30,7 +30,7 @@ class SetBudgetLimit {
       throw this._badRequest("INVALID_YEAR");
     }
 
-    return this.budgetRepo.upsertBudget(userId, {
+    return this.budgetRepo.upsertBudget(userId, { 
       category,
       limit: limitNum,
       month: monthNum,

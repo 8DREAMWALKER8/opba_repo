@@ -1,4 +1,6 @@
-// CreateTransaction.js
+// Yeni bir işlem oluşturur ve işlem “expense” ise aynı ay içinde tekrarlayan harcama var mı diye kontrol eder.
+// Ayrıca ilgili kategori için bütçe varsa harcamayı hesaplayıp %80’e yaklaşınca veya limit aşılınca kullanıcıya bildirim üretir.
+
 const TransactionEntity = require("../../domain/TransactionEntity");
 const BudgetRules = require("../../../budgets/domain/services/BudgetRules");
 
@@ -9,7 +11,6 @@ class CreateTransaction {
     this.notificationRepo = notificationRepo;
   }
 
-  // accountId eklendi
   async execute({ userId, accountId, amount, category, description, type, currency, occurredAt }) {
     const entity = new TransactionEntity({
       userId,
@@ -24,22 +25,15 @@ class CreateTransaction {
 
     const created = await this.transactionRepo.create(entity);
 
-    // sadece expense kontrolleri
     if (created.type !== "expense") return created;
 
     const txDate = created.occurredAt ? new Date(created.occurredAt) : new Date();
     const month = txDate.getMonth() + 1;
     const year = txDate.getFullYear();
 
-    // Monthly range (aynı ay içinde duplicate kontrolü için lazım)
     const { from, to } = BudgetRules.getMonthlyRange(txDate);
     const usedCurrency = created.currency || currency || "TRY";
-
-    // TEKRARLAYAN İŞLEM KONTROLÜ (aynı ay içinde 2. kez)
-    // key: description varsa description, yoksa category
-    // amount aynı
-    // currency aynı
-    // count == 2 olunca 1 kere bildir 
+ 
     const rawKey =
       typeof created.description === "string" && created.description.trim()
         ? created.description.trim()
@@ -50,7 +44,6 @@ class CreateTransaction {
     if (key) {
       const amt = Number(created.amount);
 
-      // countSimilarExpensesBetween({ userId, key, amount, currency, from, to })
       const count = await this.transactionRepo.countSimilarExpensesBetween({
         userId,
         key,
@@ -81,7 +74,6 @@ class CreateTransaction {
       }
     }
 
-    // BUDGET KONTROLÜ 
     if (!created.category) return created;
 
     const budget = await this.budgetRepo.findActiveByUserAndCategory(
@@ -102,7 +94,6 @@ class CreateTransaction {
 
     const limit = Number(budget.limit);
 
-    // %80 eşiği kontrolü (bu transaction amount'u ile eşik geçişini yakala)
     const delta = Number(created.amount);
     const spentBefore = Number.isFinite(delta) ? spent - delta : NaN;
     const threshold80 = BudgetRules.getNearLimitThreshold(limit, 0.8);
@@ -138,7 +129,6 @@ class CreateTransaction {
       });
     }
 
-    // Limit aşımı bildirimi
     if (Number.isFinite(limit) && BudgetRules.isBreached(spent, limit)) {
       await this.notificationRepo.create({
         userId,

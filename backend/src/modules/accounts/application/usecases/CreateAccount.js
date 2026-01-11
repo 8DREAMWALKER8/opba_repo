@@ -1,7 +1,6 @@
-/**
- * Girişiriş yapmış kullanıcıya ait yeni bir banka hesabı oluşturmak için kullanılır.
- * Controller’dan gelen doğrulanmış veriyi alır ve 
- * veritabanına kaydetme işlemini repository katmanına devreder.
+/*
+ Giriş yapmış kullanıcıya ait yeni bir banka hesabı oluşturmak için kullanılır.
+ Controller’dan gelen doğrulanmış veriyi alır ve veritabanına kaydetme işlemini repository katmanına devreder.
  */
 
 class CreateAccount {

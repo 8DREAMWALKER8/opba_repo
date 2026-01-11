@@ -1,3 +1,6 @@
+// Transaction verisinin MongoDB’de nasıl saklanacağını tanımlar.
+// Alanların tiplerini, zorunlu olup olmadıklarını ve hızlı sorgu için indexleri belirler.
+
 const mongoose = require("mongoose");
 
 const TransactionSchema = new mongoose.Schema(

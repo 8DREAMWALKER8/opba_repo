@@ -1,3 +1,5 @@
+// User verilerini MongoDB üzerinden okuma/yazma işlemlerini yapan repository.
+
 const User = require("../../../../models/User");
 
 class MongoUserRepository {
@@ -23,8 +25,8 @@ class MongoUserRepository {
       id,
       { $set: data },
       {
-        new: true,          // güncellenmiş dökümanı döndür
-        runValidators: true // schema validation çalışsın
+        new: true,          
+        runValidators: true 
       }
     );
   }

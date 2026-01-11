@@ -1,3 +1,5 @@
+// Kullanıcı veritabanı işlemleri için tanımlanan repository arayüzü
+
 class UserRepository {
   async findByEmail(email) {
     throw new Error("Not implemented");

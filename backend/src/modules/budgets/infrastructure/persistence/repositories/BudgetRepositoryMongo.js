@@ -2,13 +2,13 @@ const BudgetModel = require("../models/BudgetModel");
 const mongoose = require("mongoose");
 
 class BudgetRepositoryMongo {
-  // Kullanıcının tüm budget kayıtlarını getir
+  // kullanicinin budget kayıtlari
   async findByUser(userId) {
     return BudgetModel.find({ userId }).sort({ createdAt: -1 }).lean();
   }
 
-  // Aynı userId + category + month + year için upsert (modelindeki unique index ile uyumlu)
-  async upsertBudget(userId, { category, limit, month, year, period = "monthly", currency }) {
+  // güncelleme ekleme islemi
+  async upsertBudget(userId, { category, limit, month, year, period = "monthly" }) {
     return BudgetModel.findOneAndUpdate(
       { userId, category, month, year },
       {
@@ -39,7 +39,7 @@ class BudgetRepositoryMongo {
     return doc || null;
   }
 
-  // Transaction sonrası kontrol için
+  // belirli butceleri versa getirir
   async findActiveByUserAndCategory(userId, category, month, year) {
     return BudgetModel.findOne({ userId, category, month, year }).lean();
   }

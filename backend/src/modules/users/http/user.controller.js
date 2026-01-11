@@ -1,3 +1,5 @@
+// User işlemlerini yöneten controller-> register/login/me/update gibi endpointlerin input kontrolünü yapar ve usecase'leri çağırır.
+
 const { z } = require("zod");
 const { SECURITY_QUESTIONS } = require("../../../utils/securityQuestions");
 const { getQuestionText } = require("../../../utils/securityQuestions");
@@ -13,13 +15,7 @@ class UserController {
 
   register = async (req, res) => {
     try {
-      /**
-       * Şifre kuralları:
-       * - min 8 karakter
-       * - en az 1 küçük harf
-       * - en az 1 büyük harf
-       * - en az 1 noktalama / özel karakter
-       */
+
       const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\s]).{8,}$/;
 
       const schema = z
@@ -27,19 +23,15 @@ class UserController {
           username: z.string().min(3),
           email: z.string().email(),
 
-          // error code -> content.js'te çevrilecek
           phone: z.string().regex(/^\d{10,15}$/, "PHONE_INVALID_FORMAT"),
 
-          //  Güç kontrolü sadece password'de -> tek hata gelsin
           password: z.string().regex(PASSWORD_REGEX, "PASSWORD_WEAK"),
 
-          //  confirm sadece zorunlu (güç kontrolü burada yapılmıyor)
           passwordConfirm: z.string().min(1, "PASSWORD_CONFIRM_REQUIRED"),
 
           securityQuestionId: z.string().min(1),
           securityAnswer: z.string().min(1),
         })
-        //  Eşleşme kontrolü (confirm alanına yaz)
         .refine((data) => data.password === data.passwordConfirm, {
           path: ["passwordConfirm"],
           message: "PASSWORD_CONFIRM_MISMATCH",
@@ -47,7 +39,6 @@ class UserController {
 
       const input = schema.parse(req.body);
 
-      // passwordConfirm usecase'e gitmez
       const { passwordConfirm, ...usecaseInput } = input;
 
       const out = await this.registerUser.execute(usecaseInput);

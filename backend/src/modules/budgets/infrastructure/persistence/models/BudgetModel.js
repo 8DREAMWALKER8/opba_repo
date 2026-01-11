@@ -1,7 +1,6 @@
-/**
- * Bu model kullanıcıların aylık bütçelerini tutar.
- * Kategori bazlı aylık harcama limiti belirler.
- * Harcamalarla karşılaştırma yapar.
+/*
+ kullanicilarin aylik butcelerini tutar.kategori baziı aylik harcama limiti belirler.
+ harcamalarla karsılastirma yapar.
  */
 
 const mongoose = require("mongoose");
@@ -21,11 +20,9 @@ const BudgetSchema = new mongoose.Schema(
       index: true,
     },
 
-  // Bu kategori için aylık harcama limiti
-  // 0 veya pozitif olmak zorunda
+  // kategori icin aylik harcama limiti
     limit: { type: Number, required: true, min: 0 },
 
-    // Monthly destekleniyor.
     period: { type: String, enum: ["monthly"], default: "monthly" },
 
     month: { type: Number, required: true, min: 1, max: 12, index: true },
@@ -36,7 +33,7 @@ const BudgetSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Aynı kullanıcı aynı ay ve aynı kategori için sadece 1 tane bütçe tanımı yapabilsin diye unique index kullanılıyor.
+// unique index ile kullanici aynı ay ve kategori icin 1 tane tanimlasin
 BudgetSchema.index({ userId: 1, category: 1, month: 1, year: 1 }, { unique: true });
 
 module.exports = mongoose.model("Budget", BudgetSchema);

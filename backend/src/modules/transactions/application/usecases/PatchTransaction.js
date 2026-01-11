@@ -1,4 +1,6 @@
-// PatchTransaction.js
+// Bir işlemi PATCH mantığıyla günceller. Sadece gönderilen alanları değiştirir.
+// Güncellemeden sonra işlem “expense” ise tekrarlayan işlem ve bütçe limitine yaklaşma/aşma durumlarını kontrol edip bildirim oluşturur.
+
 const TransactionEntity = require("../../domain/TransactionEntity");
 const BudgetRules = require("../../../budgets/domain/services/BudgetRules");
 
@@ -9,11 +11,6 @@ class PatchTransaction {
     this.notificationRepo = notificationRepo;
   }
 
-  /**
-   * PATCH semantics:
-   * - Only apply fields that are not undefined
-   * - Convert types where needed (amount -> Number, occurredAt -> Date)
-   */
   async execute({
     userId,
     transactionId,
@@ -27,14 +24,12 @@ class PatchTransaction {
   }) {
     if (!transactionId) throw new Error("TRANSACTION_ID_REQUIRED");
 
-    // Mevcut transaction'ı bul (user'a ait olmalı)
     const existing = await this.transactionRepo.findByUserId(
       transactionId,
       userId
     );
     if (!existing) throw new Error("TRANSACTION_NOT_FOUND");
 
-    // Patch objesi: sadece gelen alanlar
     const patch = {};
 
     if (accountId !== undefined) patch.accountId = accountId;
@@ -48,25 +43,20 @@ class PatchTransaction {
       patch.occurredAt = occurredAt ? new Date(occurredAt) : new Date();
     }
 
-    // Domain entity üzerinden (istersen validation burada olur)
-    // Not: TransactionEntity'n senin projende validate ediyorsa patch'i entity ile merge ediyoruz.
     const merged = new TransactionEntity({
       ...existing,
       ...patch,
-      userId, // güvenlik: userId asla client'tan gelmesin
+      userId, 
     });
 
-    // Persist update
     const updated = await this.transactionRepo.updateByIdForUser(
       transactionId,
       userId,
       merged
     );
 
-    // Expense değilse kontroller yok
     if (!updated || updated.type !== "expense") return updated;
 
-    // Budget/duplicate kontrollerini update sonrası tekrar değerlendirelim
     const txDate = updated.occurredAt ? new Date(updated.occurredAt) : new Date();
     const month = txDate.getMonth() + 1;
     const year = txDate.getFullYear();
@@ -74,7 +64,6 @@ class PatchTransaction {
     const { from, to } = BudgetRules.getMonthlyRange(txDate);
     const usedCurrency = updated.currency || currency || "TRY";
 
-    // Duplicate kontrolü (create ile aynı mantık)
     const rawKey =
       typeof updated.description === "string" && updated.description.trim()
         ? updated.description.trim()
@@ -94,8 +83,6 @@ class PatchTransaction {
         to,
       });
 
-      // Create ile aynı davranış: 2 olunca 1 bildirim
-      // İstersen update’te spam'i engellemek için ayrıca meta ile check yapabiliriz.
       if (count === 2) {
         await this.notificationRepo.create({
           userId,
@@ -118,7 +105,6 @@ class PatchTransaction {
       }
     }
 
-    // Budget kontrolü
     if (!updated.category) return updated;
 
     const budget = await this.budgetRepo.findActiveByUserAndCategory(
@@ -139,7 +125,6 @@ class PatchTransaction {
 
     const limit = Number(budget.limit);
 
-    // %80 eşiği kontrolü
     const delta = Number(updated.amount);
     const spentBefore = Number.isFinite(delta) ? spent - delta : NaN;
     const threshold80 = BudgetRules.getNearLimitThreshold(limit, 0.8);
@@ -177,7 +162,6 @@ class PatchTransaction {
       });
     }
 
-    // Limit aşımı bildirimi
     if (Number.isFinite(limit) && BudgetRules.isBreached(spent, limit)) {
       await this.notificationRepo.create({
         userId,

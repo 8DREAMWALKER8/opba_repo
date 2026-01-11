@@ -1,9 +1,11 @@
+/*
+ Controller, HTTP işlerini (req/res) yönetir; 
+ doğrulama , parametre okuma ve userId çıkarma yapar
+*/
 const { z } = require("zod");
 
-// Kart numarası: 16 digit
 const CARD_NUMBER_REGEX = /^\d{16}$/;
 
-// Banka ismini sadece bu 3'ü olsun istiyorsan
 const ALLOWED_BANKS = ["Akbank", "İş Bankası", "Garanti BBVA"];
 
 const CreateAccountSchema = z
@@ -47,10 +49,8 @@ module.exports = ({ listAccounts, createAccount, deactivateAccount, updateAccoun
     try {
       const userId = req.user.userId || req.user._id || req.user.id;
 
-      // ✅ doğrulama + normalize (cardNumber boşlukları siler, 16 hane doğrular)
       const parsed = CreateAccountSchema.parse(req.body);
 
-      // ✅ usecase'e aynı şekilde yolla
       const account = await createAccount.execute({ userId, data: parsed });
 
       res.status(201).json({ ok: true, account });

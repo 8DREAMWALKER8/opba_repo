@@ -1,4 +1,4 @@
-const { UserEntity } = require("../../domain/UserEntity"); // path sende doğru olan
+const { UserEntity } = require("../../domain/UserEntity");
 
 class UpdateUser {
   constructor({ userRepo, hasher }) {
@@ -53,7 +53,6 @@ class UpdateUser {
       updateData.email = String(patch.email).toLowerCase();
     }
 
-    //  phone update + basit doğrulama
     if (patch.phone !== undefined) {
       const phone = String(patch.phone).trim();
       if (!/^\d{10,15}$/.test(phone)) {

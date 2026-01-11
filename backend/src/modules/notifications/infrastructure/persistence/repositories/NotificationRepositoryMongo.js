@@ -1,7 +1,7 @@
 const Notification = require("../models/NotificationModel");
 
 class NotificationRepositoryMongo {
-  // CreateTransaction burayı çağıracak
+  // CreateTransaction cagiriyor yeni bildirim icin. 
   async create(data) {
     const doc = await Notification.create({
       userId: data.userId,
@@ -9,7 +9,7 @@ class NotificationRepositoryMongo {
       title: data.title,
       message: data.message,
       meta: data.meta || {},
-      isRead: false,
+      isRead: false, //okunmamis
     });
 
     return doc.toObject ? doc.toObject() : doc;
@@ -42,7 +42,7 @@ class NotificationRepositoryMongo {
       { userId, isRead: false },
       { $set: { isRead: true } }
     );
-    return { modifiedCount: res.modifiedCount ?? res.nModified ?? 0 };
+    return { modifiedCount: res.modifiedCount ?? res.nModified ?? 0 }; //mongoose surumu icin
   }
 }
 

@@ -1,4 +1,4 @@
-class GetMyNotifications {
+class GetMyNotifications { //bildiirmleri döner
   constructor({ notificationRepo }) {
     this.notificationRepo = notificationRepo;
   }

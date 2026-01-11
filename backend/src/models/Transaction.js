@@ -1,4 +1,3 @@
-// src/models/Transaction.js
 const mongoose = require("mongoose");
 
 const TYPES = ["expense", "income"];

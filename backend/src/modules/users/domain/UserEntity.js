@@ -1,3 +1,5 @@
+// User domain nesnesi; kullanıcı bilgilerini ve temel doğrulamaları tek yerde toplar
+
 class UserEntity {
   constructor({
     id,
