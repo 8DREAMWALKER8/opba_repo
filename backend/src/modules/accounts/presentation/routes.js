@@ -1,5 +1,5 @@
 /*
- Bu dosya endpoint’leri tanımlar ve onları controller metodlarına bağlar.
+ endpoint’leri tanımlar ve onları controller metodlarına bağlar.
 */
 const router = require("express").Router();
 

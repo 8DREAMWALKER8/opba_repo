@@ -14,16 +14,16 @@ const UserSchema = new mongoose.Schema(
 
     passwordHash: { type: String, required: true },
 
-    // Password reset
+    // password reset
     resetCodeHash: { type: String, default: null },
     resetCodeExpiresAt: { type: Date, default: null },
     resetCodeAttempts: { type: Number, default: 0 },
 
-    // Security question
+    // security question
     securityQuestionId: { type: String, required: true },
     securityAnswerHash: { type: String, required: true },
 
-    // Preferences
+    // preferences
     language: { type: String, enum: LANGUAGES, default: "tr" },
     currency: { type: String, enum: CURRENCIES, default: "TRY" },
     theme: { type: String, enum: THEMES, default: "light" },

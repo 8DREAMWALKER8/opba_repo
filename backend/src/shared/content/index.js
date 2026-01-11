@@ -1,6 +1,5 @@
 /**
- * Bu dosya, istemciden gelen isteğe göre kullanılacak dili belirleyen ve
- * ilgili çeviri metnini döndüren yardımcı fonksiyonları içerir.
+ istemciden gelen isteğe göre kullanılacak dili belirleyen ve ilgili çeviri metnini döndüren yardımcı fonksiyonları içerir.
  */
 
 const content = require("./content");

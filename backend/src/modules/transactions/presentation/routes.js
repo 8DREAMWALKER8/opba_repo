@@ -1,17 +1,11 @@
 /*
-  Bu dosya Transactions modülünün API katmanını temsil eder.
-  
   Burada uygulamanın dış dünyaya açılan endpoint’leri tanımlanır.
-  İstemciden gelen HTTP istekleri burada karşılanır ve
-  ilgili usecase’lere yönlendirilir.
+  İstemciden gelen HTTP istekleri burada karşılanır ve ilgili usecase’lere yönlendirilir.
  
-  routes.js dosyası iş kuralı içermez;
-  sadece gelen isteği alır, gerekli verileri ayıklar
-  ve application katmanındaki usecase’leri çağırır.
+  routes.js dosyası gelen isteği alır, gerekli verileri ayıklar ve application katmanındaki usecase’leri çağırır.
  
   Tüm route’lar requireAuth middleware’i ile korunur.
-  Bu sayede her işlem sadece giriş yapmış kullanıcılar için çalışır
-  ve user bilgisi req.user üzerinden alınır.
+  Bu sayede her işlem sadece giriş yapmış kullanıcılar için çalışır ve user bilgisi req.user üzerinden alınır.
  */
 
 const express = require("express");

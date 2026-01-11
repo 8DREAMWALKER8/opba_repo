@@ -18,7 +18,7 @@ class NotificationRepositoryMongo {
   async findByUser(userId, { limit = 50, isRead } = {}) {
     const filter = { userId };
 
-    // isRead parametresi verilmişse filtrele
+    // isRead parametresi verilmisse filtrele
     if (typeof isRead === "boolean") {
       filter.isRead = isRead;
     }

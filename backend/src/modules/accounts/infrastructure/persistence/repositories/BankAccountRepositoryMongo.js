@@ -1,6 +1,6 @@
 /*
-Bu sınıf BankAccount (MongoDB) ile tüm veritabanı işlemlerini yapar.
-Use case’ler DB’ye direkt gitmez; repo üzerinden gider.
+ BankAccount (MongoDB) ile tüm veritabanı işlemlerini yapar.
+ Use case’ler DB’ye direkt gitmez; repo üzerinden gider.
 */
 const BankAccount = require("../models/BankAccountModel");
 const mongoose = require("mongoose");

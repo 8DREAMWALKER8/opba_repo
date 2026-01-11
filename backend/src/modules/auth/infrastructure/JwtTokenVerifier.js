@@ -1,8 +1,7 @@
 /**
- * Bu sınıf, JWT access token’ların doğrulanmasından sorumludur.
- * Token doğrulama işlemini jsonwebtoken kütüphanesi ile yapar
- * ve gizli anahtarı (JWT_SECRET) ortam değişkeninden alır.
- * Bu sınıf sadece teknik doğrulamayı yapar, iş mantığı içermez.
+  JWT access token’ların doğrulanmasından sorumludur.
+  Token doğrulama işlemini jsonwebtoken kütüphanesi ile yapar ve gizli anahtarı ortam değişkeninden alır.
+  sadece teknik doğrulamayı yapar, iş mantığı içermez.
  */
 
 const jwt = require("jsonwebtoken");

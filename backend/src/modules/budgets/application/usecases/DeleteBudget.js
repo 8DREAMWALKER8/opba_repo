@@ -1,5 +1,3 @@
-
-
 class DeleteBudget {
   constructor({ budgetRepo }) {
     this.budgetRepo = budgetRepo;
@@ -9,7 +7,6 @@ class DeleteBudget {
     if (!userId) throw new Error("USER_ID_REQUIRED");
     if (!budgetId) throw new Error("BUDGET_ID_REQUIRED");
 
-    // repo methodu yoksa wiring hatası
     if (typeof this.budgetRepo.deleteByIdForUser !== "function") {
       throw new Error("BUDGET_REPO_METHOD_MISSING");
     }

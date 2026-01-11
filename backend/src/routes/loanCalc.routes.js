@@ -1,9 +1,7 @@
-/**
- * Bu dosya, kredi hesaplama işlemleri için kullanılan API endpoint’lerini tanımlar.
- * Banka bazlı faiz oranlarını CSV dosyasından okur,
- * aylık taksit, toplam ödeme ve toplam faiz tutarını hesaplar.
- * Hesaplama işlemi sunucu tarafında yapılır ve sonuçlar
- * istemciye JSON formatında döndürülür.
+/*
+  Bu dosya, kredi hesaplama işlemleri için kullanılan API endpoint’lerini tanımlar.
+  Banka bazlı faiz oranlarını CSV dosyasından okur, aylık taksit, toplam ödeme ve toplam faiz tutarını hesaplar.
+  Hesaplama işlemi sunucu tarafında yapılır ve sonuçlar istemciye JSON formatında döndürülür.
  */
 
 const express = require("express");

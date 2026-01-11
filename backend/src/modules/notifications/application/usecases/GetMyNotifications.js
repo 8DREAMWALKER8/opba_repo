@@ -10,14 +10,12 @@ class GetMyNotifications { //bildiirmleri döner
   }
 
   _normalizeIsRead(isRead) {
-    // Controller query string gönderirse: "true"/"false"
     if (typeof isRead === "string") {
       const v = isRead.trim().toLowerCase();
       if (v === "true") return true;
       if (v === "false") return false;
       return undefined;
     }
-    // Usecase boolean alırsa
     if (typeof isRead === "boolean") return isRead;
 
     return undefined;

@@ -1,6 +1,5 @@
-// Transactions tarafının controller'ı gibi çalışıyor.
-// Yani gelen HTTP isteklerini alıyor, içinden userId / body / params / query bilgilerini çekiyor
-// ve işi asıl yapan usecase’lere paslıyor.
+// Transactions tarafının controller'ı gibi çalışıyor. gelen HTTP isteklerini alıyor, içinden userId / body / params / query bilgilerini çekiyor
+// ve işi asıl yapan usecase’lere gönderiyor.
 // Dönen sonucu da res.json ile client’a geri gönderiyor.
 
 const TransactionRepositoryMongo = require("../infrastructure/persistence/repositories/TransactionRepositoryMongo");

@@ -21,9 +21,6 @@ const budgetRepo = new BudgetRepositoryMongo();
 const txRepo = new TransactionRepositoryMongo();
 const fxRepo = new FxRateRepositoryMongo();
 
-// ÖNEMLİ: usecase constructor imzan şu olmalı:
-// new GetBudgets({ budgetRepo, txRepo }) gibi.
-// Eğer sende hâlâ new GetBudgets(budgetRepo) ise usecase’i buna göre güncelle.
 const getBudgetsUC = new GetBudgets({ budgetRepo, txRepo, fxRepo });
 const setBudgetLimitUC = new SetBudgetLimit(budgetRepo);
 const deleteBudgetUC = new DeleteBudget({ budgetRepo });

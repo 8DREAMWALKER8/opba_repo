@@ -1,8 +1,7 @@
-/**
- * Bu sınıf, kullanıcıya ait banka hesabı bilgilerini güncellemek için kullanılır.
- * Gelen veriyi Zod ile doğrular, hesabın kullanıcıya ait olduğunu kontrol eder
- * ve hesap pasifse güncellemeye izin vermez.
- * Zod,veri doğrulama ve tip tanımlama kütüphanesidir.
+/*
+  kullanıcıya ait banka hesabı bilgilerini güncellemek için kullanılır.
+  Gelen veriyi Zod ile doğrular, hesabın kullanıcıya ait olduğunu kontrol eder ve hesap pasifse güncellemeye izin vermez.
+  Zod,veri doğrulama ve tip tanımlama kütüphanesidir.
  */
 
 const { z } = require("zod");

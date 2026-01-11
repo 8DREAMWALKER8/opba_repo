@@ -1,5 +1,5 @@
-// Bu sınıf Transaction işlemlerinin MongoDB tarafındaki veritabanı işlerini yapar.
-// İş eklenince/silinince hesap bakiyesini de günceller; update’te ise transaction + bakiye değişiklikleri tutarlı olsun diye session/transaction kullanır.
+// Transaction işlemlerinin MongoDB tarafındaki veritabanı işlerini yapar.
+// İşlem eklenince/silinince hesap bakiyesini de günceller; update’te ise transaction + bakiye değişiklikleri tutarlı olsun diye session/transaction kullanır.
 
 const TransactionModel = require("../models/TransactionModel");
 const mongoose = require("mongoose");
@@ -315,29 +315,13 @@ class TransactionRepositoryMongo {
     return res[0]?.total || 0;
   }
 
-  /**
-   * Budget entegrasyonu için (FX'li):
-   * - Period içindeki expense tx'leri çeker (category opsiyonel)
-   * - fxRateRepo.getLatest() ile en güncel kurları alır
-   * - Her tx amount'unu targetCurrency'ye çevirir
-   * - Toplamı döndürür
-   *
-   * rateToTRY varsayımı:
-   *   1 {currency} = rateToTRY TRY
-   *
-   * Dönüşüm:
-   *   amount_in_TRY = amount * rateToTRY(txCurrency)
-   *   amount_in_target = amount_in_TRY / rateToTRY(targetCurrency)
-   *
-   * TRY için rateToTRY = 1 kabul edilir.
-   */
   async sumExpensesByUserAndCategoryBetweenFx({
     userId,
-    category,          // optional
-    from,              // Date (inclusive)
-    to,                // Date (exclusive)
+    category,          
+    from,              
+    to,                
     targetCurrency = "TRY",
-    fxRateRepo,        // instance of FxRateRepositoryMongo
+    fxRateRepo,        
   }) {
     if (!userId) throw new Error("USER_ID_REQUIRED");
     if (!from || !to) throw new Error("PERIOD_REQUIRED");
@@ -350,7 +334,6 @@ class TransactionRepositoryMongo {
 
     const normalizedTarget = String(targetCurrency || "TRY").trim().toUpperCase();
 
-    // 1) Period tx'leri çek (expense)
     const match = {
       userId: userObjectId,
       type: "expense",
@@ -358,15 +341,12 @@ class TransactionRepositoryMongo {
     };
     if (category) match.category = category;
 
-    // Sadece lazım olan alanlar
     const txs = await TransactionModel.find(match)
       .select({ amount: 1, currency: 1 })
       .lean();
 
     if (!txs.length) return 0;
 
-    // 2) FX rates (en güncel) -> map
-    // getLatest(limit) zaten date desc ile geliyor, aynı currency için birden fazla varsa ilkini alacağız.
     const fxDocs = await fxRateRepo.getLatest(500);
 
     const rateToTRYByCur = new Map();
@@ -379,13 +359,11 @@ class TransactionRepositoryMongo {
       if (!rateToTRYByCur.has(cur)) rateToTRYByCur.set(cur, r);
     }
 
-    // Target rate var mı?
     const targetRate = rateToTRYByCur.get(normalizedTarget);
     if (!targetRate) {
       throw new Error("TARGET_CURRENCY_RATE_NOT_FOUND");
     }
 
-    // 3) Convert + sum
     let total = 0;
 
     for (const tx of txs) {
@@ -396,19 +374,15 @@ class TransactionRepositoryMongo {
 
       const txRate = rateToTRYByCur.get(txCur);
       if (!txRate) {
-        // İstersen "skip" yapabilirsin; ben hata fırlatıyorum ki eksik kur fark edilsin.
         throw new Error(`FX_RATE_NOT_FOUND_${txCur}`);
       }
 
-      // amount -> TRY -> target
       const amountInTRY = amount * txRate;
       const amountInTarget = amountInTRY / targetRate;
 
       total += amountInTarget;
     }
 
-    // İstersen rounding:
-    // return Math.round(total * 100) / 100;
     return total;
   }
 

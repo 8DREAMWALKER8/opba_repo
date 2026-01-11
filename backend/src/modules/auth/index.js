@@ -1,6 +1,5 @@
-/**
- * JWT doğrulayıcı ile VerifyAccessToken use case’ini bağlar
- * ve dış katmanlara hazır şekilde sunar.
+/*
+  JWT doğrulayıcı ile VerifyAccessToken use case’ini bağlar ve dış katmanlara hazır şekilde sunar.
  */
 
 const { JwtTokenVerifier } = require("./infrastructure/JwtTokenVerifier");

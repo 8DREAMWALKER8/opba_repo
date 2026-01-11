@@ -1,7 +1,6 @@
 /**
- * Bu sınıf, istemciden gelen erişim token’ını doğrulamak için kullanılır.
- * Token’ın varlığını ve geçerliliğini kontrol eder.
- * Geçersiz veya eksik token durumunda hata fırlatır.
+  istemciden gelen erişim token’ını doğrulamak için kullanılır.
+  token’ın varlığını ve geçerliliğini kontrol eder. geçersiz veya eksik token durumunda hata fırlatır.
  */
 
 class VerifyAccessToken {
@@ -19,7 +18,6 @@ class VerifyAccessToken {
       throw new Error("AUTH_TOKEN_INVALID");
     }
 
-    // bizim payload: { userId: "..." }
     if (!payload?.userId) throw new Error("AUTH_TOKEN_INVALID");
 
     return { userId: payload.userId };

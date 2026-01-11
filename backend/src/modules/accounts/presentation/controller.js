@@ -1,6 +1,5 @@
 /*
- Controller, HTTP işlerini (req/res) yönetir; 
- doğrulama , parametre okuma ve userId çıkarma yapar
+ Controller, HTTP işlerini (req/res) yönetir. doğrulama , parametre okuma ve userId çıkarma yapar
 */
 const { z } = require("zod");
 
@@ -21,7 +20,6 @@ const CreateAccountSchema = z
     cardNumber: z
       .string()
       .min(1, "CARD_NUMBER_REQUIRED")
-      // boşlukları sil, sadece rakam bırak
       .transform((v) => v.replace(/\s+/g, "").replace(/[^\d]/g, ""))
       .refine((v) => CARD_NUMBER_REGEX.test(v), {
         message: "CARD_NUMBER_INVALID_FORMAT",
@@ -36,7 +34,7 @@ const CreateAccountSchema = z
 module.exports = ({ listAccounts, createAccount, deactivateAccount, updateAccount}) => ({
   list: async (req, res) => {
     const userId = req.user.userId || req.user._id || req.user.id;
-    const currency = req.query.currency; // "TRY"
+    const currency = req.query.currency; 
     console.log("Currency in controller:", req.query);
     const accounts = await listAccounts.execute({
       userId,
@@ -72,11 +70,10 @@ module.exports = ({ listAccounts, createAccount, deactivateAccount, updateAccoun
         throw e;
       }
 
-      // Eğer balance string geliyorsa burada number'a çevir
       const body = { ...req.body };
       if (typeof body.balance === "string" && body.balance.trim() !== "") {
         const n = Number(body.balance);
-        body.balance = Number.isFinite(n) ? n : body.balance; // zod yakalasın
+        body.balance = Number.isFinite(n) ? n : body.balance; 
       }
 
       const account = await updateAccount.execute({

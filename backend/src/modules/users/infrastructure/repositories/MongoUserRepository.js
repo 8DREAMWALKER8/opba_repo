@@ -1,5 +1,3 @@
-// User verilerini MongoDB üzerinden okuma/yazma işlemlerini yapan repository.
-
 const User = require("../../../../models/User");
 
 class MongoUserRepository {

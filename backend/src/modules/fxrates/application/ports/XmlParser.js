@@ -1,4 +1,4 @@
-// Bu sınıf, dış servisten gelen XML verisini parse etmek için tanımlanmış bir port yapısıdır.
+// dış servisten gelen XML verisini parse etmek için tanımlanmış bir port yapısı.
 // Gerçek XML parse işlemi infrastructure katmanında implemente edilir.
 
 class XmlParser {

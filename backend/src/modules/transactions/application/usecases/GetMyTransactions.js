@@ -1,5 +1,4 @@
-// Kullanıcının işlemlerini listeler ve istenirse döviz kuru bilgilerini kullanarak
-// işlem tutarlarını seçilen para birimine çevirip geri döndürür.
+// Kullanıcının işlemlerini listeler ve istenirse döviz kuru bilgilerini kullanarak işlem tutarlarını seçilen para birimine çevirip geri döndürür.
 
 class GetMyTransactions {
   constructor({ transactionRepo, fxRateRepo, syncTcbmRates }) {

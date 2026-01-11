@@ -1,5 +1,4 @@
-// User işlemlerini yöneten controller-> register/login/me/update gibi endpointlerin input kontrolünü yapar ve usecase'leri çağırır.
-
+// register, 2 adımlı login, güvenlik soruları listesi ve kendi profilini güncelleme işlemlerinin hepsini yöneten katman.
 const { z } = require("zod");
 const { SECURITY_QUESTIONS } = require("../../../utils/securityQuestions");
 const { getQuestionText } = require("../../../utils/securityQuestions");

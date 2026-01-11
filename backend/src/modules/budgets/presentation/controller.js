@@ -2,19 +2,16 @@ const { t } = require("../../../shared/content");
 
 function makeBudgetsController({ getBudgetsUC, setBudgetLimitUC, deleteBudgetUC }) {
   return {
-    // GET /budgets?month=1&year=2026 (opsiyonel)
     getBudgets: async (req, res) => {
       const userId = req.user?.userId || req.user?.id || req.user?._id;
       if (!userId) {
         return res.status(401).json({ ok: false, code: "UNAUTHORIZED" });
       }
 
-      // month/year query’den alınır (opsiyonel)
       const month = req.query.month !== undefined ? Number(req.query.month) : undefined;
       const year = req.query.year !== undefined ? Number(req.query.year) : undefined;
       const currency = req.query.currency;
 
-      // NaN koruması
       const safeMonth = Number.isFinite(month) ? month : undefined;
       const safeYear = Number.isFinite(year) ? year : undefined;
 
@@ -28,8 +25,6 @@ function makeBudgetsController({ getBudgetsUC, setBudgetLimitUC, deleteBudgetUC 
       return res.json({ ok: true, budgets });
     },
 
-    // POST /budgets
-    // body: { category, limitAmount, month, year, currency? }
     setBudgetLimit: async (req, res) => {
       const userId = req.user?.userId || req.user?.id || req.user?._id;
       if (!userId) {
@@ -40,12 +35,10 @@ function makeBudgetsController({ getBudgetsUC, setBudgetLimitUC, deleteBudgetUC 
       const month = req.body.month !== undefined ? Number(req.body.month) : undefined;
       const year = req.body.year !== undefined ? Number(req.body.year) : undefined;
 
-      // Frontend bazen limit, bazen limitAmount göndermiş olabilir.
-      // Backend standardı: limitAmount
       const limitAmountRaw = req.body.limitAmount ?? req.body.limit;
       const limitAmount = limitAmountRaw !== undefined ? Number(limitAmountRaw) : undefined;
 console.log(limitAmount);
-      const currency = req.body.currency; // opsiyonel (TRY vs)
+      const currency = req.body.currency; 
 
       try {
         const budget = await setBudgetLimitUC.execute({
@@ -59,7 +52,6 @@ console.log(limitAmount);
 
         return res.status(201).json({ ok: true, budget });
       } catch (err) {
-        // err.statusCode varsa usecase’ten geliyor olabilir
         const status = err.statusCode || 400;
         const code = err.message || "BUDGET_ERROR";
 
