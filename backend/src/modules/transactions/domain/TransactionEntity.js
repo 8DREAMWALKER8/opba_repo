@@ -1,3 +1,6 @@
+// Bir transaction nesnesini temsil eder.
+// Constructor içinde gerekli alanların doğru gelip gelmediği kontrol edilir ve geçersizse hata fırlatılır.
+
 class TransactionEntity {
   constructor({
     userId,
@@ -9,7 +12,6 @@ class TransactionEntity {
     currency = "TRY",
     occurredAt = new Date(),
   }) {
-    // Domain: sadece CODE fırlatıyoruz
     if (!userId) throw new Error("USER_ID_REQUIRED");
     if (!accountId) throw new Error("ACCOUNT_ID_REQUIRED");
 

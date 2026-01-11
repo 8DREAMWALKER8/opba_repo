@@ -1,3 +1,5 @@
+// Bu repository, döviz kuru verilerinin MongoDB üzerinde upsert edilmesini ve en güncel kur kayıtlarının sıralı şekilde getirilmesini sağlar.
+
 const FxRate = require("../models/FxRateModel");
 
 class FxRateRepositoryMongo {

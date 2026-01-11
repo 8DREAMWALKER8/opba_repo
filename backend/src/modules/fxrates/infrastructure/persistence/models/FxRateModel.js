@@ -1,8 +1,11 @@
+// TCMB’den alınan döviz kuru verilerinin MongoDB’de nasıl saklanacağını tanımlar.
+// Tarih ve para birimi bazında unique index kullanılarak aynı gün için tekrar kayıt oluşması engellenir.
+
 const mongoose = require("mongoose");
 
 const FxRateSchema = new mongoose.Schema(
   {
-    date: { type: Date, required: true, index: true }, // 00:00'a yuvarlanmış gün
+    date: { type: Date, required: true, index: true },
     currency: { type: String, enum: ["TRY", "USD", "EUR", "GBP"], required: true, index: true },
     rateToTRY: { type: Number, required: true },
     source: { type: String, default: "tcmb" },

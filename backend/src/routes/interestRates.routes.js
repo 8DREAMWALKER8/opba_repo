@@ -1,17 +1,10 @@
-/*
-CSV içeriğini satır satır okur.
-Başlıkları (header) key olarak kullanır.
-Her satırı bir obje haline getirir.
-*/
+// Kredi faiz oranlarını CSV’den okuyup filtreleyerek listeleyen / karşılaştırma verisi dönen API yerleri
+
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 
-//  CSV DOSYASINI PARSE ETME
-// CSV içeriğini satır satır okur.
-// Başlıkları (header) key olarak kullanır.
-// Her satırı bir obje haline getirir.
 function parseCsv(content) {
   const lines = content.split(/\r?\n/).filter(Boolean);
   if (!lines.length) return [];
@@ -28,9 +21,6 @@ function parseCsv(content) {
     return obj;
   });
 }
-
- //CSV OKUMA + CACHE
- //CSV dosyası her istekte tekrar okunmasın diye 60 saniyelik cache kullanılır.
 
 let CACHE = { ts: 0, rows: [] };
 
@@ -52,9 +42,6 @@ function readRatesCsv() {
   return rows;
 }
 
-//  VERİ NORMALIZE
-// CSV'den gelen string değerleri sayıya çevirir.
-
 function normalizeRows(rows) {
   return rows
     .map((r) => {
@@ -75,9 +62,6 @@ function normalizeRows(rows) {
     })
     .filter(Boolean);
 }
-
- // ANA LİSTE ENDPOINT
- // Grafik (chart) + banka kartları için kullanılır.
 
 router.get("/", (req, res) => {
   try {
@@ -132,9 +116,6 @@ router.get("/", (req, res) => {
   }
 });
 
-// BANKA DETAY – VADESİNE GÖRE FAİZLER
-// GET /api/interest-rates/banks/:bankName/terms
-// Seçilen bankanın tüm vadelerini listeler.
 router.get("/banks/:bankName/terms", (req, res) => {
   try {
     const { bankName } = req.params;

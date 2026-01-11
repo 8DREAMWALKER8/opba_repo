@@ -1,3 +1,6 @@
+// TCMB’den gelen XML formatındaki döviz kuru verisini okuyup
+// USD, EUR ve GBP kurlarını ayıklayarak kullanılabilir hale getirir.
+
 class TcmbXmlParser {
   parse(xml) {
     const usdBlock = xml.match(/<Currency[^>]*CurrencyCode="USD"[\s\S]*?<\/Currency>/);

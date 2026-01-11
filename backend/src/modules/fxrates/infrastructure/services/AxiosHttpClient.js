@@ -1,3 +1,5 @@
+// Axios kullanarak HTTP isteklerini gerçekleştiren altyapı servisi.
+
 const axios = require("axios");
 
 class AxiosHttpClient {
