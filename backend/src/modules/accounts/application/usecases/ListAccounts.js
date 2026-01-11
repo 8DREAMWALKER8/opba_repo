@@ -1,20 +1,21 @@
-// ListAccounts.js
+/**
+ * Bu sınıf, kullanıcıya ait aktif banka hesaplarını listelemek için kullanılır.
+ * İsteğe bağlı olarak TCMB döviz kurlarını kullanarak
+ * hesap bakiyelerini seçilen para birimine dönüştürür.
+ */
+
 class ListAccounts {
   constructor({ repo, syncTcbmRates, fxRateRepo }) {
     this.repo = repo;
-    this.syncTcbmRates = syncTcbmRates; // ✅ eklendi
-    this.fxRateRepo = fxRateRepo;       // ✅ eklendi (kur dönüşümü yapacaksan)
+    this.syncTcbmRates = syncTcbmRates; 
+    this.fxRateRepo = fxRateRepo;      
   }
 
-  // TCMB rate yapıları farklı olabildiği için esnek okuyoruz.
-  // Ama ana varsayım: 1 FOREIGN = rate TRY
   _buildRateMap(rates) {
     const map = { TRY: 1 };
 
-    // console.log("Rates fetched for conversion:", rates);
 
     for (const r of rates || []) {
-      // Mongoose doc gelebilir -> _doc fallback
       const obj = r?._doc ? r._doc : r;
 
       const code = (obj.currency || obj.code || obj.ccy || obj.symbol || "")
@@ -23,7 +24,6 @@ class ListAccounts {
 
       if (!code) continue;
 
-      // Yeni şema: rateToTRY
       const raw =
         obj.rateToTRY ??
         obj.rate ??
@@ -41,7 +41,6 @@ class ListAccounts {
       }
     }
 
-    // TRY kaydı gelmese bile garanti
     map.TRY = 1;
 
     return map;
@@ -51,16 +50,12 @@ class ListAccounts {
     const amt = Number(amount) || 0;
     const from = (fromCurrency || "TRY").toUpperCase();
     const to = (toCurrency || "TRY").toUpperCase();
-    // console.log(`Converting ${amt} from ${from} to ${to}`);
     if (from === to) return amt;
-    // console.log("Rate map:", rateMap);
-    const fromRate = rateMap[from]; // 1 FROM = fromRate TRY
-    const toRate = rateMap[to];     // 1 TO   = toRate   TRY
+    const fromRate = rateMap[from]; 
+    const toRate = rateMap[to];     
 
-    // Rate bulunamazsa: convert edemiyoruz -> aynı bırak
     if (!fromRate || !toRate) return amt;
 
-    // FROM -> TRY -> TO
     const inTry = amt * fromRate;
     const out = inTry / toRate;
     console.log(`Converted amount: ${out}`);
@@ -77,25 +72,21 @@ class ListAccounts {
     // 2) Accounts çek
     let accounts = await this.repo.listActiveByUser(userId);
 
-    // selectedCurrency yoksa direkt dön
     if (!selectedCurrency) return accounts;
 
     const target = selectedCurrency.toUpperCase();
     console.log("Target:" + target);
-    // 3) FX rate'leri   oku (bugünün verisi)
-    // fxRateRepo’da hangi metot varsa onu kullanmalısın.
-    // Ben örnek olarak "getLatestByDate(date)" varsaydım.
+    // 3) FX rate'leri oku 
     let rateMap = { TRY: 1 };
 
     if (this.fxRateRepo && this.syncTcbmRates) {
       try {
         const today = this.syncTcbmRates.dayStartUTC();
 
-        // ÖRNEK: fxRateRepo.getLatest(today) -> [{ code:'USD', rate: 32.1 }, ...]
         const rates = await this.fxRateRepo.getLatest();
         rateMap = this._buildRateMap(rates);
       } catch (e) {
-        // rate okuma hatasında convert yapmadan devam et
+        
       }
     }
 
@@ -107,7 +98,7 @@ class ListAccounts {
       return {
         ...account,
         balance: newValue,
-        currency: target, // UI "seçilen currency" gösteriyorsa mantıklı
+        currency: target, 
       };
     });
 

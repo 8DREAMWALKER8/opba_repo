@@ -1,4 +1,10 @@
-// backend/src/modules/accounts/application/usecases/UpdateAccount.js
+/**
+ * Bu sınıf, kullanıcıya ait banka hesabı bilgilerini güncellemek için kullanılır.
+ * Gelen veriyi Zod ile doğrular, hesabın kullanıcıya ait olduğunu kontrol eder
+ * ve hesap pasifse güncellemeye izin vermez.
+ * Zod,veri doğrulama ve tip tanımlama kütüphanesidir.
+ */
+
 const { z } = require("zod");
 
 const ALLOWED_BANKS = ["Akbank", "İş Bankası", "Garanti BBVA"];
@@ -19,7 +25,7 @@ const UpdateAccountSchema = z
     cardNumber: z
       .string()
       .trim()
-      .transform((v) => v.replace(/\s+/g, "")) // "1234 5678 ..." => "12345678..."
+      .transform((v) => v.replace(/\s+/g, "")) 
       .refine((v) => /^\d{16}$/.test(v), { message: "CARD_NUMBER_INVALID" })
       .optional(),
 
@@ -37,7 +43,6 @@ const UpdateAccountSchema = z
       })
       .optional(),
 
-    // legacy
     accountName: z.string().trim().min(1, "ACCOUNT_NAME_REQUIRED").optional(),
     iban: z.string().trim().optional(),
   })
@@ -63,7 +68,6 @@ class UpdateAccount {
 
     const parsed = UpdateAccountSchema.parse(data);
 
-    // legacy mapping
     if (parsed.accountName && !parsed.cardHolderName) {
       parsed.cardHolderName = parsed.accountName;
     }
@@ -72,10 +76,8 @@ class UpdateAccount {
       if (digits.length === 16) parsed.cardNumber = digits;
     }
 
-    // ownership check
     console.log("repo öncesi id " + accountId);
 
-    // Tercih: user-scope find (varsa)
     let existing = null;
     if (typeof this.repo.findByIdForUser === "function") {
       existing = await this.repo.findByIdForUser({ id: accountId, userId });
@@ -99,7 +101,6 @@ class UpdateAccount {
       throw e;
     }
 
-    // allowlist patch
     const patch = {};
     if (parsed.bankName !== undefined) patch.bankName = parsed.bankName;
     if (parsed.cardHolderName !== undefined)
@@ -114,7 +115,6 @@ class UpdateAccount {
 
     patch.updatedAt = new Date();
 
-    // ✅ DÜZELTİLEN KISIM: repo object param istiyor
     if (typeof this.repo.updateByIdForUser === "function") {
       return await this.repo.updateByIdForUser({
         id: accountId,

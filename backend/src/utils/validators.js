@@ -1,8 +1,7 @@
 /**
- * Bu dosya uygulama genelinde kullanılan doğrulama (validation) yardımcılarını içerir.
- * Geçerli para birimi ve dil kontrolü
- * Şifre güvenliği için regex tanımı
- * Frontend'den gelen verileri standart hale getirmek
+ * Uygulama genelinde kullanılan doğrulama ve normalizasyon yardımcılarını içerir.
+ * Para birimi, dil ve şifre kuralları gibi sabitleri tek noktada tutarak
+ * tutarlılık sağlar.
  */
 
 const ALLOWED_CURRENCIES = ["TRY", "USD", "EUR", "GBP"];

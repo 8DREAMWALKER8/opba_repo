@@ -1,4 +1,8 @@
-// src/shared/content/index.js
+/**
+ * Bu dosya, istemciden gelen isteğe göre kullanılacak dili belirleyen ve
+ * ilgili çeviri metnini döndüren yardımcı fonksiyonları içerir.
+ */
+
 const content = require("./content");
 
 function normalizeLang(value) {
@@ -9,14 +13,6 @@ function normalizeLang(value) {
   return null;
 }
 
-/**
- * Dil seçimi önceliği:
- * 1) req.user.language (auth'lu istekler)
- * 2) x-lang / x-language header
- * 3) accept-language header
- * 4) req.body.language (register gibi auth'suz)
- * 5) default: tr
- */
 function getLangFromReq(req) {
   const fromUser = normalizeLang(req?.user?.language);
   if (fromUser) return fromUser;
@@ -36,10 +32,6 @@ function getLangFromReq(req) {
   return "tr";
 }
 
-/**
- * key: "errors.INVALID_CREDENTIALS" veya "enums.currency.TRY"
- * fallback: bulunamazsa dönecek metin
- */
 function t(req, key, fallback) {
   const lang = req?.lang || getLangFromReq(req);
   const dict = content[lang] || content.tr;

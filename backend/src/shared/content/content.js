@@ -1,4 +1,8 @@
-// src/shared/content/content.js
+/**
+ * Bu dosya, uygulama genelinde kullanılan
+ * çok dilli (Türkçe / İngilizce) metinleri ve hata mesajlarını içerir.
+ */
+
 module.exports = {
   tr: {
     errors: {

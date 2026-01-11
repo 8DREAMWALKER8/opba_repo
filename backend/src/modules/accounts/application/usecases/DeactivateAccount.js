@@ -1,3 +1,9 @@
+/**
+ * Bu sınıf, kullanıcıya ait bir banka hesabını
+ * sistemden silmeden pasif hale getirmek için kullanılır.
+ * Hesap bulunamazsa veya kullanıcıya ait değilse 404 hatası fırlatır.
+ */
+
 class DeactivateAccount {
   constructor({ repo }) {
     this.repo = repo;

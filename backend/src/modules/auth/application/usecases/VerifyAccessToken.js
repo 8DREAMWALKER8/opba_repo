@@ -1,3 +1,9 @@
+/**
+ * Bu sınıf, istemciden gelen erişim token’ını doğrulamak için kullanılır.
+ * Token’ın varlığını ve geçerliliğini kontrol eder.
+ * Geçersiz veya eksik token durumunda hata fırlatır.
+ */
+
 class VerifyAccessToken {
   constructor({ tokenVerifier }) {
     this.tokenVerifier = tokenVerifier;

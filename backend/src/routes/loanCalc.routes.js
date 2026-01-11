@@ -1,13 +1,18 @@
-// Bu dosya, faiz oranlarını kullanarak kredi taksit hesabı yapar.
+/**
+ * Bu dosya, kredi hesaplama işlemleri için kullanılan API endpoint’lerini tanımlar.
+ * Banka bazlı faiz oranlarını CSV dosyasından okur,
+ * aylık taksit, toplam ödeme ve toplam faiz tutarını hesaplar.
+ * Hesaplama işlemi sunucu tarafında yapılır ve sonuçlar
+ * istemciye JSON formatında döndürülür.
+ */
+
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 
-//  content helper
 const { t } = require("../shared/content");
 
-// CSV'yi basit şekilde parse etmek için helper.
 function parseCsv(content) {
   const lines = content.split(/\r?\n/).filter(Boolean);
   if (lines.length === 0) return [];
@@ -17,7 +22,6 @@ function parseCsv(content) {
     .split(delimiter)
     .map((h) => h.replace(/^\uFEFF/, "").trim());
 
-  // Her satırı başlıklara göre objeye çeviriyoruz {bank_name: "...", term_months: "..."}
   return lines.slice(1).map((line) => {
     const cols = line.split(delimiter).map((c) => c.trim());
     const obj = {};
@@ -26,7 +30,7 @@ function parseCsv(content) {
   });
 }
 
-// 60 saniye içinde tekrar istek gelirse aynı veriyi kullanıyoruz.
+
 let CACHE = { ts: 0, rows: [] };
 function readRatesCsv() {
   const now = Date.now();
@@ -40,17 +44,14 @@ function readRatesCsv() {
   return rows;
 }
 
-// Annuiteli kredi hesabı (bankaların klasik taksit hesabı).
-// Formül ile aylık taksit, toplam ödeme ve toplam faiz hesaplanır.
 function calcLoan({ principal, months, monthlyRate }) {
   const P = principal;
   const n = months;
-  const r = monthlyRate; // 0.03162 gibi
+  const r = monthlyRate; 
 
   let monthlyPayment;
   if (r === 0) monthlyPayment = P / n;
   else {
-    // annuite formülü
     const pow = Math.pow(1 + r, n);
     monthlyPayment = (P * r * pow) / (pow - 1);
   }
@@ -67,12 +68,6 @@ function calcLoan({ principal, months, monthlyRate }) {
   };
 }
 
-/**
- * POST /api/loan/calc
- * Bu endpoint kredi hesaplar:
- * Frontend bankayı, vade ayını ve ana parayı gönderir.
- * Backend CSV'den ilgili bankanın ilgili vadedeki monthly_rate değerini bulur sonra annuite formülüyle taksit/total/faiz hesaplayıp döner.
- */
 
 router.post("/calc", (req, res) => {
   try {
@@ -109,7 +104,6 @@ router.post("/calc", (req, res) => {
     const rows = readRatesCsv();
     const bankLower = bank.toLowerCase();
 
-    // CSV'de: banka + kredi türü + para birimi + vade eşleşen satırı buluyoruz
     const match = rows.find((r) => {
       const bn = String(r.bank_name || "").toLowerCase();
       return (
@@ -128,7 +122,7 @@ router.post("/calc", (req, res) => {
       });
     }
 
-    const monthlyRate = Number(String(match.monthly_rate).replace(",", ".")); // 0.03162
+    const monthlyRate = Number(String(match.monthly_rate).replace(",", ".")); 
     if (!Number.isFinite(monthlyRate)) {
       return res.status(500).json({
         ok: false,
@@ -136,7 +130,6 @@ router.post("/calc", (req, res) => {
       });
     }
 
-    // Kredi sonuçlarını hesapla
     const result = calcLoan({ principal: P, months: term, monthlyRate });
 
     return res.json({
@@ -150,7 +143,7 @@ router.post("/calc", (req, res) => {
       },
       rate: {
         monthly_rate: monthlyRate,
-        monthly_rate_percent: Math.round(monthlyRate * 100000) / 1000, // ör: 3.162
+        monthly_rate_percent: Math.round(monthlyRate * 100000) / 1000, 
         annual_effective_rate: match.annual_effective_rate
           ? Number(match.annual_effective_rate)
           : null,
