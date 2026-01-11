@@ -2,15 +2,15 @@ const BudgetRepositoryMongo = require("../infrastructure/persistence/repositorie
 const GetBudgets = require("../application/usecases/GetBudgets");
 const SetBudgetLimit = require("../application/usecases/SetBudgetLimit");
 
-const { t } = require("../../../shared/content");
+const { t } = require("../../../shared/content"); //dil secenegi
 
 const budgetRepo = new BudgetRepositoryMongo();
 
-// FIX: usecase'lere repo'yu direkt ver
+// repo bagı
 const getBudgetsUC = new GetBudgets(budgetRepo);
 const setBudgetLimitUC = new SetBudgetLimit(budgetRepo);
 
-// GET /budgets
+// get kullanici bilgilerini alir http response
 async function getBudgets(req, res) {
   try {
     const userId = req.user?.userId || req.user?.id || req.user?._id;
@@ -20,7 +20,7 @@ async function getBudgets(req, res) {
   } catch (err) {
     console.error("getBudgets error:", err);
 
-    // usecase/repo wiring hatası varsa fallback dene
+    // usecase heta verirse repodaki fonlsiyonu calistir
     try {
       const userId = req.user?.userId || req.user?.id || req.user?._id;
 
@@ -42,12 +42,12 @@ async function getBudgets(req, res) {
   }
 }
 
-// POST /budgets
+// kullanicidan alır db'ye kaydeder
 async function setBudgetLimit(req, res) {
   try {
     const userId = req.user?.userId || req.user?.id || req.user?._id;
 
-    const budget = await setBudgetLimitUC.execute({
+    const budget = await setBudgetLimitUC.execute({ //usecase
       userId,
       category: req.body.category,
       limit: req.body.limit,

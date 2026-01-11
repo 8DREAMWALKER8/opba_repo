@@ -6,7 +6,7 @@ require("express-async-errors");
 
 const { errorHandler } = require("./middleware/errorHandler");
 
-// legacy routes (KEEP only what we still need)
+// legacy routes
 const passwordResetRoutes = require("./routes/passwordReset.routes");
 const interestRatesRoutes = require("./routes/interestRates.routes");
 const loanCalcRoutes = require("./routes/loanCalc.routes");
@@ -15,14 +15,10 @@ const loanCalcRoutes = require("./routes/loanCalc.routes");
 const { requireAuth } = require("./middleware/auth");
 const { contentLang } = require("./middleware/contentLang");
 
-// --------------------
-// CLEAN: Users 
-// --------------------
+// users 
 const { buildUserModule } = require("./modules/users");
 
-// --------------------
-// CLEAN: Notifications
-// --------------------
+// notifications
 const NotificationRepositoryMongo = require("./modules/notifications/infrastructure/persistence/repositories/NotificationRepositoryMongo");
 const GetMyNotifications = require("./modules/notifications/application/usecases/GetMyNotifications");
 const MarkNotificationAsRead = require("./modules/notifications/application/usecases/MarkNotificationAsRead");
@@ -30,9 +26,7 @@ const MarkAllAsRead = require("./modules/notifications/application/usecases/Mark
 const makeNotificationsController = require("./modules/notifications/presentation/controller");
 const makeNotificationsRoutes = require("./modules/notifications/presentation/routes");
 
-// --------------------
-// CLEAN: FX Rates
-// --------------------
+// FX Rates
 const SyncTcbmRates = require("./modules/fxrates/application/usecases/SyncTcbmRates");
 const AxiosHttpClient = require("./modules/fxrates/infrastructure/services/AxiosHttpClient");
 const TcmbXmlParser = require("./modules/fxrates/infrastructure/services/TcmbXmlParser");
@@ -40,9 +34,7 @@ const FxRateRepositoryMongo = require("./modules/fxrates/infrastructure/persiste
 const makeFxRatesController = require("./modules/fxrates/presentation/controller");
 const makeFxRatesRoutes = require("./modules/fxrates/presentation/routes");
 
-// --------------------
-// CLEAN: Accounts
-// --------------------
+// Accounts
 const BankAccountRepositoryMongo = require("./modules/accounts/infrastructure/persistence/repositories/BankAccountRepositoryMongo");
 const ListAccounts = require("./modules/accounts/application/usecases/ListAccounts");
 const CreateAccount = require("./modules/accounts/application/usecases/CreateAccount");
@@ -51,14 +43,10 @@ const DeactivateAccount = require("./modules/accounts/application/usecases/Deact
 const makeAccountsController = require("./modules/accounts/presentation/controller");
 const makeAccountsRoutes = require("./modules/accounts/presentation/routes");
 
-// --------------------
-// CLEAN: Budgets
-// --------------------
+// budgets
 const budgetsRouter = require("./modules/budgets/presentation/routes");
 
-// --------------------
-// Clean FX wiring
-// --------------------
+// FX wiring
 const fxRateRepo = new FxRateRepositoryMongo();
 
 const syncTcbmRates = new SyncTcbmRates({
@@ -71,20 +59,15 @@ const syncTcbmRates = new SyncTcbmRates({
 const fxController = makeFxRatesController({ syncTcbmRates, fxRateRepo });
 const fxRoutes = makeFxRatesRoutes(fxController);
 
-// --------------------
-// CLEAN: Transactions
-// --------------------
+// Transactions
 const transactionsRouter = require("./modules/transactions/presentation/routes");
 
 const app = express();
 
-// --------------------
-// Clean Accounts wiring
-// --------------------
+// accounts wiring
 const accountRepo = new BankAccountRepositoryMongo();
 
-// updateAccount.execute(...) artık çalışır
-
+// updateAccount.execute
 const listAccounts = new ListAccounts({ repo: accountRepo, syncTcbmRates, fxRateRepo });
 const createAccount = new CreateAccount({ repo: accountRepo });
 const deactivateAccount = new DeactivateAccount({ repo: accountRepo });
@@ -102,9 +85,7 @@ const accountsRouter = makeAccountsRoutes({
   protect: requireAuth,
 });
 
-// --------------------
-// Clean Notifications wiring
-// --------------------
+// notifications wiring
 const notificationRepo = new NotificationRepositoryMongo();
 
 const getMyNotifications = new GetMyNotifications({ notificationRepo });
@@ -123,30 +104,26 @@ const notificationsRouter = makeNotificationsRoutes({
 });
 
 
-// --------------------
-// Middlewares
-// --------------------
+// middlewares
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(contentLang);
 app.use(morgan("dev"));
 
-// --------------------
 // Routes
-// --------------------
 
-//  clean users (register/login/me artık burada)
+// users (register/login/me)
 app.use("/users", buildUserModule());
 
-//  clean modules
+// modules
 app.use("/accounts", accountsRouter);
 app.use("/transactions", transactionsRouter);
 app.use("/budgets", budgetsRouter);
 app.use("/notifications", notificationsRouter);
 app.use("/api/fx", fxRoutes);
 
-//  legacy (şimdilik kalsın)
+// legacy 
 app.use("/auth", passwordResetRoutes);
 app.use("/api/interest-rates", interestRatesRoutes);
 app.use("/api/loan", loanCalcRoutes);

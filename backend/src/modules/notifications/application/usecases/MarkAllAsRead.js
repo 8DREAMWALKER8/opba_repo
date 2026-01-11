@@ -1,4 +1,4 @@
-class MarkAllAsRead {
+class MarkAllAsRead { //id'ye gore tum bildirimleri okur
   constructor({ notificationRepo }) {
     this.notificationRepo = notificationRepo;
   }
