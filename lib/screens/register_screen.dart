@@ -4,6 +4,7 @@ import '../providers/auth_provider.dart';
 import '../theme/app_theme.dart';
 import '../utils/app_localizations.dart';
 import '../widgets/opba_logo.dart';
+import 'package:flutter/services.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -206,6 +207,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         TextFormField(
                           controller: _phoneController,
                           keyboardType: TextInputType.phone,
+                          autofillHints: const [AutofillHints.telephoneNumber],
                           decoration: InputDecoration(
                             hintText: l10n.phoneHint,
                             filled: true,
@@ -213,10 +215,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ? AppColors.backgroundDark
                                 : const Color(0xFFF1F5F9),
                           ),
+                          inputFormatters: [
+                            // Sadece rakamları kabul et (harf/özel karakter yazılınca eklemez, var olanı silmez)
+                            FilteringTextInputFormatter.digitsOnly,
+                            // Maksimum 10 hane
+                            LengthLimitingTextInputFormatter(10),
+                          ],
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            final v = (value ?? '').trim();
+                            if (v.isEmpty)
                               return l10n.translate('field_required');
-                            }
+                            if (v.length != 10)
+                              return l10n.translate('phone_must_be_10_digits');
                             return null;
                           },
                         ),

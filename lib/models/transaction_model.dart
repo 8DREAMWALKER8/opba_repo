@@ -68,7 +68,7 @@ extension TransactionCategoryExtension on TransactionCategory {
     }
   }
 
-  // uygulama dili neyse ona göre kategori adını döndür
+  // uygulama dili neyse ona göre kategori adını döndürür
   String localizedName(AppLocalizations l10n) {
     switch (this) {
       case TransactionCategory.market:
@@ -309,7 +309,6 @@ class Transaction {
   }
 }
 
-// expense tablosu için kategori özeti
 class CategorySummary {
   final TransactionCategory category;
   final double amount;

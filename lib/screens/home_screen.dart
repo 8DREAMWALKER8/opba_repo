@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:opba_app/providers/auth_provider.dart';
+import 'package:opba_app/providers/notification_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/account_provider.dart';
 import '../providers/transaction_provider.dart';
-import '../providers/app_provider.dart';
 import '../theme/app_theme.dart';
 import '../utils/app_localizations.dart';
 import '../widgets/bottom_nav_bar.dart';
@@ -19,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
+  bool _popupShownThisOpen = false;
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
       await accountProvider.fetchAccounts(authProvider.user?.currency);
       await transactionProvider.fetchTransactions(
           currency: authProvider.user?.currency);
+      context.read<NotificationProvider>().startPolling();
     });
   }
 
@@ -263,8 +265,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.more_horiz),
-                  onPressed: () {},
+                  icon: const Icon(Icons.description_outlined),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/transactions')
+                        .then((_) async {
+                      // geri dönüldüğünde bu ekranı yenile
+                      final authProvider = context.read<AuthProvider>();
+
+                      await context
+                          .read<TransactionProvider>()
+                          .fetchTransactions(
+                            currency: authProvider.user?.currency,
+                          );
+                    });
+                  },
                 ),
               ],
             ),

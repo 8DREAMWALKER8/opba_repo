@@ -355,13 +355,32 @@ class ApiService {
     );
   }
 
-  // bütçe endpoint'leri
-  Future<dynamic> getBudgets() async {
-    return get('/budgets');
+  /// =========================
+// Budgets
+// GET /budgets?year=YYYY&month=MM
+// POST /budgets  { category, limitAmount, year, month }
+// =========================
+
+  Future<dynamic> getBudgets({int? year, int? month, String? currency}) async {
+    final qp = <String>[];
+
+    if (year != null && year > 0) qp.add('year=$year');
+    if (month != null && month >= 1 && month <= 12) qp.add('month=$month');
+
+    if (currency != null && currency.trim().isNotEmpty) {
+      qp.add('currency=${Uri.encodeComponent(currency.trim().toUpperCase())}');
+    }
+
+    final endpoint = qp.isEmpty ? '/budgets' : '/budgets?${qp.join('&')}';
+    return get(endpoint);
   }
 
   Future<dynamic> createBudget(Map<String, dynamic> budgetData) async {
     return post('/budgets', budgetData);
+  }
+
+  Future<dynamic> deleteBudget(String budgetId) async {
+    return delete('/budgets/$budgetId');
   }
 
   // kredi endpoint'leri
@@ -454,10 +473,24 @@ class ApiService {
     return patch('/users/me/update', body);
   }
 
-  Future<BankTermsResponse?> getInterestRateBankTerms(
-      {required String bankName,
-      required String loanType,
-      required String currency}) async {}
+  Future<dynamic> getNotifications({int limit = 50, bool? isRead}) async {
+    final qp = <String>[];
+    qp.add('limit=$limit');
+    if (isRead != null) qp.add('isRead=$isRead');
+
+    final endpoint =
+        qp.isEmpty ? '/notifications' : '/notifications?${qp.join('&')}';
+
+    return get(endpoint);
+  }
+
+  Future<dynamic> markNotificationRead(String id) async {
+    return patch('/notifications/$id/read', {});
+  }
+
+  Future<dynamic> markAllNotificationsRead() async {
+    return patch('/notifications/read-all', {});
+  }
 }
 
 class ApiException implements Exception {

@@ -10,6 +10,7 @@ class Budget {
   final bool alertSent80;
   final bool alertSent100;
   final DateTime? createdAt;
+  final String currency;
 
   Budget({
     this.id,
@@ -21,6 +22,7 @@ class Budget {
     this.alertSent80 = false,
     this.alertSent100 = false,
     this.createdAt,
+    required this.currency,
   });
 
   double get progress => limitAmount > 0 ? (spentAmount / limitAmount) : 0.0;
@@ -36,45 +38,37 @@ class Budget {
   }
 
   factory Budget.fromJson(Map<String, dynamic> json) {
+    // Backend farklı isimlerle dönebilir diye toleranslı okuyoruz:
+    final rawCategory = (json['category'] ?? json['categoryName'])?.toString();
+
     return Budget(
-      id: json['_id'] ?? json['id'],
-      userId: json['userId'] ?? '',
-      category: _parseCategory(json['category']),
-      limitAmount: (json['limitAmount'] ?? 0).toDouble(),
-      spentAmount: (json['spentAmount'] ?? 0).toDouble(),
-      month: json['month'] ?? '',
-      alertSent80: json['alertSent80'] ?? false,
-      alertSent100: json['alertSent100'] ?? false,
-      createdAt:
-          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
+      id: (json['_id'] ?? json['id'])?.toString(),
+      userId: (json['userId'] ?? json['user_id'] ?? '')?.toString() ?? '',
+      category: parseCategory(rawCategory),
+      limitAmount: _toDouble(json['limit'] ?? json['limit']),
+      spentAmount: _toDouble(json['spent'] ?? json['spent']),
+      month: (json['month'] ?? json['yyyy_mm'] ?? '')?.toString() ?? '',
+      alertSent80:
+          (json['alertSent80'] ?? json['alert_sent_80'] ?? false) == true,
+      alertSent100:
+          (json['alertSent100'] ?? json['alert_sent_100'] ?? false) == true,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'].toString())
+          : null,
+      currency: json['currency'] ?? null,
     );
   }
 
-  static TransactionCategory _parseCategory(String? category) {
-    switch (category?.toLowerCase()) {
-      case 'market':
-        return TransactionCategory.market;
-      case 'bills':
-      case 'faturalar':
-        return TransactionCategory.bills;
-      case 'entertainment':
-      case 'eğlence':
-        return TransactionCategory.entertainment;
-      case 'transport':
-      case 'ulaşım':
-        return TransactionCategory.transport;
-      case 'food':
-      case 'yemek':
-        return TransactionCategory.food;
-      case 'health':
-      case 'sağlık':
-        return TransactionCategory.health;
-      case 'shopping':
-      case 'alışveriş':
-        return TransactionCategory.shopping;
-      default:
-        return TransactionCategory.other;
-    }
+  /// Backend’e gönderirken standartlaştırılmış payload üret
+  /// Not: Backend’in beklediği key’ler farklıysa burada değiştirmen yeterli.
+  Map<String, dynamic> toCreatePayload() {
+    return {
+      'category':
+          category.name, // backend 'market', 'bills'... bekliyorsa doğru
+      'limitAmount': limitAmount,
+      // bazı backend’ler month’u kendi hesaplar; yine de gönderiyoruz
+      'month': month,
+    };
   }
 
   Map<String, dynamic> toJson() {
@@ -100,6 +94,7 @@ class Budget {
     bool? alertSent80,
     bool? alertSent100,
     DateTime? createdAt,
+    String? currency,
   }) {
     return Budget(
       id: id ?? this.id,
@@ -111,6 +106,70 @@ class Budget {
       alertSent80: alertSent80 ?? this.alertSent80,
       alertSent100: alertSent100 ?? this.alertSent100,
       createdAt: createdAt ?? this.createdAt,
+      currency: currency ?? this.currency,
     );
+  }
+
+  // -----------------------
+  // Helpers
+  // -----------------------
+
+  static double _toDouble(dynamic v) {
+    if (v == null) return 0.0;
+    if (v is num) return v.toDouble();
+    return double.tryParse(v.toString()) ?? 0.0;
+  }
+
+  /// Kategori parse: EN/TR ve farklı yazımlar desteklenir
+  static TransactionCategory parseCategory(String? category) {
+    final c = (category ?? '').trim().toLowerCase();
+    if (c.isEmpty) return TransactionCategory.other;
+
+    switch (c) {
+      case 'market':
+        return TransactionCategory.market;
+
+      case 'bills':
+      case 'faturalar':
+      case 'fatura':
+      case 'invoice':
+        return TransactionCategory.bills;
+
+      case 'entertainment':
+      case 'eğlence':
+      case 'eglence':
+        return TransactionCategory.entertainment;
+
+      case 'transport':
+      case 'ulaşım':
+      case 'ulasim':
+      case 'transportation':
+        return TransactionCategory.transport;
+
+      case 'food':
+      case 'yemek':
+        return TransactionCategory.food;
+
+      case 'health':
+      case 'sağlık':
+      case 'saglik':
+        return TransactionCategory.health;
+
+      case 'shopping':
+      case 'alışveriş':
+      case 'alisveris':
+        return TransactionCategory.shopping;
+
+      case 'salary':
+      case 'maaş':
+      case 'maas':
+        return TransactionCategory.salary;
+
+      case 'transfer':
+        return TransactionCategory.transfer;
+
+      default:
+        return TransactionCategory.other;
+    }
   }
 }

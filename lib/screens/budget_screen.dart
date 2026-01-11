@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:opba_app/models/budget_model.dart';
+import 'package:opba_app/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/budget_provider.dart';
 import '../models/transaction_model.dart';
@@ -27,6 +29,17 @@ class _BudgetScreenState extends State<BudgetScreen> {
     TransactionCategory.shopping,
     TransactionCategory.other,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      final auth = context.read<AuthProvider>();
+      await context.read<BudgetProvider>().fetchBudgets(
+            currency: (auth.user?.currency ?? 'TRY').toUpperCase(),
+          );
+    });
+  }
 
   @override
   void dispose() {
@@ -59,14 +72,21 @@ class _BudgetScreenState extends State<BudgetScreen> {
     setState(() => _isLoading = true);
 
     final budgetProvider = Provider.of<BudgetProvider>(context, listen: false);
+    final auth = context.read<AuthProvider>();
+    final currency = (auth.user?.currency ?? 'TRY').toUpperCase();
+
     final success = await budgetProvider.setBudget(
       category: _selectedCategory!,
       limitAmount: limit,
+      year: budgetProvider.selectedYear,
+      month: budgetProvider.selectedMonth,
+      currency: currency,
     );
 
     setState(() => _isLoading = false);
 
     if (success && mounted) {
+      budgetProvider.fetchBudgets(currency: currency);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Bütçe başarıyla kaydedildi'),
@@ -82,7 +102,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final budgetProvider = Provider.of<BudgetProvider>(context);
+    final auth = context.watch<AuthProvider>();
+    final currency = (auth.user?.currency ?? 'TRY').toUpperCase();
 
     return Scaffold(
       backgroundColor:
@@ -111,7 +134,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // mevcut bütçeler bölümü
             Text(
               'Mevcut Bütçeler',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -119,8 +141,11 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
             ),
             const SizedBox(height: 16),
-
-            if (budgetProvider.budgets.isEmpty)
+            if (budgetProvider.isLoading)
+              const Center(child: CircularProgressIndicator())
+            else if (budgetProvider.error != null)
+              Text(budgetProvider.error!)
+            else if (budgetProvider.budgets.isEmpty)
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(24),
@@ -145,16 +170,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
               )
             else
               ...budgetProvider.budgets.map((budget) {
-                return _buildBudgetCard(
+                return _buildDismissibleBudgetCard(
                   context,
                   budget: budget,
                   isDark: isDark,
+                  currency: currency,
                 );
               }),
-
             const SizedBox(height: 32),
-
-            // bütçe bölümünü ekle / düzenle
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -178,8 +201,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
                         ),
                   ),
                   const SizedBox(height: 20),
-
-                  // kategori seçimi
                   _buildLabel(l10n.selectCategory),
                   const SizedBox(height: 8),
                   Wrap(
@@ -190,9 +211,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       return GestureDetector(
                         onTap: () {
                           setState(() => _selectedCategory = category);
-                          // varsa mevcut limiti önceden doldur
+
                           final existingBudget =
                               budgetProvider.getBudgetForCategory(category);
+
                           if (existingBudget != null) {
                             _limitController.text =
                                 existingBudget.limitAmount.toStringAsFixed(0);
@@ -242,8 +264,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
                     }).toList(),
                   ),
                   const SizedBox(height: 20),
-
-                  // limit girişi
                   _buildLabel(l10n.setLimit),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -252,7 +272,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                     decoration: InputDecoration(
                       hintText: l10n.limitHint,
                       prefixIcon: const Icon(Icons.attach_money),
-                      suffixText: 'TL',
+                      suffixText: currency,
                       filled: true,
                       fillColor: isDark
                           ? AppColors.backgroundDark
@@ -260,8 +280,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // gönder butonu
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -305,8 +323,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   Widget _buildBudgetCard(
     BuildContext context, {
-    required dynamic budget,
+    required Budget budget,
     required bool isDark,
+    required String currency,
   }) {
     final progress = budget.progress;
     final percentage = budget.percentage;
@@ -364,7 +383,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       ),
                     ),
                     Text(
-                      '${budget.spentAmount.toStringAsFixed(0)} / ${budget.limitAmount.toStringAsFixed(0)} TL',
+                      '${budget.spentAmount.toStringAsFixed(0)} / ${budget.limitAmount.toStringAsFixed(0)} $currency',
                       style: TextStyle(
                         color: isDark
                             ? AppColors.textSecondaryDark
@@ -401,6 +420,138 @@ class _BudgetScreenState extends State<BudgetScreen> {
     );
   }
 
+  Widget _buildDismissibleBudgetCard(
+    BuildContext context, {
+    required Budget budget,
+    required bool isDark,
+    required String currency,
+  }) {
+    final provider = context.read<BudgetProvider>();
+
+    // id yoksa swipe kapat (backend id yoksa silme yapamaz)
+    final canDelete = (budget.id != null && budget.id!.isNotEmpty);
+
+    if (!canDelete) {
+      return _buildBudgetCard(
+        context,
+        budget: budget,
+        isDark: isDark,
+        currency: currency,
+      );
+    }
+
+    return Dismissible(
+      key: ValueKey('budget_${budget.id}'),
+      direction: DismissDirection.endToStart, // sola kaydır
+      background: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: AppColors.error.withOpacity(0.90),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.centerRight,
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.delete_outline, color: Colors.white),
+            SizedBox(width: 8),
+            Text(
+              'Sil',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      // ✅ Onay dialog’u
+      confirmDismiss: (_) async {
+        return await showDialog<bool>(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('Bütçe Silinsin mi?'),
+                content:
+                    const Text('Bu bütçeyi silmek istediğinize emin misiniz?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx, false),
+                    child: const Text('Vazgeç'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(ctx, true),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.error,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Sil'),
+                  ),
+                ],
+              ),
+            ) ??
+            false;
+      },
+
+      // ✅ UI’dan silindiği an burası çalışır
+      onDismissed: (_) async {
+        final auth = context.read<AuthProvider>();
+        final cur = (auth.user?.currency ?? 'TRY').toUpperCase();
+
+        // UI optimistik: listeden zaten düştü; başarısız olursa geri ekleyeceğiz
+        final removed = budget;
+        final removedIndex =
+            provider.budgets.indexWhere((b) => b.id == budget.id);
+
+        // (Provider listesi Dismissible ile otomatik düşmez; biz elle düşürelim)
+        provider.budgets.removeWhere((b) => b.id == budget.id);
+        provider.notifyListeners();
+
+        final ok = await provider.deleteBudget(
+          budgetId: removed.id!,
+          year: provider.selectedYear,
+          month: provider.selectedMonth,
+          currency: cur,
+        );
+
+        if (!ok && mounted) {
+          // geri ekle
+          final list = provider.budgets;
+          final idx = (removedIndex >= 0 && removedIndex <= list.length)
+              ? removedIndex
+              : list.length;
+          list.insert(idx, removed);
+          provider.notifyListeners();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(provider.error ?? 'Silme başarısız.'),
+              backgroundColor: AppColors.error,
+            ),
+          );
+          return;
+        }
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Bütçe silindi'),
+              backgroundColor: AppColors.success,
+            ),
+          );
+        }
+      },
+
+      child: _buildBudgetCard(
+        context,
+        budget: budget,
+        isDark: isDark,
+        currency: currency,
+      ),
+    );
+  }
+
   Widget _buildLabel(String text) {
     return Row(
       children: [
@@ -421,6 +572,138 @@ class _BudgetScreenState extends State<BudgetScreen> {
           ),
         ),
       ],
+    );
+  }
+}
+
+void _showPeriodPicker(BuildContext context) {
+  final provider = context.read<BudgetProvider>();
+
+  int year = provider.selectedYear;
+  int month = provider.selectedMonth;
+
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    ),
+    builder: (ctx) {
+      return StatefulBuilder(
+        builder: (ctx, setState) {
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.calendar_month),
+                    const SizedBox(width: 8),
+                    const Text(
+                      'Ay / Yıl Seç',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.pop(ctx),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<int>(
+                        value: month,
+                        decoration: const InputDecoration(labelText: 'Ay'),
+                        items: List.generate(12, (i) => i + 1)
+                            .map((m) => DropdownMenuItem(
+                                  value: m,
+                                  child: Text(m.toString().padLeft(2, '0')),
+                                ))
+                            .toList(),
+                        onChanged: (v) => setState(() => month = v ?? month),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: DropdownButtonFormField<int>(
+                        value: year,
+                        decoration: const InputDecoration(labelText: 'Yıl'),
+                        items:
+                            List.generate(8, (i) => DateTime.now().year - 3 + i)
+                                .map((y) => DropdownMenuItem(
+                                      value: y,
+                                      child: Text('$y'),
+                                    ))
+                                .toList(),
+                        onChanged: (v) => setState(() => year = v ?? year),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final auth = context.read<AuthProvider>();
+                      provider.setSelectedPeriod(year: year, month: month);
+                      await provider.fetchBudgets(
+                        year: year,
+                        month: month,
+                        currency: (auth.user?.currency ?? 'TRY').toUpperCase(),
+                      );
+                      if (ctx.mounted) Navigator.pop(ctx);
+                    },
+                    child: const Text('Uygula'),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+class _PeriodPickerRow extends StatelessWidget {
+  final bool isDark;
+  final String
+      label; // artık gösterilmeyecek ama picker çalışsın diye kalabilir
+  final VoidCallback onPick;
+
+  const _PeriodPickerRow({
+    required this.isDark,
+    required this.label,
+    required this.onPick,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPick,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardDark : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.primaryBlue.withOpacity(0.18)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.calendar_month, color: AppColors.primaryBlue),
+            const Spacer(),
+            const Icon(Icons.keyboard_arrow_down),
+          ],
+        ),
+      ),
     );
   }
 }

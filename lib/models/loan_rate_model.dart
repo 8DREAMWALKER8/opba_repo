@@ -3,8 +3,8 @@ class LoanRateItem {
   final String loanType;
   final String currency;
   final int termMonths;
-  final double monthlyRate; // 0.03162 gibi
-  final double monthlyRatePercent; // 3.162 gibi
+  final double monthlyRate;
+  final double monthlyRatePercent;
   final double? annualEffectiveRate;
   final String? asOfMonth;
   final String? source;
@@ -39,8 +39,8 @@ class LoanRateItem {
 
 class LoanCalcInput {
   final String bankName;
-  final String loanType; // consumer vs mortgage vs ...
-  final String currency; // TRY vs ...
+  final String loanType;
+  final String currency;
   final int termMonths;
   final double principal;
 
@@ -82,7 +82,7 @@ class LoanCalcResult {
 }
 
 class LoanCalcResponse {
-  final LoanRateItem? rate; // backend "rate" objesi
+  final LoanRateItem? rate;
   final LoanCalcResult result;
 
   LoanCalcResponse({required this.rate, required this.result});

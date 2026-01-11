@@ -15,8 +15,15 @@ class NotificationRepositoryMongo {
     return doc.toObject ? doc.toObject() : doc;
   }
 
-  async findByUser(userId, { limit = 50 } = {}) {
-    return Notification.find({ userId })
+  async findByUser(userId, { limit = 50, isRead } = {}) {
+    const filter = { userId };
+
+    // isRead parametresi verilmişse filtrele
+    if (typeof isRead === "boolean") {
+      filter.isRead = isRead;
+    }
+
+    return Notification.find(filter)
       .sort({ createdAt: -1 })
       .limit(Number(limit));
   }

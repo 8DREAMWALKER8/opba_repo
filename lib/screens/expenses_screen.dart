@@ -231,7 +231,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
 
             const SizedBox(height: 24),
 
-            // bütçe yönetimi butonu
+            // tüm işlemler butonu
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -257,6 +257,39 @@ class _ExpensesScreenState extends State<ExpensesScreen>
                 child: Text(
                   l10n.allTransactions,
                   style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            // bütçe yönetim butonu
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/budget').then((_) async {
+                    // geri dönüldüğünde bu ekranı yenile
+                    final authProvider = context.read<AuthProvider>();
+
+                    await context.read<TransactionProvider>().fetchTransactions(
+                          currency: authProvider.user?.currency,
+                        );
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryBlue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  elevation: 0,
+                ),
+                child: const Text(
+                  'Bütçe Yönetimi',
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

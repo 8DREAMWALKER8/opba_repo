@@ -56,6 +56,14 @@ const makeAccountsRoutes = require("./modules/accounts/presentation/routes");
 // --------------------
 const budgetsRouter = require("./modules/budgets/presentation/routes");
 
+// const BudgetRepositoryMongo = require("./modules/budgets/infrastructure/persistence/repositories/BudgetRepositoryMongo");
+// const ListAccounts = require("./modules/accounts/application/usecases/ListAccounts");
+// const CreateAccount = require("./modules/accounts/application/usecases/CreateAccount");
+// const UpdateAccount = require("./modules/accounts/application/usecases/UpdateAccount");
+// const DeactivateAccount = require("./modules/accounts/application/usecases/DeactivateAccount");
+// const makeAccountsController = require("./modules/accounts/presentation/controller");
+// const makeAccountsRoutes = require("./modules/accounts/presentation/routes");
+
 // --------------------
 // Clean FX wiring
 // --------------------

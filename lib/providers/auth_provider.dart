@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:opba_app/services/api_service.dart';
@@ -33,7 +35,6 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> initSecurityQuestions(
       {String lang = 'tr', bool force = false}) async {
-    // Daha önce yüklediysek tekrar istek atma
     if (_securityQuestionsLoaded && !force) return;
 
     try {
@@ -41,11 +42,8 @@ class AuthProvider extends ChangeNotifier {
 
       final resp = await api.getSecurityQuestions(lang: lang);
 
-      // Beklenen response örneği:
-      // { ok: true, lang: 'tr', questions: [ {id:'q1', text:'...'}, ... ] }
       final ok = resp is Map && resp['ok'] == true;
       if (!ok) {
-        // ok false ise cache'i bozma; sadece loaded flag'i false bırak
         _securityQuestionsLoaded = false;
         notifyListeners();
         return;
@@ -59,12 +57,10 @@ class AuthProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       _securityQuestionsLoaded = false;
-      // İstersen burada loglayabilirsin
       notifyListeners();
     }
   }
 
-  // İstersen id ile tek soru metni bulma (UI tarafını kolaylaştırır)
   String? securityQuestionTextById(String id) {
     final q = _securityQuestions.where((x) => x['id'] == id).toList();
     if (q.isEmpty) return null;
@@ -100,7 +96,6 @@ class AuthProvider extends ChangeNotifier {
     try {
       final api = ApiService();
 
-      // Backend email bekliyor; username girilirse 400 alırsın.
       final result = await api.login(emailOrUsername.trim(), password);
 
       final ok = result is Map && result['ok'] == true;
@@ -113,7 +108,7 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
 
-      debugPrint('login result => ' + result.toString());
+      debugPrint('login result => $result');
       final userId = (result['userId'] ?? '').toString();
       final securityQuestionId =
           (result['securityQuestionId'] ?? '').toString();
@@ -125,20 +120,18 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
 
-      // 2. adım için geçici olarak sakla
       await _storage.write(key: 'user_id', value: userId);
       await _storage.write(
           key: 'security_question_id', value: securityQuestionId);
 
       _securityQuestion = securityQuestionTextById(securityQuestionId);
-      _tempUserId = null; // backend artık userId dönmüyor; token içinde var
+      _tempUserId = null;
 
-      // Henüz authenticated değiliz; güvenlik sorusu adımı var
       _status = AuthStatus.unauthenticated;
       notifyListeners();
       return true;
     } on ApiException catch (e) {
-      _error = e.message; // "Invalid credentials" gelir
+      _error = e.message;
       _status = AuthStatus.unauthenticated;
       notifyListeners();
       return false;
@@ -166,7 +159,6 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
 
-      // 1) verify
       final verifyRes = await api.verifySecurityQuestion(tempUserId, answer);
 
       final verifyOk = verifyRes is Map && verifyRes['ok'] == true;
@@ -188,11 +180,9 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
 
-      // 2) token kaydet
       _token = accessToken;
       await _storage.write(key: 'auth_token', value: accessToken);
 
-      // 3) /me çağır ve user setle
       final meRes = await api.getMe();
 
       final meOk = meRes['ok'] == true;
@@ -213,10 +203,8 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
       debugPrint('USER JSON: ' + userJson.toString());
-      // User modelin hangi alanları bekliyorsa ona göre map et
-      _user = User.fromJson(userJson); // Eğer fromJson yoksa aşağıya bak
+      _user = User.fromJson(userJson);
 
-      // user_id storage
       final userId = (userJson['_id'] ?? userJson['id'])?.toString();
       if (userId != null) {
         await _storage.write(key: 'user_id', value: userId);
@@ -275,7 +263,7 @@ class AuthProvider extends ChangeNotifier {
         await _storage.write(key: 'user_id', value: userId);
       }
 
-      _status = AuthStatus.unauthenticated; // register token dönmüyor
+      _status = AuthStatus.unauthenticated;
       notifyListeners();
       return true;
     } catch (e) {
@@ -297,7 +285,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<bool> updateProfile({
-    String? fullName, // UI'dan geliyor; backend "username" bekliyor
+    String? fullName,
     String? email,
     String? phone,
     String? language,
@@ -318,9 +306,8 @@ class AuthProvider extends ChangeNotifier {
     try {
       final api = ApiService();
 
-      // Backend profile endpoint sadece username/email/phone güncelliyor
       final result = await api.patchProfile(
-        fullName: fullName, // fullName'i username'e map ediyoruz
+        fullName: fullName,
         email: email,
         phone: phone,
         password: password,

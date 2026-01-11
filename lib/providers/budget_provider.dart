@@ -1,124 +1,163 @@
 import 'package:flutter/material.dart';
 import '../models/budget_model.dart';
 import '../models/transaction_model.dart';
+import '../services/api_service.dart';
 
 class BudgetProvider extends ChangeNotifier {
+  final ApiService _api;
+  BudgetProvider(this._api);
+
   List<Budget> _budgets = [];
   bool _isLoading = false;
   String? _error;
+
+  int _selectedYear = DateTime.now().year;
+  int _selectedMonth = DateTime.now().month;
 
   List<Budget> get budgets => _budgets;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  BudgetProvider() {
-    _loadDemoBudgets();
-  }
+  int get selectedYear => _selectedYear;
+  int get selectedMonth => _selectedMonth;
 
-  void _loadDemoBudgets() {
-    _budgets = [
-      Budget(
-        id: 'budget_1',
-        userId: 'user_123',
-        category: TransactionCategory.market,
-        limitAmount: 3000,
-        spentAmount: 850,
-        month: '2025-11',
-      ),
-      Budget(
-        id: 'budget_2',
-        userId: 'user_123',
-        category: TransactionCategory.entertainment,
-        limitAmount: 1000,
-        spentAmount: 53.95,
-        month: '2025-11',
-      ),
-      Budget(
-        id: 'budget_3',
-        userId: 'user_123',
-        category: TransactionCategory.food,
-        limitAmount: 2000,
-        spentAmount: 150,
-        month: '2025-11',
-      ),
-    ];
+  String get selectedPeriodLabel =>
+      '${_selectedYear}-${_selectedMonth.toString().padLeft(2, '0')}';
+
+  // ✅ Burada her türlü inputu int’e çevirip garanti altına alıyoruz
+  void setSelectedPeriod({required dynamic year, required dynamic month}) {
+    final y = (year is int) ? year : int.tryParse(year.toString());
+    final m = (month is int) ? month : int.tryParse(month.toString());
+
+    if (y == null || m == null) return;
+
+    _selectedYear = y;
+    _selectedMonth = m.clamp(1, 12);
     notifyListeners();
   }
 
-  Budget? getBudgetByCategory(TransactionCategory category) {
+  Budget? getBudgetForCategory(TransactionCategory category) {
     try {
       return _budgets.firstWhere((b) => b.category == category);
-    } catch (e) {
+    } catch (_) {
       return null;
     }
   }
 
-  Budget? getBudgetForCategory(TransactionCategory category) {
-    return getBudgetByCategory(category);
-  }
-
-  Future<bool> setBudget({
-    required TransactionCategory category,
-    required double limitAmount,
-  }) async {
-    return createBudget(category: category, limitAmount: limitAmount);
-  }
-
-  Future<void> fetchBudgets() async {
+  Future<void> fetchBudgets({int? year, int? month, String? currency}) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
+    final y = year ?? _selectedYear;
+    final m = month ?? _selectedMonth;
+
+    // currency paramı verilmediyse uygulama ayarından al
+    // (AppProvider yoksa burayı AuthProvider'a göre değiştir)
+    final cur = (currency?.trim().isNotEmpty == true)
+        ? currency!.trim().toUpperCase()
+        : 'TRY';
+
     try {
-      await Future.delayed(const Duration(seconds: 1));
+      final resp = await _api.getBudgets(year: y, month: m, currency: cur);
+
+      List list;
+      if (resp is Map && resp['ok'] == true) {
+        list = (resp['budgets'] as List?) ?? [];
+      } else if (resp is List) {
+        list = resp;
+      } else {
+        list = [];
+      }
+
+      _budgets = list
+          .whereType<Map>()
+          .map((x) => Budget.fromJson(Map<String, dynamic>.from(x)))
+          .toList();
+
       _isLoading = false;
       notifyListeners();
-    } catch (e) {
+    } on ApiException catch (e) {
+      _error = e.message;
+      _isLoading = false;
+      notifyListeners();
+    } catch (_) {
       _error = 'Bütçeler yüklenirken hata oluştu.';
       _isLoading = false;
       notifyListeners();
     }
   }
 
+  Future<bool> setBudget({
+    required TransactionCategory category,
+    required double limitAmount,
+    required int year,
+    required int month,
+    required String currency,
+  }) async {
+    return createBudget(
+      category: category,
+      limitAmount: limitAmount,
+      year: year,
+      month: month,
+      currency: currency,
+    );
+  }
+
   Future<bool> createBudget({
     required TransactionCategory category,
     required double limitAmount,
+    required int year,
+    required int month,
+    required String currency,
   }) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      await Future.delayed(const Duration(milliseconds: 500));
+      final payload = {
+        'category': category.name,
+        'limitAmount': limitAmount,
+        'year': year,
+        'month': month,
+        'currency': currency,
+      };
 
-      // bu kategori için zaten bütçe olup olmadığını kontrol et
-      final existingIndex = _budgets.indexWhere((b) => b.category == category);
+      final resp = await _api.createBudget(payload);
 
-      final now = DateTime.now();
-      final month = '${now.year}-${now.month.toString().padLeft(2, '0')}';
+      Budget? created;
+      if (resp is Map && resp['ok'] == true) {
+        if (resp['budget'] is Map) {
+          created = Budget.fromJson(Map<String, dynamic>.from(resp['budget']));
+        } else if (resp['budgets'] is List) {
+          final list = (resp['budgets'] as List).whereType<Map>().toList();
+          _budgets = list
+              .map((x) => Budget.fromJson(Map<String, dynamic>.from(x)))
+              .toList();
+        }
+      }
 
-      if (existingIndex != -1) {
-        // mevcut bütçeyi güncelle
-        _budgets[existingIndex] = _budgets[existingIndex].copyWith(
-          limitAmount: limitAmount,
-        );
+      if (created != null) {
+        final idx = _budgets.indexWhere((b) => b.category == created!.category);
+        if (idx != -1)
+          _budgets[idx] = created;
+        else
+          _budgets.add(created);
       } else {
-        // yeni bütçe oluştur
-        final newBudget = Budget(
-          id: 'budget_${DateTime.now().millisecondsSinceEpoch}',
-          userId: 'user_123',
-          category: category,
-          limitAmount: limitAmount,
-          spentAmount: 0,
-          month: month,
-        );
-        _budgets.add(newBudget);
+        // create sonrası item dönmüyorsa: tekrar çek
+        await fetchBudgets(year: year, month: month);
       }
 
       _isLoading = false;
       notifyListeners();
       return true;
-    } catch (e) {
+    } on ApiException catch (e) {
+      _error = e.message;
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } catch (_) {
       _error = 'Bütçe oluşturulurken hata oluştu.';
       _isLoading = false;
       notifyListeners();
@@ -126,26 +165,43 @@ class BudgetProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateBudget(Budget budget) async {
-    try {
-      final index = _budgets.indexWhere((b) => b.id == budget.id);
-      if (index != -1) {
-        _budgets[index] = budget;
-        notifyListeners();
-        return true;
-      }
-      return false;
-    } catch (e) {
-      return false;
-    }
-  }
+  Future<bool> deleteBudget({
+    required String budgetId,
+    int? year,
+    int? month,
+    String? currency,
+  }) async {
+    _error = null;
+    notifyListeners();
 
-  Future<bool> deleteBudget(String budgetId) async {
+    // UI optimistik silme yapacak; burada sadece API + refetch
     try {
-      _budgets.removeWhere((b) => b.id == budgetId);
-      notifyListeners();
+      final resp = await _api.deleteBudget(budgetId);
+
+      final ok = (resp is Map) ? (resp['ok'] == true) : true;
+      if (!ok) {
+        _error = (resp is Map && resp['message'] != null)
+            ? resp['message'].toString()
+            : 'Bütçe silinemedi.';
+        notifyListeners();
+        return false;
+      }
+
+      // mevcut seçili dönemi koruyarak tekrar çek
+      await fetchBudgets(
+        year: year ?? _selectedYear,
+        month: month ?? _selectedMonth,
+        currency: currency,
+      );
+
       return true;
-    } catch (e) {
+    } on ApiException catch (e) {
+      _error = e.message;
+      notifyListeners();
+      return false;
+    } catch (_) {
+      _error = 'Bütçe silinirken hata oluştu.';
+      notifyListeners();
       return false;
     }
   }

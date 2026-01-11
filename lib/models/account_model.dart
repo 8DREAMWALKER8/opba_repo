@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Account {
   final String? id;
   final String userId;
@@ -13,8 +11,6 @@ class Account {
   final bool isActive;
   final DateTime? lastSyncAt;
   final DateTime? createdAt;
-
-  // ✅ NEW: zorunlu description
   final String description;
 
   Account({
@@ -30,12 +26,9 @@ class Account {
     this.isActive = true,
     this.lastSyncAt,
     this.createdAt,
-
-    // ✅ NEW
     required this.description,
   });
 
-  // görüntülemek için gizlenmiş kart numarası
   String get maskedCardNumber {
     final cleaned = cardNumber.replaceAll(' ', '');
     if (cleaned.length >= 16) {
@@ -61,37 +54,21 @@ class Account {
       id: (json['_id'] ?? json['id'])?.toString(),
       userId: (json['userId'] ?? '').toString(),
       bankName: (json['bankName'] ?? '').toString(),
-
-      // Backend'de cardNumber yok -> boş geç, UI'da placeholder/override ile yönet
       cardNumber: (json['cardNumber'] ?? '').toString(),
-
-      // ✅ UI cardHolderName = backend accountName
       cardHolderName:
           (json['cardHolderName'] ?? json['accountName'])?.toString(),
-
-      // Backend'de expiryDate yok
-      expiryDate: json['expiryDate']?.toString(),
       balance: (json['balance'] ?? 0).toDouble(),
       currency: (json['currency'] ?? 'TRY').toString(),
-
-      // Backend'de accountType yok (schema'da accountName var)
-      // UI'da accountType kullanıyorsan default kalsın
       accountType: (json['accountType'] ?? 'checking').toString(),
-
       isActive: (json['isActive'] ?? true) as bool,
-
-      // ✅ backend lastSyncedAt -> lastSyncAt
       lastSyncAt: json['lastSyncedAt'] != null
           ? DateTime.tryParse(json['lastSyncedAt'].toString())
           : (json['lastSyncAt'] != null
               ? DateTime.tryParse(json['lastSyncAt'].toString())
               : null),
-
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt'].toString())
           : null,
-
-      // ✅ NEW: description (yoksa temp)
       description: (json['description'] ?? 'temp').toString(),
     );
   }
@@ -99,14 +76,11 @@ class Account {
   Map<String, dynamic> toJsonForCreate() {
     return {
       'bankName': bankName,
-      'accountName': (cardHolderName ?? '').trim(), // ✅ mapping
+      'accountName': (cardHolderName ?? '').trim(),
       'cardNumber': cardNumber,
       'balance': balance,
       'currency': currency,
-
-      // ✅ NEW
       'description': description,
-
       'source': 'manual',
     };
   }
@@ -124,8 +98,6 @@ class Account {
     bool? isActive,
     DateTime? lastSyncAt,
     DateTime? createdAt,
-
-    // ✅ NEW
     String? description,
   }) {
     return Account(
@@ -141,8 +113,6 @@ class Account {
       isActive: isActive ?? this.isActive,
       lastSyncAt: lastSyncAt ?? this.lastSyncAt,
       createdAt: createdAt ?? this.createdAt,
-
-      // ✅ NEW
       description: description ?? this.description,
     );
   }

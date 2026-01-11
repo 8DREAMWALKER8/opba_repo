@@ -2,7 +2,11 @@ module.exports = ({ getMyNotifications, markNotificationAsRead, markAllAsRead })
   getMine: async (req, res) => {
     const userId = req.user.userId; // sizde protect middleware bunu set ediyor
     const limit = Number(req.query.limit || 50);
-    const items = await getMyNotifications.execute({ userId, limit });
+    const items = await getMyNotifications.execute({
+  userId,
+  limit: req.query.limit,
+  isRead: req.query.isRead,
+});
     res.json({ ok: true, notifications: items });
   },
 

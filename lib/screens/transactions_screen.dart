@@ -8,7 +8,6 @@ import '../utils/app_localizations.dart';
 import '../providers/transaction_provider.dart';
 import '../providers/app_provider.dart';
 import '../theme/app_theme.dart';
-import '../utils/app_localizations.dart';
 import '../models/transaction_model.dart';
 
 class ListTransactionScreen extends StatefulWidget {
@@ -20,6 +19,16 @@ class ListTransactionScreen extends StatefulWidget {
 
 class _ListTransactionScreenState extends State<ListTransactionScreen> {
   String? _selectedAccountId;
+  bool get _isAllSelected => _selectedAccountId == null;
+
+  void _showSelectAccountSnack(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Lütfen hesap seçiniz.'),
+        backgroundColor: AppColors.error,
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -36,16 +45,8 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
 
       // 3) Transactions'ı ilk account'a göre çek
       await context.read<TransactionProvider>().fetchTransactions(
-            accountId: firstAccountId,
             currency: authProvider.user?.currency,
           );
-
-      // 4) Screen state’inde de seçimi tutuyorsan set et
-      if (mounted &&
-          firstAccountId != null &&
-          firstAccountId.toString().isNotEmpty) {
-        setState(() => _selectedAccountId = firstAccountId.toString());
-      }
     });
   }
 
@@ -58,13 +59,6 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
 
     final accounts = accountProvider.accounts;
     final l10n = context.l10n;
-
-    if (_selectedAccountId == null && accounts.isNotEmpty) {
-      final firstId = accounts.first.id?.toString();
-      if (firstId != null && firstId.isNotEmpty) {
-        _selectedAccountId = firstId;
-      }
-    }
 
     return Scaffold(
       backgroundColor:
@@ -104,9 +98,14 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
               width: double.infinity,
               height: 50,
               child: ElevatedButton.icon(
-                onPressed: (_selectedAccountId == null)
-                    ? null
-                    : () => _showAddTransactionDialog(context),
+                onPressed: () {
+                  debugPrint(_isAllSelected.toString());
+                  if (_isAllSelected) {
+                    _showSelectAccountSnack(context);
+                    return;
+                  }
+                  _showAddTransactionDialog(context);
+                },
                 icon: const Icon(Icons.add),
                 label: Text(
                   l10n.addTransaction,
@@ -149,6 +148,8 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
                     final tx = txProvider.transactions[index];
                     return _TransactionTile(
                       transaction: tx,
+                      actionsEnabled: !_isAllSelected,
+                      onDisabledTap: () => _showSelectAccountSnack(context),
                       onEdit: () => _showEditTransactionDialog(context, tx),
                       onDelete: () async {
                         await context
@@ -349,9 +350,10 @@ class _EditTransactionDialogState extends State<_EditTransactionDialog> {
               TextField(
                 controller: _descriptionController,
                 enabled: !_isSubmitting,
-                maxLines: 2,
+                maxLines: 1,
                 decoration: InputDecoration(labelText: l10n.description),
               ),
+              const SizedBox(height: 16),
               // ✅ Date picker
               _InkDateField(
                 label: 'Date',
@@ -376,7 +378,6 @@ class _EditTransactionDialogState extends State<_EditTransactionDialog> {
               DropdownButtonFormField<TransactionType>(
                 value: _selectedType,
                 decoration: const InputDecoration(
-                  labelText: 'Type',
                   prefixIcon: Icon(Icons.swap_vert),
                 ),
                 items: const [
@@ -536,18 +537,24 @@ class _TransactionTile extends StatelessWidget {
   final Transaction transaction;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+
+  final bool actionsEnabled;
+  final VoidCallback onDisabledTap;
+
+  const _TransactionTile({
+    required this.transaction,
+    required this.onEdit,
+    required this.onDelete,
+    required this.actionsEnabled,
+    required this.onDisabledTap,
+  });
+
   String _formatDate(DateTime d) {
     final dd = d.day.toString().padLeft(2, '0');
     final mm = d.month.toString().padLeft(2, '0');
     final yyyy = d.year.toString();
     return '$dd/$mm/$yyyy';
   }
-
-  const _TransactionTile({
-    required this.transaction,
-    required this.onEdit,
-    required this.onDelete,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -609,7 +616,7 @@ class _TransactionTile extends StatelessWidget {
                   (transaction.description ?? '').trim().isEmpty
                       ? '—'
                       : transaction.description!.trim(),
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 13,
@@ -658,14 +665,19 @@ class _TransactionTile extends StatelessWidget {
                   _IconPillButton(
                     icon: Icons.edit,
                     tooltip: 'Edit',
-                    onTap: onEdit,
+                    onTap: actionsEnabled ? onEdit : onDisabledTap,
                     isDark: isDark,
+                    disabled: !actionsEnabled,
                   ),
                   const SizedBox(width: 8),
                   _IconPillButton(
                     icon: Icons.delete_outline,
                     tooltip: l10n.delete,
                     onTap: () async {
+                      if (!actionsEnabled) {
+                        onDisabledTap();
+                        return;
+                      }
                       final confirmed = await showDialog<bool>(
                         context: context,
                         barrierDismissible: false,
@@ -695,6 +707,7 @@ class _TransactionTile extends StatelessWidget {
                     },
                     isDark: isDark,
                     danger: true,
+                    disabled: !actionsEnabled,
                   ),
                 ],
               ),
@@ -712,6 +725,7 @@ class _IconPillButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool isDark;
   final bool danger;
+  final bool disabled;
 
   const _IconPillButton({
     required this.icon,
@@ -719,21 +733,25 @@ class _IconPillButton extends StatelessWidget {
     required this.onTap,
     required this.isDark,
     this.danger = false,
+    this.disabled = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final bg = isDark
-        ? Colors.white.withOpacity(0.06)
-        : Colors.black.withOpacity(0.05);
-    final fg =
+        ? Colors.white.withOpacity(disabled ? 0.03 : 0.06)
+        : Colors.black.withOpacity(disabled ? 0.03 : 0.05);
+
+    final fgBase =
         danger ? AppColors.error : (isDark ? Colors.white70 : Colors.black87);
+
+    final fg = disabled ? fgBase.withOpacity(0.35) : fgBase;
 
     return Tooltip(
       message: tooltip,
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
-        onTap: onTap,
+        onTap: onTap, // ✅ gerçekten pasif
         child: Container(
           width: 34,
           height: 34,
@@ -895,8 +913,9 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
                   labelText: 'Description',
                   hintText: 'Örn: Market alışverişi',
                 ),
-                maxLines: 2,
+                maxLines: 1,
               ),
+              const SizedBox(height: 16),
               // ✅ Date picker
               _InkDateField(
                 label: 'Date',
@@ -921,7 +940,6 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
               DropdownButtonFormField<TransactionType>(
                 value: _selectedType,
                 decoration: const InputDecoration(
-                  labelText: 'Type',
                   prefixIcon: Icon(Icons.swap_vert),
                 ),
                 items: const [
@@ -1015,7 +1033,6 @@ class _InkDateField extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: InputDecorator(
         decoration: InputDecoration(
-          labelText: label,
           prefixIcon: const Icon(Icons.calendar_today_outlined),
         ),
         child: Text(_fmt(value)),

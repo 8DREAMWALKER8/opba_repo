@@ -340,6 +340,103 @@ class TransactionRepositoryMongo {
   }
 
   /**
+   * Budget entegrasyonu için (FX'li):
+   * - Period içindeki expense tx'leri çeker (category opsiyonel)
+   * - fxRateRepo.getLatest() ile en güncel kurları alır
+   * - Her tx amount'unu targetCurrency'ye çevirir
+   * - Toplamı döndürür
+   *
+   * rateToTRY varsayımı:
+   *   1 {currency} = rateToTRY TRY
+   *
+   * Dönüşüm:
+   *   amount_in_TRY = amount * rateToTRY(txCurrency)
+   *   amount_in_target = amount_in_TRY / rateToTRY(targetCurrency)
+   *
+   * TRY için rateToTRY = 1 kabul edilir.
+   */
+  async sumExpensesByUserAndCategoryBetweenFx({
+    userId,
+    category,          // optional
+    from,              // Date (inclusive)
+    to,                // Date (exclusive)
+    targetCurrency = "TRY",
+    fxRateRepo,        // instance of FxRateRepositoryMongo
+  }) {
+    if (!userId) throw new Error("USER_ID_REQUIRED");
+    if (!from || !to) throw new Error("PERIOD_REQUIRED");
+    if (!fxRateRepo || typeof fxRateRepo.getLatest !== "function") {
+      throw new Error("FX_REPO_REQUIRED");
+    }
+
+    const userObjectId =
+      typeof userId === "string" ? new mongoose.Types.ObjectId(userId) : userId;
+
+    const normalizedTarget = String(targetCurrency || "TRY").trim().toUpperCase();
+
+    // 1) Period tx'leri çek (expense)
+    const match = {
+      userId: userObjectId,
+      type: "expense",
+      occurredAt: { $gte: from, $lt: to },
+    };
+    if (category) match.category = category;
+
+    // Sadece lazım olan alanlar
+    const txs = await TransactionModel.find(match)
+      .select({ amount: 1, currency: 1 })
+      .lean();
+
+    if (!txs.length) return 0;
+
+    // 2) FX rates (en güncel) -> map
+    // getLatest(limit) zaten date desc ile geliyor, aynı currency için birden fazla varsa ilkini alacağız.
+    const fxDocs = await fxRateRepo.getLatest(500);
+
+    const rateToTRYByCur = new Map();
+    rateToTRYByCur.set("TRY", 1);
+
+    for (const d of fxDocs) {
+      const cur = String(d.currency || "").trim().toUpperCase();
+      const r = Number(d.rateToTRY);
+      if (!cur || !Number.isFinite(r) || r <= 0) continue;
+      if (!rateToTRYByCur.has(cur)) rateToTRYByCur.set(cur, r);
+    }
+
+    // Target rate var mı?
+    const targetRate = rateToTRYByCur.get(normalizedTarget);
+    if (!targetRate) {
+      throw new Error("TARGET_CURRENCY_RATE_NOT_FOUND");
+    }
+
+    // 3) Convert + sum
+    let total = 0;
+
+    for (const tx of txs) {
+      const txCur = String(tx.currency || "TRY").trim().toUpperCase();
+      const amount = Number(tx.amount) || 0;
+
+      if (amount === 0) continue;
+
+      const txRate = rateToTRYByCur.get(txCur);
+      if (!txRate) {
+        // İstersen "skip" yapabilirsin; ben hata fırlatıyorum ki eksik kur fark edilsin.
+        throw new Error(`FX_RATE_NOT_FOUND_${txCur}`);
+      }
+
+      // amount -> TRY -> target
+      const amountInTRY = amount * txRate;
+      const amountInTarget = amountInTRY / targetRate;
+
+      total += amountInTarget;
+    }
+
+    // İstersen rounding:
+    // return Math.round(total * 100) / 100;
+    return total;
+  }
+
+  /**
    * Tekrarlayan işlem kontrolü için:
    * Aynı ay aralığında aynı amount + currency ile aynı "key" (description veya category) kaç kez var?
    * key: CreateTransaction tarafında lower-case gönderiyoruz.

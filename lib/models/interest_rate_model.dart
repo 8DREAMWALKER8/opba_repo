@@ -3,8 +3,8 @@ class InterestRateItem {
   final String loanType;
   final String currency;
   final int termMonths;
-  final double monthlyRate; // 0.03162
-  final double monthlyRatePercent; // 3.16
+  final double monthlyRate;
+  final double monthlyRatePercent;
   final double? annualEffectiveRate;
   final String? asOfMonth;
   final String? source;

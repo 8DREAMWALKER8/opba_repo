@@ -15,8 +15,6 @@ const BankAccountSchema = new mongoose.Schema(
 
     currency: { type: String, enum: ["TRY", "USD", "EUR", "GBP"], default: "TRY" },
     balance: { type: Number, default: 0 },
-    limit: { type: Number, required: true, min: 0 },
-    period: { type: String, enum: ["monthly"], default: "monthly" },
     isActive: { type: Boolean, default: true },
     lastSyncedAt: { type: Date, default: null },
     source: { type: String, enum: ["manual", "mock", "openbanking"], default: "manual" },

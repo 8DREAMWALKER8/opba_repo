@@ -215,6 +215,7 @@ class _CreditScreenState extends State<CreditScreen> {
                   context,
                   bankName: r.bankName,
                   interestRate: r.monthlyRatePercent,
+                  termMonths: r.termMonths,
                   color: _colorForBank(r.bankName),
                   isBest: isBest,
                   isDark: isDark,
@@ -265,6 +266,7 @@ class _CreditScreenState extends State<CreditScreen> {
     required Color color,
     required bool isBest,
     required bool isDark,
+    required int termMonths,
   }) {
     final l10n = context.l10n;
 
@@ -364,7 +366,7 @@ class _CreditScreenState extends State<CreditScreen> {
                 ],
               ),
               Text(
-                l10n.monthlyInterest,
+                '$termMonths ${l10n.months} • ${l10n.monthlyInterest}',
                 style: TextStyle(
                   color: isDark
                       ? AppColors.textSecondaryDark
@@ -448,24 +450,6 @@ class _CreditScreenState extends State<CreditScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  if (best == null)
-                    const _InfoBox(
-                      message: 'Faiz oranı bulunamadı. Önce listeyi yükleyin.',
-                    )
-                  else
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryBlue.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        '${best.bankName} • %${best.monthlyRatePercent.toStringAsFixed(2)}',
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: amountController,

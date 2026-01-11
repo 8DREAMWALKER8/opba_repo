@@ -176,21 +176,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 8),
-                        // şifremi unuttum
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              l10n.forgotPassword,
-                              style: const TextStyle(
-                                color: AppColors.primaryBlue,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 24),
+
                         // giriş yap butonu
                         SizedBox(
                           width: double.infinity,

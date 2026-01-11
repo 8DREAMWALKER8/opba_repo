@@ -84,7 +84,6 @@ class TransactionProvider extends ChangeNotifier {
       _transactions = rawList
           .map((e) => Transaction.fromJson(Map<String, dynamic>.from(e as Map)))
           .toList();
-
       _isLoading = false;
       notifyListeners();
     } on ApiException catch (e) {

@@ -30,6 +30,8 @@ const BudgetSchema = new mongoose.Schema(
 
     month: { type: Number, required: true, min: 1, max: 12, index: true },
     year: { type: Number, required: true, min: 2000, max: 2100, index: true },
+
+    currency: { type: String, enum: ["TRY", "USD", "EUR", "GBP"], default: "TRY" },
   },
   { timestamps: true }
 );

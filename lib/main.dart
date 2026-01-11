@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:opba_app/providers/interest_rate_provider.dart';
-import 'package:opba_app/providers/loan_provider.dart';
-import 'package:opba_app/screens/transactions_screen.dart';
-import 'package:opba_app/services/api_service.dart';
+import 'package:opba_app/providers/notification_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -12,26 +9,32 @@ import 'providers/auth_provider.dart';
 import 'providers/account_provider.dart';
 import 'providers/transaction_provider.dart';
 import 'providers/budget_provider.dart';
+import 'providers/loan_provider.dart';
+
+import 'services/api_service.dart';
+
 import 'theme/app_theme.dart';
 import 'utils/app_localizations.dart';
+
 import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/security_question_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/home_screen.dart';
-// import 'screens/accounts_screen.dart';
-import '../screens/edit_account_screen.dart';
 import 'screens/add_account_screen.dart';
 import 'screens/expenses_screen.dart';
 import 'screens/budget_screen.dart';
 import 'screens/credit_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/privacy_screen.dart';
+import 'screens/transactions_screen.dart';
+
+// Global navigatorKey: Notification popup’ı ekran bağımsız göstermek için
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // tercih edilen seçenekleri ayarla
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -51,15 +54,33 @@ class OpbaApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => AccountProvider()),
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
-        ChangeNotifierProvider(create: (_) => BudgetProvider()),
-        // ChangeNotifierProvider(create: (_) => InterestRatesProvider()),
+
+        // Tek ApiService instance
+        Provider<ApiService>(create: (_) => ApiService()),
+
+        // Notifications
         ChangeNotifierProvider(
-            create: (_) =>
-                LoanProvider(ApiService())..fetchRates(currency: 'TRY')),
+          create: (ctx) => NotificationProvider(
+            api: ctx.read<ApiService>(),
+            navigatorKey: rootNavigatorKey,
+          ),
+        ),
+
+        // Budgets
+        ChangeNotifierProvider<BudgetProvider>(
+          create: (ctx) => BudgetProvider(ctx.read<ApiService>()),
+        ),
+
+        // Loans (aynı ApiService instance kullan)
+        ChangeNotifierProvider(
+          create: (ctx) =>
+              LoanProvider(ctx.read<ApiService>())..fetchRates(currency: 'TRY'),
+        ),
       ],
       child: Consumer<AppProvider>(
-        builder: (context, appProvider, child) {
+        builder: (context, appProvider, _) {
           return MaterialApp(
+            navigatorKey: rootNavigatorKey,
             title: 'OPBA',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
@@ -84,7 +105,6 @@ class OpbaApp extends StatelessWidget {
               '/security-question': (context) => const SecurityQuestionScreen(),
               '/register': (context) => const RegisterScreen(),
               '/home': (context) => const HomeScreen(),
-              // '/accounts': (context) => const AccountsScreen(),
               '/add-account': (context) => const AddAccountScreen(),
               '/expenses': (context) => const ExpensesScreen(),
               '/budget': (context) => const BudgetScreen(),

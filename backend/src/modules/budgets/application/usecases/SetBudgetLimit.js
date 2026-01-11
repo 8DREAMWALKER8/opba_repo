@@ -9,7 +9,7 @@ class SetBudgetLimit {
     return err;
   }
 
-  async execute({ userId, category, limit, month, year, period }) {
+  async execute({ userId, category, limit, month, year, period, currency }) {
     // basit validasyon
     if (!userId) throw this._badRequest("USER_ID_REQUIRED");
     if (!category) throw this._badRequest("CATEGORY_REQUIRED");
@@ -36,6 +36,7 @@ class SetBudgetLimit {
       month: monthNum,
       year: yearNum,
       period: period || "monthly",
+      currency: currency,
     });
   }
 }

@@ -21,18 +21,9 @@ class AccountProvider extends ChangeNotifier {
 
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  // =========================
-  // STORAGE KEY (NEW + LEGACY)
-  // =========================
-
-  /// ✅ Yeni key: cardNumber -> iban (legacy) -> id fallback
   String _storageKeyForAccount(Account acc) {
-    final cn = (acc.cardNumber ?? '').trim();
+    final cn = (acc.cardNumber).trim();
     if (cn.isNotEmpty) return 'acct_card_cn_$cn';
-
-    // Legacy alan (eski datalar)
-    final iban = ((acc as dynamic).iban ?? '').toString().trim();
-    if (iban.isNotEmpty) return 'acct_card_iban_$iban';
 
     final id = (acc.id ?? '').trim();
     if (id.isNotEmpty) return 'acct_card_id_$id';
@@ -40,63 +31,10 @@ class AccountProvider extends ChangeNotifier {
     return 'acct_card_unknown';
   }
 
-  /// ✅ Eski key formatları burada yakalıyoruz
-  List<String> _legacyKeysForAccount(Account acc) {
-    final keys = <String>[];
-
-    final cn = (acc.cardNumber ?? '').trim();
-    final iban = ((acc as dynamic).iban ?? '').toString().trim();
-    final id = (acc.id ?? '').trim();
-
-    // senin eski kodun:
-    // String _cardKey(String iban) => 'acct_card_$iban';
-    if (iban.isNotEmpty) keys.add('acct_card_$iban');
-
-    // geçmişte yanlışlıkla böyle yazıldıysa diye (opsiyonel)
-    if (cn.isNotEmpty) keys.add('acct_card_$cn');
-    if (id.isNotEmpty) keys.add('acct_card_$id');
-
-    return keys;
-  }
-
-  Future<Map<String, dynamic>?> _readMergedCardData(Account acc) async {
-    final newKey = _storageKeyForAccount(acc);
-
-    // 1) önce yeni key’den oku
-    String? stored = await _storage.read(key: newKey);
-
-    // 2) yoksa legacy key’lerden ara + migrate et
-    if (stored == null) {
-      for (final legacyKey in _legacyKeysForAccount(acc)) {
-        stored = await _storage.read(key: legacyKey);
-        if (stored != null) {
-          // migrate (kopyala)
-          await _storage.write(key: newKey, value: stored);
-
-          // istersen legacy'yi temizle (opsiyonel)
-          // await _storage.delete(key: legacyKey);
-          break;
-        }
-      }
-    }
-
-    if (stored == null) return null;
-
-    try {
-      return jsonDecode(stored) as Map<String, dynamic>;
-    } catch (_) {
-      return null;
-    }
-  }
-
   Future<void> _writeCardData(Account acc, Map<String, dynamic> data) async {
     final key = _storageKeyForAccount(acc);
     await _storage.write(key: key, value: jsonEncode(data));
   }
-
-  // =========================
-  // API
-  // =========================
 
   Future<void> fetchAccounts(String? currency) async {
     _isLoading = true;
@@ -106,7 +44,7 @@ class AccountProvider extends ChangeNotifier {
     try {
       final api = ApiService();
 
-      final raw = await api.getAccounts(currency: currency!); // List<dynamic>
+      final raw = await api.getAccounts(currency: currency!);
 
       final accounts =
           raw.whereType<Map<String, dynamic>>().map(Account.fromJson).toList();
@@ -133,13 +71,11 @@ class AccountProvider extends ChangeNotifier {
     try {
       final api = ApiService();
 
-      // ✅ backend: DELETE /accounts/:id  -> { ok:true, account: {...} }
       final deletedJson = await api.deactivateAccount(accountId);
 
       final deletedId =
           (deletedJson['id'] ?? deletedJson['_id'] ?? accountId).toString();
 
-      // ✅ hard delete: listeden tamamen çıkar
       _accounts.removeWhere((a) => a.id == deletedId);
 
       _isLoading = false;
@@ -160,8 +96,8 @@ class AccountProvider extends ChangeNotifier {
 
   Future<bool> addAccount({
     required String bankName,
-    required String cardHolderName, // backend: cardHolder
-    required String cardNumber, // backend: cardNumber
+    required String cardHolderName,
+    required String cardNumber,
     required String description,
     double balance = 0.0,
     String currency = 'TRY',
@@ -173,7 +109,6 @@ class AccountProvider extends ChangeNotifier {
     try {
       final api = ApiService();
 
-      // ✅ backend payload (senin controller schema’na göre: cardHolder + cardNumber)
       final payload = <String, dynamic>{
         'bankName': bankName.trim(),
         'cardHolderName': cardHolderName.trim(),
@@ -187,7 +122,6 @@ class AccountProvider extends ChangeNotifier {
       final createdJson = await api.createAccount(payload);
       final created = Account.fromJson(createdJson);
 
-      // UI-only alanları localde tamamla
       final uiAccount = created.copyWith(
         cardHolderName: cardHolderName.trim(),
         cardNumber: cardNumber.trim(),
@@ -195,7 +129,6 @@ class AccountProvider extends ChangeNotifier {
         lastSyncAt: DateTime.now(),
       );
 
-      // ✅ storage'a da yaz (eski datalarla uyumlu key sistemiyle)
       await _writeCardData(uiAccount, {
         'cardNumber': uiAccount.cardNumber,
         'cardHolderName': uiAccount.cardHolderName,
@@ -242,7 +175,6 @@ class AccountProvider extends ChangeNotifier {
         return false;
       }
 
-      // ✅ Backend payload (yeni field isimleriyle)
       final payload = <String, dynamic>{
         'bankName': account.bankName.trim(),
         'cardHolderName': (account.cardHolderName ?? '').trim(),
@@ -250,26 +182,20 @@ class AccountProvider extends ChangeNotifier {
         'description': (account.description ?? '').trim(),
         'balance': account.balance,
         'currency': account.currency,
-        // expiryDate backend’de varsa aç:
-        // 'expiryDate': account.expiryDate,
       };
 
       final api = ApiService();
 
-      // ✅ API’den güncellenmiş account’u al
       final updatedJson = await api.patchAccount(id, payload);
       final updated = Account.fromJson(updatedJson);
 
-      // ✅ Local listeyi server cevabına göre güncelle
       final index = _accounts.indexWhere((a) => a.id == updated.id);
       if (index != -1) {
         _accounts[index] = updated;
       } else {
-        // listede yoksa başa ekle (opsiyonel)
         _accounts.insert(0, updated);
       }
 
-      // ✅ UI-only alanları storage’a yaz
       await _writeCardData(updated, {
         'cardNumber': updated.cardNumber,
         'cardHolderName': updated.cardHolderName,
