@@ -26,7 +26,7 @@ class NotificationProvider extends ChangeNotifier {
   String? get error => _error;
 
   // Home'a 1 kez gelince çağır
-  void startPolling({Duration interval = const Duration(seconds: 5)}) {
+  void startPolling({Duration interval = const Duration(seconds: 15)}) {
     if (_polling) return;
     _polling = true;
 
