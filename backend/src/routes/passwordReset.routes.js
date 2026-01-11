@@ -1,9 +1,3 @@
-/**
- * Bu dosya şifremi unuttum sürecini yönetir.
- * 1) E-posta ile doğrulama kodu üret.
- * 2) Kod doğrulanır → kısa süreli reset token verilir.
- * 3) Yeni şifre belirlenir.
- */
 const router = require("express").Router();
 const { z } = require("zod");
 const crypto = require("crypto");
@@ -41,8 +35,6 @@ function sha256(text) {
 
 }
 
-// 1) Şifremi unuttum 
-// POST /auth/forgot-password
 // Kullanıcı e-postası ile 6 haneli doğrulama kodu oluşturur.
 router.post("/forgot-password", async (req, res) => {
   const lang = getLang(req);
@@ -72,8 +64,7 @@ router.post("/forgot-password", async (req, res) => {
   });
 });
 
-// 2) Kod doğrulama
-// POST /auth/verify-reset-code
+
 // Kullanıcının girdiği kodu kontrol eder.
 router.post("/verify-reset-code", async (req, res) => {
   const lang = getLang(req);
@@ -122,8 +113,6 @@ router.post("/verify-reset-code", async (req, res) => {
   return res.json({ ok: true, resetToken });
 });
 
-// 3) Şifre sıfırlama
-// POST /auth/reset-password
 // Yeni şifre belirlenir ve passwordHash güncellenir.
 router.post("/reset-password", async (req, res) => {
   const lang = getLang(req);

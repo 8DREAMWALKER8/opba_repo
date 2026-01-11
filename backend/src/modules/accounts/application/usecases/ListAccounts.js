@@ -1,7 +1,6 @@
-/**
- * Bu sınıf, kullanıcıya ait aktif banka hesaplarını listelemek için kullanılır.
- * İsteğe bağlı olarak TCMB döviz kurlarını kullanarak
- * hesap bakiyelerini seçilen para birimine dönüştürür.
+/*
+ kullanıcıya ait aktif banka hesaplarını listelemek için kullanılır.
+ İsteğe bağlı olarak TCMB döviz kurlarını kullanarak hesap bakiyelerini seçilen para birimine dönüştürür.
  */
 
 class ListAccounts {
@@ -63,20 +62,20 @@ class ListAccounts {
   }
 
   async execute({ userId, selectedCurrency }) {
-    // 1) Önce TCMB sync (best-effort)
+    // Önce TCMB sync 
     console.log("list accounts started");
-        // 1) Önce TCMB sync (best-effort)
+        // TCMB sync 
     const {date, rates} = await this.syncTcbmRates.execute();;
     
 
-    // 2) Accounts çek
+    // Accounts çek
     let accounts = await this.repo.listActiveByUser(userId);
 
     if (!selectedCurrency) return accounts;
 
     const target = selectedCurrency.toUpperCase();
     console.log("Target:" + target);
-    // 3) FX rate'leri oku 
+    // FX rate'leri oku 
     let rateMap = { TRY: 1 };
 
     if (this.fxRateRepo && this.syncTcbmRates) {
@@ -90,7 +89,6 @@ class ListAccounts {
       }
     }
 
-    // 4) Balance convert et
     accounts = accounts.map((account) => {
       const from = (account.currency || "TRY").toUpperCase();
       const newValue = this._convertAmount(account.balance, from, target, rateMap);

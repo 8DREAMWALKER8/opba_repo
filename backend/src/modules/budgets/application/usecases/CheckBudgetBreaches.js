@@ -9,21 +9,18 @@ class CheckBudgetBreaches {
     this.notificationRepo = notificationRepo;
   }
 
-  // kullanici icin kategoriye göre ve o aya göre butce asimi olup olmadigini kontrol eder.
-  // gerektiginde "limite yaklasildi" veya "butce asildi" bildirimleri olusturur.
   async execute({ userId, category, occurredAt, currency = "TRY", deltaAmount }) {
     const txDate = occurredAt ? new Date(occurredAt) : new Date();
     const month = txDate.getMonth() + 1;
     const year = txDate.getFullYear();
 
-    // butce varsa limit asimi durumunu kontrol eder
+    // limit asimi durumunu kontrol eder
     const budget = await this.budgetRepo.findActiveByUserAndCategory(userId, category, month, year);
     if (!budget) return { ok: true, breached: false, reason: "NO_BUDGET", month, year };
 
     const limit = Number(budget.limit);
     if (!Number.isFinite(limit)) return { ok: true, breached: false, reason: "INVALID_LIMIT", month, year };
 
-    // ayin 1'i ve 31'i
     const { from, to } = BudgetRules.getMonthlyRange(txDate);
 
     // harcama toplami
@@ -35,7 +32,6 @@ class CheckBudgetBreaches {
       currency
     );
 
-    // %80 esigi 
     const d = Number(deltaAmount);
     const spentBefore = Number.isFinite(d) ? spent - d : NaN;
 

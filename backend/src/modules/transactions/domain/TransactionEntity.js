@@ -1,4 +1,3 @@
-// Bir transaction nesnesini temsil eder.
 // Constructor içinde gerekli alanların doğru gelip gelmediği kontrol edilir ve geçersizse hata fırlatılır.
 
 class TransactionEntity {

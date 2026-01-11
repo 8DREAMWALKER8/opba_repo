@@ -1,7 +1,4 @@
-/**
- * Bu dosya, uygulama genelinde kullanılan
- * çok dilli (Türkçe / İngilizce) metinleri ve hata mesajlarını içerir.
- */
+// uygulama genelinde kullanılan Türkçe / İngilizce metinleri ve hata mesajlarını içerir.
 
 module.exports = {
   tr: {

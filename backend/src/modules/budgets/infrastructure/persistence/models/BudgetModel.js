@@ -1,18 +1,13 @@
 /*
- kullanicilarin aylik butcelerini tutar.kategori baziı aylik harcama limiti belirler.
- harcamalarla karsılastirma yapar.
+ kullanicilarin aylik butcelerini tutar.kategori bazli aylik harcama limiti belirler.
  */
 
 const mongoose = require("mongoose");
 
 const BudgetSchema = new mongoose.Schema(
   {
-  // Bütçenin hangi kullanıcıya ait olduğunu belirtir.
-  // Tüm sorgular userId üzerinden filtrelenir.
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
 
-  // Bütçenin hangi harcama kategorisi için olduğunu belirtir.
-  // Transaction modeliyle birebir aynı category key'leri kullanılır.
     category: {
       type: String,
       enum: ["market", "transport", "food", "bills", "entertainment", "health", "education", "other"],
@@ -20,7 +15,6 @@ const BudgetSchema = new mongoose.Schema(
       index: true,
     },
 
-  // kategori icin aylik harcama limiti
     limit: { type: Number, required: true, min: 0 },
 
     period: { type: String, enum: ["monthly"], default: "monthly" },

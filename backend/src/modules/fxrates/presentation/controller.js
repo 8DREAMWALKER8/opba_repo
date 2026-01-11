@@ -1,5 +1,4 @@
-// Döviz kurlarıyla ilgili API isteklerini karşılar.
-// Güncel kur listesini getirir veya TCMB’den kurları manuel olarak günceller.
+// Döviz kurlarıyla ilgili API isteklerini karşılar. güncel kur listesini getirir 
 
 module.exports = ({ syncTcbmRates, fxRateRepo }) => ({
   getLatest: async (req, res) => {

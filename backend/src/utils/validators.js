@@ -1,13 +1,12 @@
-/**
- * Uygulama genelinde kullanılan doğrulama ve normalizasyon yardımcılarını içerir.
- * Para birimi, dil ve şifre kuralları gibi sabitleri tek noktada tutarak
- * tutarlılık sağlar.
+/*
+  Uygulama genelinde kullanılan doğrulama ve normalizasyon yardımcılarını içerir.
+  Para birimi, dil ve şifre kuralları gibi sabitleri tek noktada tutarak tutarlılık sağlar.
  */
 
 const ALLOWED_CURRENCIES = ["TRY", "USD", "EUR", "GBP"];
 const ALLOWED_LANGUAGES = ["tr", "en"];
 
-// En az 8 karakter, 1 büyük, 1 küçük, 1 özel karakter
+// en az 8 karakter, 1 büyük, 1 küçük, 1 özel karakter
 const PASSWORD_REGEX =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/;
 

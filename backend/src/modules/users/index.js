@@ -1,4 +1,4 @@
-// Users modülünü ayağa kaldıran ana dosya
+// Users modülünü çalıştıran dosya
 
 const buildRoutes = require("./http/user.routes");
 const { UserController } = require("./http/user.controller");

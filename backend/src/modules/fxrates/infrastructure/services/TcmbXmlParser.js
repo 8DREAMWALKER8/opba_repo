@@ -1,5 +1,4 @@
-// TCMB’den gelen XML formatındaki döviz kuru verisini okuyup
-// USD, EUR ve GBP kurlarını ayıklayarak kullanılabilir hale getirir.
+// TCMB’den gelen XML formatındaki döviz kuru verisini okuyup USD, EUR ve GBP kurlarını ayıklayarak kullanılabilir hale getirir.
 
 class TcmbXmlParser {
   parse(xml) {

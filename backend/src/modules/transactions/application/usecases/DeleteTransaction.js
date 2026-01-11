@@ -1,5 +1,4 @@
-// Kullanıcıya ait bir işlemi siler ve silinen işlemin etkisini
-// ilgili banka hesabının bakiyesinden geri alarak günceller.
+// Kullanıcıya ait bir işlemi siler ve silinen işlemin etkisini ilgili banka hesabının bakiyesinden geri alarak günceller.
 
 class DeleteTransaction {
   constructor(transactionRepo, bankAccountRepo) {
