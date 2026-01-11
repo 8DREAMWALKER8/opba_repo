@@ -1,3 +1,7 @@
+/*
+Bu sınıf BankAccount (MongoDB) ile tüm veritabanı işlemlerini yapar.
+Use case’ler DB’ye direkt gitmez; repo üzerinden gider.
+*/
 const BankAccount = require("../models/BankAccountModel");
 const mongoose = require("mongoose");
 const { Types } = mongoose;
@@ -38,7 +42,6 @@ class BankAccountRepositoryMongo {
     const uid = this._normalizeUserId(userId);
     const _id = this._toObjectId(accountId);
 
-    // ✅ Hard delete (DB'den tamamen siler)
     return BankAccount.findOneAndDelete({ _id, userId: uid })
       .lean()
       .exec();

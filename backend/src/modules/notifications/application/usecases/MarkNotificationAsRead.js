@@ -1,4 +1,4 @@
-class MarkNotificationAsRead {
+class MarkNotificationAsRead {//bildirim varsa belirli bildirimi okundu yap yoksa hata
   constructor({ notificationRepo }) {
     this.notificationRepo = notificationRepo;
   }

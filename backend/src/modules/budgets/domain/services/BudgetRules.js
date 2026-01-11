@@ -6,16 +6,16 @@ class BudgetRules {
     return { from, to };
   }
 
-  static isBreached(spent, limit) {
+  static isBreached(spent, limit) { //limit asilmis mi
     return Number(spent) > Number(limit);
   }
 
-  // %80 eşiği
+  // %80 
   static getNearLimitThreshold(limit, ratio = 0.8) {
     return Number(limit) * ratio;
   }
 
-  // Eşik “aşıldı mı?” (önce/sonra karşılaştırması)
+  // islemden sonra esik seviyesinde miyiz yoksa ustune mi ciktik kontrolu
   static crossedUpward(before, after, threshold) {
     if (!Number.isFinite(before) || !Number.isFinite(after) || !Number.isFinite(threshold)) return false;
     return before < threshold && after >= threshold;
@@ -25,7 +25,7 @@ class BudgetRules {
     return `${category} bütçesi aşıldı. Limit: ${limit} ${currency}, Harcama: ${spent} ${currency}`;
   }
 
-  // %80 mesajı
+  // %80 mesaji
   static buildNearLimitMessage({ category, limit, spent, currency, threshold }) {
     return `${category} bütçesi %80 sınırına yaklaştı. Limit: ${limit} ${currency}, Harcama: ${spent} ${currency} (Eşik: ${threshold} ${currency})`;
   }

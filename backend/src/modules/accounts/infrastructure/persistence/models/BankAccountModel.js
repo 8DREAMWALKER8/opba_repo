@@ -1,3 +1,7 @@
+/*
+ Bu dosya banka hesabının veritabanındaki karşılığını tanımlar.  
+ MongoDB’de BankAccount koleksiyonunun şemasıdır.
+ */
 const mongoose = require("mongoose");
 
 const BankAccountSchema = new mongoose.Schema(
