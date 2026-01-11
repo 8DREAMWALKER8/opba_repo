@@ -383,7 +383,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               const SizedBox(width: 12),
               Text(
-                'Şifre Değiştir',
+                l10n.changePassword,
                 style: TextStyle(
                   color: isDark ? Colors.white : AppColors.primaryBlue,
                   fontWeight: FontWeight.w700,
@@ -401,7 +401,7 @@ class SettingsScreen extends StatelessWidget {
                 controller: currentPasswordController,
                 obscureText: obscureCurrent,
                 decoration: InputDecoration(
-                  labelText: 'Mevcut Şifre',
+                  labelText: l10n.currentPassword,
                   prefixIcon: const Icon(Icons.lock_outline),
                   filled: true,
                   fillColor: isDark
@@ -426,7 +426,7 @@ class SettingsScreen extends StatelessWidget {
                 controller: newPasswordController,
                 obscureText: obscureNew,
                 decoration: InputDecoration(
-                  labelText: 'Yeni Şifre',
+                  labelText: l10n.newPassword,
                   prefixIcon: const Icon(Icons.lock),
                   filled: true,
                   fillColor: isDark
@@ -450,7 +450,7 @@ class SettingsScreen extends StatelessWidget {
                 controller: confirmPasswordController,
                 obscureText: obscureConfirm,
                 decoration: InputDecoration(
-                  labelText: 'Yeni Şifre (Tekrar)',
+                  labelText: l10n.newPasswordConfirm,
                   prefixIcon: const Icon(Icons.lock),
                   filled: true,
                   fillColor: isDark
@@ -550,7 +550,7 @@ class SettingsScreen extends StatelessWidget {
                 if (current.isEmpty || next.isEmpty || confirm.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Lütfen tüm alanları doldurun.'),
+                      content: Text(l10n.fillAllFields),
                       backgroundColor: AppColors.error,
                     ),
                   );
@@ -831,7 +831,7 @@ class SettingsScreen extends StatelessWidget {
                   if (currentQuestionId == null || currentQuestionId.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Mevcut güvenlik sorusu bulunamadı.'),
+                        content: Text(l10n.securityQuestionNotFound),
                         backgroundColor: AppColors.error,
                       ),
                     );
@@ -844,7 +844,7 @@ class SettingsScreen extends StatelessWidget {
                       newAnswer.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Lütfen tüm alanları doldurun.'),
+                        content: Text(l10n.fillAllFields),
                         backgroundColor: AppColors.error,
                       ),
                     );
@@ -856,7 +856,7 @@ class SettingsScreen extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content:
-                            Text('Yeni soru, mevcut sorudan farklı olmalıdır.'),
+                            Text(l10n.nsqMustBeDifferent),
                         backgroundColor: AppColors.error,
                       ),
                     );
@@ -972,7 +972,7 @@ class SettingsScreen extends StatelessWidget {
               if (success) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Profil başarıyla güncellendi.'),
+                    content: Text(l10n.profileUpdatedSuccess),
                     backgroundColor: AppColors.success,
                   ),
                 );
@@ -1001,7 +1001,7 @@ class SettingsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Güvenlik Ayarları'),
+        title: Text(l10n.securitySettings),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -1027,7 +1027,7 @@ class SettingsScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Kapat'),
+            child: Text(l10n.close),
           ),
         ],
       ),
@@ -1151,7 +1151,7 @@ class SettingsScreen extends StatelessWidget {
           children: [
             Icon(Icons.account_balance, color: AppColors.primaryBlue),
             SizedBox(width: 8),
-            Text('OPBA'),
+            Text(l10n.appName),
           ],
         ),
         content: Column(

@@ -45,7 +45,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
     if (_selectedBank == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Lütfen bir banka seçin.'),
+          content: Text(l10n.pleaseSelectBank),
           backgroundColor: AppColors.error,
         ),
       );
@@ -74,7 +74,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Hesap başarıyla eklendi.'),
+          content: Text(l10n.accountAddedSuccess),
           backgroundColor: AppColors.success,
         ),
       );
@@ -176,7 +176,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
               const SizedBox(height: _fieldGap),
 
               // kart numarası
-              _buildLabel('Kart Numarası'),
+              _buildLabel(l10n.cardNumber),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _cardNumberController,
@@ -185,7 +185,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   _CardNumberFormatter(),
                 ],
                 decoration: InputDecoration(
-                  hintText: '1234 5678 9012 3456',
+                  hintText: l10n.accountNumberHint,
                   prefixIcon: const Icon(Icons.credit_card),
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
@@ -196,7 +196,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   final v = _cleanCardNumber(value ?? '');
                   if (v.isEmpty) return l10n.translate('field_required');
                   if (!RegExp(r'^\d{16}$').hasMatch(v)) {
-                    return 'Kart numarası 16 haneli olmalı';
+                    return l10n.cardNumberLengthError;
                   }
                   return null;
                 },
@@ -206,13 +206,13 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
               const SizedBox(height: _fieldGap),
 
               // kart sahibi adı
-              _buildLabel('Kart Sahibi'),
+              _buildLabel(l10n.cardHolder),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _cardHolderController,
                 textCapitalization: TextCapitalization.characters,
                 decoration: InputDecoration(
-                  hintText: 'AD SOYAD',
+                  hintText: l10n.nameSurnameUp,
                   prefixIcon: const Icon(Icons.person_outline),
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
@@ -229,13 +229,13 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
               const SizedBox(height: _fieldGap),
 
               // açıklama (description)
-              _buildLabel('Açıklama'),
+              _buildLabel(l10n.description),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _descriptionController,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
-                  hintText: 'Örn: Ana Kart / Maaş Kartı',
+                  hintText: l10n.accountNameHint,
                   prefixIcon: const Icon(Icons.description_outlined),
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
@@ -263,7 +263,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   _DotDecimalTextInputFormatter(decimalRange: 2),
                 ],
                 decoration: InputDecoration(
-                  hintText: '0.00',
+                  hintText: l10n.balanceHint,
 
                   // ❌ Sabit dolar iconunu kaldır
                   // prefixIcon: const Icon(Icons.attach_money),
@@ -302,8 +302,8 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
               const SizedBox(height: _fieldGap),
               // önizleme kartı
               if (_selectedBank != null) ...[
-                Text(
-                  'Önizleme',
+                  Text(
+                  l10n.preview,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -382,7 +382,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
         : _cardNumberController.text;
 
     final holder = _cardHolderController.text.trim().isEmpty
-        ? 'AD SOYAD'
+        ? l10n.nameSurnameUp
         : _cardHolderController.text.trim();
 
     final desc = _descriptionController.text.trim().isEmpty

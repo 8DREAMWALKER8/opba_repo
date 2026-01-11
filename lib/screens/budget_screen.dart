@@ -51,7 +51,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
     if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Lütfen bir kategori seçin'),
+          content: Text(l10n.pleaseSelectCategory),
           backgroundColor: AppColors.error,
         ),
       );
@@ -62,7 +62,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
     if (limit == null || limit <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Lütfen geçerli bir limit girin'),
+          content: Text(l10n.pleaseEnterValidLimit),
           backgroundColor: AppColors.error,
         ),
       );
@@ -89,7 +89,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
       budgetProvider.fetchBudgets(currency: currency);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Bütçe başarıyla kaydedildi'),
+          content: Text(l10n.budgetSavedSuccess),
           backgroundColor: AppColors.success,
         ),
       );
@@ -135,7 +135,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Mevcut Bütçeler',
+              l10n.currentBudgets,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -162,7 +162,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                     ),
                     const SizedBox(height: 12),
                     const Text(
-                      'Henüz bütçe belirlemediniz',
+                      l10n.noBudgetSet,
                       style: TextStyle(color: AppColors.textSecondaryLight),
                     ),
                   ],
@@ -195,7 +195,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Yeni Bütçe Belirle',
+                    l10n.setNewBudget,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -472,13 +472,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
         return await showDialog<bool>(
               context: context,
               builder: (ctx) => AlertDialog(
-                title: const Text('Bütçe Silinsin mi?'),
+                title: Text(l10n.deleteBudgetTitle),
                 content:
-                    const Text('Bu bütçeyi silmek istediğinize emin misiniz?'),
+                    Text(l10n.deleteBudgetConfirm),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(ctx, false),
-                    child: const Text('Vazgeç'),
+                    child: Text(l10n.cancel),
                   ),
                   ElevatedButton(
                     onPressed: () => Navigator.pop(ctx, true),
@@ -486,7 +486,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       backgroundColor: AppColors.error,
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text('Sil'),
+                    child: Text(l10n.delete),
                   ),
                 ],
               ),
@@ -536,7 +536,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('Bütçe silindi'),
+              content: Text(l10n.budgetDeleted),
               backgroundColor: AppColors.success,
             ),
           );
@@ -600,7 +600,7 @@ void _showPeriodPicker(BuildContext context) {
                     const Icon(Icons.calendar_month),
                     const SizedBox(width: 8),
                     const Text(
-                      'Ay / Yıl Seç',
+                      l10n.selectPeriod,
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                     ),
@@ -617,7 +617,7 @@ void _showPeriodPicker(BuildContext context) {
                     Expanded(
                       child: DropdownButtonFormField<int>(
                         value: month,
-                        decoration: const InputDecoration(labelText: 'Ay'),
+                        decoration: InputDecoration(labelText: l10n.monthLabel),
                         items: List.generate(12, (i) => i + 1)
                             .map((m) => DropdownMenuItem(
                                   value: m,
@@ -631,7 +631,7 @@ void _showPeriodPicker(BuildContext context) {
                     Expanded(
                       child: DropdownButtonFormField<int>(
                         value: year,
-                        decoration: const InputDecoration(labelText: 'Yıl'),
+                        decoration: InputDecoration(labelText: l10n.yearLabel),
                         items:
                             List.generate(8, (i) => DateTime.now().year - 3 + i)
                                 .map((y) => DropdownMenuItem(
@@ -659,7 +659,7 @@ void _showPeriodPicker(BuildContext context) {
                       );
                       if (ctx.mounted) Navigator.pop(ctx);
                     },
-                    child: const Text('Uygula'),
+                    child: Text(l10n.apply),
                   ),
                 ),
               ],

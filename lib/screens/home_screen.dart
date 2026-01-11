@@ -189,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Mevcut hesabınız bulunmamaktadır',
+                        l10n.noAccountsAvailable,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
@@ -315,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'İşlemler yükleniyor...',
+                        l10n.transactionsLoading,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
@@ -387,7 +387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: const Icon(Icons.refresh,
                             color: AppColors.primaryBlue),
                         label: const Text(
-                          'Tekrar Dene',
+                          l10n.tryAgain,
                           style: TextStyle(
                             color: AppColors.primaryBlue,
                             fontWeight: FontWeight.w600,
@@ -445,7 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'Henüz işlem bulunmamaktadır.',
+                            l10n.noRecentTransactions,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -467,7 +467,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: const Icon(Icons.refresh,
                             color: AppColors.primaryBlue),
                         label: const Text(
-                          'Yenile',
+                          l10n.refresh,
                           style: TextStyle(
                             color: AppColors.primaryBlue,
                             fontWeight: FontWeight.w600,
@@ -606,20 +606,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   String _getMonthName(int month) {
-    const months = [
-      'Ocak',
-      'Şubat',
-      'Mart',
-      'Nisan',
-      'Mayıs',
-      'Haziran',
-      'Temmuz',
-      'Ağustos',
-      'Eylül',
-      'Ekim',
-      'Kasım',
-      'Aralık'
-    ];
-    return months[month - 1];
+    return context.l10n.translate('month_$month');
   }
 }

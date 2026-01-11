@@ -232,6 +232,68 @@ class AppLocalizations {
       'delete_confirmation': 'Silme Onayı',
       'delete_confirm_message': 'İşlemi silmek istediğinize emin misiniz?',
       'edit_transaction': 'İşlemi Düzenle',
+      'current_password': 'Mevcut Şifre',
+      'new_password': 'Yeni Şifre',
+      'new_password_confirm': 'Yeni Şifre (Tekrar)',
+      'fill_all_fields': 'Lütfen tüm alanları doldurun.',
+      'security_question_not_found': 'Mevcut güvenlik sorusu bulunamadı.',
+      'nsq_must_be_different': 'Yeni soru, mevcut sorudan farklı olmalıdır.',
+      'profile_updated_success': 'Profil başarıyla güncellendi.',
+      'security_settings': 'Güvenlik Ayarları',
+      'change_password': 'Şifre Değiştir',
+      'please_select_bank': 'Lütfen bir banka seçin.',
+      'account_added_success': 'Hesap başarıyla eklendi.',
+      'name_surname_up': 'AD SOYAD',
+      'account_name_hint': 'Örn: Ana Kart / Maaş Kartı',
+      'account_number_hint': '1234 5678 9012 3456',
+      'balance_hint': '0.00',
+      'please_select_category': 'Lütfen bir kategori seçin',
+      'please_enter_valid_limit': 'Lütfen geçerli bir limit girin',
+      'budget_saved_success': 'Bütçe başarıyla kaydedildi',
+      'delete_budget_title': 'Bütçe Silinsin mi?',
+      'delete_budget_confirm': 'Bu bütçeyi silmek istediğinize emin misiniz?',
+      'budget_deleted': 'Bütçe silindi',
+      'month_label': 'Ay',
+      'year_label': 'Yıl',
+      'apply': 'Uygula',
+      'account_updated_success': 'Hesap güncellendi.',
+      'account_update_failed': 'Hesap güncellenemedi.',
+      'session_not_found': 'Oturum bulunamadı. Lütfen tekrar giriş yapın.',
+      'delete_account_title': 'Hesabı Sil',
+      'account_deleted': 'Hesap silindi.',
+      'account_name_example': 'Örn: Maaş hesabım',
+      'credit_rate_not_found': 'Kredi faiz oranı bulunamadı.',
+      'no_accounts_available': 'Mevcut hesabınız bulunmamaktadır',
+      'transactions_loading': 'İşlemler yükleniyor...',
+      'try_again': 'Tekrar Dene',
+      'no_recent_transactions': 'Henüz işlem bulunmamaktadır.',
+      'refresh': 'Yenile',
+      'month_1': 'Ocak',
+      'month_2': 'Şubat',
+      'month_3': 'Mart',
+      'month_4': 'Nisan',
+      'month_5': 'Mayıs',
+      'month_6': 'Haziran',
+      'month_7': 'Temmuz',
+      'month_8': 'Ağustos',
+      'month_9': 'Eylül',
+      'month_10': 'Ekim',
+      'month_11': 'Kasım',
+      'month_12': 'Aralık',
+      'preview': 'Önizleme',
+      'card_holder': 'Kart Sahibi',
+      'card_number_length_error': 'Kart numarası 16 haneli olmalı',
+      'current_budgets': 'Mevcut Bütçeler',
+      'no_budget_set': 'Henüz bütçe belirlemediniz',
+      'set_new_budget': 'Yeni Bütçe Belirle',
+      'select_period': 'Ay / Yıl Seç',
+      'delete_account_confirm':
+          'Bu hesabı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
+      'account_delete_failed': 'Hesap silinemedi.',
+      'edit_account': 'Hesabı Düzenle',
+      'total_interest': 'Toplam Faiz',
+      'amount_hint': '100000',
+      'term_hint': '12',
     },
     'en': {
       'app_name': 'OPBA',
@@ -454,6 +516,68 @@ class AppLocalizations {
       'delete_confirm_message':
           'Are you sure you want to delete the transaction?',
       'edit_transaction': 'Edit Transaction',
+      'current_password': 'Current Password',
+      'new_password': 'New Password',
+      'new_password_confirm': 'New Password (Confirm)',
+      'fill_all_fields': 'Please fill in all fields.',
+      'security_question_not_found': 'Current security question not found.',
+      'nsq_must_be_different': 'New question must be different from the current one.',
+      'profile_updated_success': 'Profile updated successfully.',
+      'security_settings': 'Security Settings',
+      'change_password': 'Change Password',
+      'please_select_bank': 'Please select a bank.',
+      'account_added_success': 'Account added successfully.',
+      'name_surname_up': 'NAME SURNAME',
+      'account_name_hint': 'Ex: Main Card / Salary Card',
+      'account_number_hint': '1234 5678 9012 3456',
+      'balance_hint': '0.00',
+      'please_select_category': 'Please select a category',
+      'please_enter_valid_limit': 'Please enter a valid limit',
+      'budget_saved_success': 'Budget saved successfully',
+      'delete_budget_title': 'Delete Budget?',
+      'delete_budget_confirm': 'Are you sure you want to delete this budget?',
+      'budget_deleted': 'Budget deleted',
+      'month_label': 'Month',
+      'year_label': 'Year',
+      'apply': 'Apply',
+      'account_updated_success': 'Account updated.',
+      'account_update_failed': 'Account update failed.',
+      'session_not_found': 'Session not found. Please login again.',
+      'delete_account_title': 'Delete Account',
+      'account_deleted': 'Account deleted.',
+      'account_name_example': 'Ex: My Salary Account',
+      'credit_rate_not_found': 'Credit interest rate not found.',
+      'no_accounts_available': 'No accounts available',
+      'transactions_loading': 'Loading transactions...',
+      'try_again': 'Try Again',
+      'no_recent_transactions': 'No recent transactions.',
+      'refresh': 'Refresh',
+      'month_1': 'January',
+      'month_2': 'February',
+      'month_3': 'March',
+      'month_4': 'April',
+      'month_5': 'May',
+      'month_6': 'June',
+      'month_7': 'July',
+      'month_8': 'August',
+      'month_9': 'September',
+      'month_10': 'October',
+      'month_11': 'November',
+      'month_12': 'December',
+      'preview': 'Preview',
+      'card_holder': 'Card Holder',
+      'card_number_length_error': 'Card number must be 16 digits',
+      'current_budgets': 'Current Budgets',
+      'no_budget_set': 'No budget set yet',
+      'set_new_budget': 'Set New Budget',
+      'select_period': 'Select Period',
+      'delete_account_confirm':
+          'Are you sure you want to delete this account? This action cannot be undone.',
+      'account_delete_failed': 'Account deletion failed.',
+      'edit_account': 'Edit Account',
+      'total_interest': 'Total Interest',
+      'amount_hint': '100000',
+      'term_hint': '12',
     },
   };
 
@@ -626,6 +750,67 @@ class AppLocalizations {
   String get deleteConfirmation => translate('delete_confirmation');
   String get deleteConfirmMessage => translate('delete_confirm_message');
   String get editTransaction => translate('edit_transaction');
+  String get currentPassword => translate('current_password');
+  String get newPassword => translate('new_password');
+  String get newPasswordConfirm => translate('new_password_confirm');
+  String get fillAllFields => translate('fill_all_fields');
+  String get securityQuestionNotFound => translate('security_question_not_found');
+  String get nsqMustBeDifferent => translate('nsq_must_be_different');
+  String get profileUpdatedSuccess => translate('profile_updated_success');
+  String get securitySettings => translate('security_settings');
+  String get changePassword => translate('change_password');
+  String get pleaseSelectBank => translate('please_select_bank');
+  String get accountAddedSuccess => translate('account_added_success');
+  String get nameSurnameUp => translate('name_surname_up');
+  String get accountNameHint => translate('account_name_hint');
+  String get accountNumberHint => translate('account_number_hint');
+  String get balanceHint => translate('balance_hint');
+  String get pleaseSelectCategory => translate('please_select_category');
+  String get pleaseEnterValidLimit => translate('please_enter_valid_limit');
+  String get budgetSavedSuccess => translate('budget_saved_success');
+  String get deleteBudgetTitle => translate('delete_budget_title');
+  String get deleteBudgetConfirm => translate('delete_budget_confirm');
+  String get budgetDeleted => translate('budget_deleted');
+  String get monthLabel => translate('month_label');
+  String get yearLabel => translate('year_label');
+  String get apply => translate('apply');
+  String get accountUpdatedSuccess => translate('account_updated_success');
+  String get accountUpdateFailed => translate('account_update_failed');
+  String get sessionNotFound => translate('session_not_found');
+  String get deleteAccountTitle => translate('delete_account_title');
+  String get accountDeleted => translate('account_deleted');
+  String get accountNameExample => translate('account_name_example');
+  String get creditRateNotFound => translate('credit_rate_not_found');
+  String get noAccountsAvailable => translate('no_accounts_available');
+  String get transactionsLoading => translate('transactions_loading');
+  String get tryAgain => translate('try_again');
+  String get noRecentTransactions => translate('no_recent_transactions');
+  String get refresh => translate('refresh');
+  String get month1 => translate('month_1');
+  String get month2 => translate('month_2');
+  String get month3 => translate('month_3');
+  String get month4 => translate('month_4');
+  String get month5 => translate('month_5');
+  String get month6 => translate('month_6');
+  String get month7 => translate('month_7');
+  String get month8 => translate('month_8');
+  String get month9 => translate('month_9');
+  String get month10 => translate('month_10');
+  String get month11 => translate('month_11');
+  String get month12 => translate('month_12');
+  String get preview => translate('preview');
+  String get cardHolder => translate('card_holder');
+  String get cardNumberLengthError => translate('card_number_length_error');
+  String get currentBudgets => translate('current_budgets');
+  String get noBudgetSet => translate('no_budget_set');
+  String get setNewBudget => translate('set_new_budget');
+  String get selectPeriod => translate('select_period');
+  String get deleteAccountConfirm => translate('delete_account_confirm');
+  String get accountDeleteFailed => translate('account_delete_failed');
+  String get editAccount => translate('edit_account');
+  String get totalInterest => translate('total_interest');
+  String get amountHint => translate('amount_hint');
+  String get termHint => translate('term_hint');
 
   List<Map<String, String>> get securityQuestions => [
         {'id': 'q1', 'text': translate('sq_mother_maiden')},

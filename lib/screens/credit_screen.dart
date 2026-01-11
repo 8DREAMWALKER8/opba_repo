@@ -199,7 +199,7 @@ class _CreditScreenState extends State<CreditScreen> {
               )
             else if (loanProvider.rates.isEmpty)
               const _InfoBox(
-                message: 'Kredi faiz oranı bulunamadı.',
+                message: l10n.creditRateNotFound,
               )
             else ...[
               // kredi faiz oranları listesi
@@ -456,7 +456,7 @@ class _CreditScreenState extends State<CreditScreen> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: l10n.loanAmount,
-                      hintText: '100000',
+                      hintText: l10n.amountHint,
                       suffixText: best?.currency ?? 'TRY',
                     ),
                     onChanged: (_) => calculate(),
@@ -467,7 +467,7 @@ class _CreditScreenState extends State<CreditScreen> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: l10n.loanTermMonths,
-                      hintText: '12',
+                      hintText: l10n.termHint,
                       suffixText: l10n.months,
                     ),
                     onChanged: (_) => calculate(),
@@ -501,7 +501,7 @@ class _CreditScreenState extends State<CreditScreen> {
                           ),
                           const SizedBox(height: 8),
                           _kvRow(
-                            left: 'Toplam Faiz',
+                            left: l10n.totalInterest,
                             right:
                                 '${calcRes.result.totalInterest.toStringAsFixed(2)} ${best?.currency ?? 'TRY'}',
                           ),
@@ -593,7 +593,7 @@ class _ErrorBox extends StatelessWidget {
               onPressed: onRetry,
               icon: const Icon(Icons.refresh, color: AppColors.primaryBlue),
               label: const Text(
-                'Tekrar Dene',
+                 l10n.tryAgain,
                 style: TextStyle(
                   color: AppColors.primaryBlue,
                   fontWeight: FontWeight.w600,

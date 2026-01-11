@@ -288,7 +288,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
                   elevation: 0,
                 ),
                 child: const Text(
-                  'Bütçe Yönetimi',
+                  l10n.budgetManagement,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

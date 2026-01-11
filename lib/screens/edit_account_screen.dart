@@ -73,7 +73,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     if (_selectedBank == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Lütfen bir banka seçin.'),
+          content: Text(l10n.pleaseSelectBank),
           backgroundColor: AppColors.error,
         ),
       );
@@ -105,7 +105,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     if (ok) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Hesap güncellendi.'),
+          content: Text(l10n.accountUpdatedSuccess),
           backgroundColor: AppColors.success,
         ),
       );
@@ -113,7 +113,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Hesap güncellenemedi.'),
+          content: Text(l10n.accountUpdateFailed),
           backgroundColor: AppColors.error,
         ),
       );
@@ -126,7 +126,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     if (auth.user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Oturum bulunamadı. Lütfen tekrar giriş yapın.'),
+          content: Text(l10n.sessionNotFound),
           backgroundColor: AppColors.error,
         ),
       );
@@ -138,14 +138,12 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
       barrierDismissible: false,
       builder: (ctx) {
         return AlertDialog(
-          title: const Text('Hesabı Sil'),
-          content: const Text(
-            'Bu hesabı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
-          ),
+          title: Text(l10n.deleteAccountTitle),
+          content: Text(l10n.deleteAccountConfirm),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Vazgeç'),
+              child: Text(l10n.cancel),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pop(ctx, true),
@@ -154,7 +152,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                 foregroundColor: Colors.white,
                 elevation: 0,
               ),
-              child: const Text('Sil'),
+              child: Text(l10n.delete),
             ),
           ],
         );
@@ -175,13 +173,13 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
     if (ok) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Hesap silindi.'),
+          content: Text(l10n.accountDeleted),
           backgroundColor: AppColors.success,
         ),
       );
       Navigator.pop(context);
     } else {
-      final err = accountProvider.error ?? 'Hesap silinemedi.';
+      final err = accountProvider.error ?? l10n.accountDeleteFailed;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(err),
@@ -223,7 +221,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          l10n.translate('edit_account') ?? 'Hesabı Düzenle',
+          l10n.editAccount,
           style: TextStyle(
             color: isDark ? Colors.white : AppColors.primaryBlue,
             fontWeight: FontWeight.w600,
@@ -278,14 +276,14 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
               const SizedBox(height: _gap),
 
               // Kart Numarası
-              _buildLabel('Kart Numarası'),
+              _buildLabel(l10n.cardNumber),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _cardNumberController,
                 keyboardType: TextInputType.number,
                 inputFormatters: [_CardNumberFormatter()],
                 decoration: InputDecoration(
-                  hintText: '1234 5678 9012 3456',
+                  hintText: l10n.accountNumberHint,
                   prefixIcon: const Icon(Icons.credit_card),
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
@@ -296,7 +294,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                   final v = _cleanCardNumber(value ?? '');
                   if (v.isEmpty) return l10n.translate('field_required');
                   if (!RegExp(r'^\d{16}$').hasMatch(v)) {
-                    return 'Kart numarası 16 haneli olmalı';
+                    return l10n.cardNumberLengthError;
                   }
                   return null;
                 },
@@ -306,13 +304,13 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
               const SizedBox(height: _gap),
 
               // Kart Sahibi
-              _buildLabel('Kart Sahibi'),
+              _buildLabel(l10n.cardHolder),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _cardHolderController,
                 textCapitalization: TextCapitalization.characters,
                 decoration: InputDecoration(
-                  hintText: 'AD SOYAD',
+                  hintText: l10n.nameSurnameUp,
                   prefixIcon: const Icon(Icons.person_outline),
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
@@ -329,13 +327,13 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
               const SizedBox(height: _gap),
 
               // Description
-              _buildLabel('Açıklama'),
+              _buildLabel(l10n.description),
               const SizedBox(height: 8),
               TextFormField(
                 controller: _descriptionController,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
-                  hintText: 'Örn: Maaş hesabım',
+                  hintText: l10n.accountNameExample,
                   prefixIcon: const Icon(Icons.edit_note),
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
@@ -357,7 +355,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                   _DotDecimalTextInputFormatter(decimalRange: 2),
                 ],
                 decoration: InputDecoration(
-                  hintText: '0.00',
+                  hintText: l10n.balanceHint,
                   prefixIcon: const Icon(Icons.attach_money),
                   prefixText: isPrefix ? '$symbol ' : null,
                   suffixText: isPrefix ? null : ' $symbol',
@@ -423,7 +421,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                     ),
                   ),
                   child: const Text(
-                    'Hesabı Sil',
+                    l10n.deleteAccountTitle,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -461,7 +459,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
         ? '**** **** **** ****'
         : _cardNumberController.text.trim();
     final holder = _cardHolderController.text.trim().isEmpty
-        ? 'AD SOYAD'
+        ? l10n.nameSurnameUp
         : _cardHolderController.text.trim();
     final desc = _descriptionController.text.trim().isEmpty
         ? '—'
