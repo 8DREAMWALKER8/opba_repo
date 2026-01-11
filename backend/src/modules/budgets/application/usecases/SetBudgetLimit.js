@@ -9,7 +9,7 @@ class SetBudgetLimit {
     return err;
   }
 
-  async execute({ userId, category, limit, month, year, period }) {
+  async execute({ userId, category, limit, month, year, period, currency }) {
     // asagidaki durumlarda badRequest döndürür:
     if (!userId) throw this._badRequest("USER_ID_REQUIRED");
     if (!category) throw this._badRequest("CATEGORY_REQUIRED");

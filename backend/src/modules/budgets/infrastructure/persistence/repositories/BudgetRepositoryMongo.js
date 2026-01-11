@@ -8,7 +8,7 @@ class BudgetRepositoryMongo {
   }
 
   // güncelleme ekleme islemi
-  async upsertBudget(userId, { category, limit, month, year, period = "monthly" }) {
+  async upsertBudget(userId, { category, limit, month, year, period = "monthly", currency }) {
     return BudgetModel.findOneAndUpdate(
       { userId, category, month, year },
       {
