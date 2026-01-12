@@ -63,7 +63,6 @@ module.exports = ({ listAccounts, createAccount, deactivateAccount, updateAccoun
     try {
       const userId = req.user.userId || req.user._id || req.user.id;
       const id = req.params.id ?? req.params.accountId;
-      console.log('ilk id ' + id)
       if (!id) {
         const e = new Error("ACCOUNT_ID_REQUIRED");
         e.statusCode = 400;

@@ -19,13 +19,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  bool _popupShownThisOpen = false;
 
   @override
   void initState() {
     super.initState();
 
-    // initState içinde context erişimi için microtask patterni
     Future.microtask(() async {
       final accountProvider = context.read<AccountProvider>();
       final transactionProvider = context.read<TransactionProvider>();
@@ -269,7 +267,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.pushNamed(context, '/transactions')
                         .then((_) async {
-                      // geri dönüldüğünde bu ekranı yenile
                       final authProvider = context.read<AuthProvider>();
 
                       await context
@@ -284,7 +281,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 12),
 
-// ✅ Transactions state yönetimi
+            // işlem durumu yönetimi
             if (transactionProvider.isLoading)
               Container(
                 width: double.infinity,
@@ -386,7 +383,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         icon: const Icon(Icons.refresh,
                             color: AppColors.primaryBlue),
-                        label: const Text(
+                        label: Text(
                           l10n.tryAgain,
                           style: TextStyle(
                             color: AppColors.primaryBlue,
@@ -466,7 +463,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         icon: const Icon(Icons.refresh,
                             color: AppColors.primaryBlue),
-                        label: const Text(
+                        label: Text(
                           l10n.refresh,
                           style: TextStyle(
                             color: AppColors.primaryBlue,
@@ -520,10 +517,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // ✅ Kategori adı (description'un üstünde)
+                            // kategori adı
                             Text(
-                              transaction.category
-                                  .name, // enum extension'ında name varsa
+                              transaction.category.name,
                               style: TextStyle(
                                 color: isDark ? Colors.white : Colors.black87,
                                 fontSize: 15,
@@ -535,7 +531,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             const SizedBox(height: 2),
 
-                            // ✅ Description (alt satır)
+                            // açıklama
                             Text(
                               (transaction.description ?? '').trim().isEmpty
                                   ? '—'
@@ -603,9 +599,5 @@ class _HomeScreenState extends State<HomeScreen> {
           RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
           (Match m) => '${m[1]}.',
         );
-  }
-
-  String _getMonthName(int month) {
-    return context.l10n.translate('month_$month');
   }
 }

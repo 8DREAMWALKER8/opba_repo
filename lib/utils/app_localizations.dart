@@ -294,6 +294,8 @@ class AppLocalizations {
       'total_interest': 'Toplam Faiz',
       'amount_hint': '100000',
       'term_hint': '12',
+      'phone_must_be_10_digits': 'Telefon numarası 10 hane olmalıdır.',
+      'account': 'Hesap'
     },
     'en': {
       'app_name': 'OPBA',
@@ -521,7 +523,8 @@ class AppLocalizations {
       'new_password_confirm': 'New Password (Confirm)',
       'fill_all_fields': 'Please fill in all fields.',
       'security_question_not_found': 'Current security question not found.',
-      'nsq_must_be_different': 'New question must be different from the current one.',
+      'nsq_must_be_different':
+          'New question must be different from the current one.',
       'profile_updated_success': 'Profile updated successfully.',
       'security_settings': 'Security Settings',
       'change_password': 'Change Password',
@@ -578,6 +581,8 @@ class AppLocalizations {
       'total_interest': 'Total Interest',
       'amount_hint': '100000',
       'term_hint': '12',
+      'phone_must_be_10_digits': 'Phone number must be 10 digits.',
+      'account': 'Account'
     },
   };
 
@@ -754,7 +759,8 @@ class AppLocalizations {
   String get newPassword => translate('new_password');
   String get newPasswordConfirm => translate('new_password_confirm');
   String get fillAllFields => translate('fill_all_fields');
-  String get securityQuestionNotFound => translate('security_question_not_found');
+  String get securityQuestionNotFound =>
+      translate('security_question_not_found');
   String get nsqMustBeDifferent => translate('nsq_must_be_different');
   String get profileUpdatedSuccess => translate('profile_updated_success');
   String get securitySettings => translate('security_settings');
@@ -811,6 +817,9 @@ class AppLocalizations {
   String get totalInterest => translate('total_interest');
   String get amountHint => translate('amount_hint');
   String get termHint => translate('term_hint');
+  String get thisMonth => translate('this_month');
+  String get phoneNumberMustBe10Digits => translate('phone_must_be_10_digits');
+  String get account => translate('account');
 
   List<Map<String, String>> get securityQuestions => [
         {'id': 'q1', 'text': translate('sq_mother_maiden')},

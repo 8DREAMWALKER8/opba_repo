@@ -1,4 +1,3 @@
-// credit_screen.dart
 import 'package:flutter/material.dart';
 import 'package:opba_app/models/loan_rate_model.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +17,6 @@ class CreditScreen extends StatefulWidget {
 class _CreditScreenState extends State<CreditScreen> {
   int _currentIndex = 2;
 
-  // Banka renkleri (mock'tan uyarlanmış). Backend renk göndermediği için burada map'liyoruz.
   static const Map<String, Color> _bankColors = {
     'Halkbank': Color(0xFF0066B3),
     'Vakıfbank': Color(0xFF003366),
@@ -38,10 +36,7 @@ class _CreditScreenState extends State<CreditScreen> {
   void initState() {
     super.initState();
 
-    // Ekran açılır açılmaz faizleri çek
     Future.microtask(() async {
-      // İstersen burada AuthProvider/AppProvider'dan currency alıp gönderebilirsin
-      // final currency = context.read<AuthProvider>().user?.currency ?? 'TRY';
       const currency = 'TRY';
 
       await context.read<LoanProvider>().fetchRates(
@@ -179,7 +174,6 @@ class _CreditScreenState extends State<CreditScreen> {
             ),
             const SizedBox(height: 16),
 
-            // RATE LIST STATE
             if (loanProvider.isLoadingRates)
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 32),
@@ -198,7 +192,7 @@ class _CreditScreenState extends State<CreditScreen> {
                 },
               )
             else if (loanProvider.rates.isEmpty)
-              const _InfoBox(
+              _InfoBox(
                 message: l10n.creditRateNotFound,
               )
             else ...[
@@ -406,7 +400,6 @@ class _CreditScreenState extends State<CreditScreen> {
               final term = int.tryParse(termController.text.trim());
 
               if (amount == null || term == null || amount <= 0 || term <= 0) {
-                // geçersiz input: mevcut sonucu silmek istemiyorsan dokunma
                 return;
               }
 
@@ -554,9 +547,6 @@ class _CreditScreenState extends State<CreditScreen> {
   }
 }
 
-// -------------------
-// Small UI helpers
-// -------------------
 class _ErrorBox extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
@@ -566,6 +556,7 @@ class _ErrorBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = context.l10n;
 
     return Container(
       width: double.infinity,
@@ -592,8 +583,8 @@ class _ErrorBox extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh, color: AppColors.primaryBlue),
-              label: const Text(
-                 l10n.tryAgain,
+              label: Text(
+                l10n.tryAgain,
                 style: TextStyle(
                   color: AppColors.primaryBlue,
                   fontWeight: FontWeight.w600,

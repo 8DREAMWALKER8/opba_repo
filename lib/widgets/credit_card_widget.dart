@@ -26,11 +26,6 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
   Widget build(BuildContext context) {
     final account = widget.account;
     final currency = widget.currency;
-
-    // ✅ Yeni alan: cardNumber
-    // ✅ Eski datalar için fallback:
-    // - Eğer Account modelinde eski alanı map'lediğin bir property varsa buraya ekle (örn: account.legacyIban)
-    // - Yoksa sadece cardNumber üzerinden devam eder (null/empty ise '—' gösterir)
     final rawCardNumber = (account.cardNumber ?? '').trim();
 
     final cardText = _showFullCardNumber
@@ -61,7 +56,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ÜST SATIR: Description + Edit
+          // description + edit ikonu
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -113,7 +108,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
 
           const SizedBox(height: 20),
 
-          // ALT SATIR: Card Number + Eye
+          // card number + göz ikonu
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -163,7 +158,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
 
           const SizedBox(height: 16),
 
-          // Kart sahibi adı
+          // kart sahibi adı
           Text(
             (account.cardHolderName ?? '').trim().isEmpty
                 ? 'Kart Sahibi'
@@ -179,7 +174,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
 
           const SizedBox(height: 8),
 
-          // Bakiye
+          // bakiye
           Text(
             'Bakiye: ${_formatNumber(account.balance)} ${currency}',
             style: const TextStyle(
@@ -191,8 +186,6 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
       ),
     );
   }
-
-  // ---------- helpers ----------
 
   List<Color> _getGradientColors(Account account) {
     final bankName = account.bankName.toLowerCase();

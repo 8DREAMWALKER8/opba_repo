@@ -40,11 +40,13 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
   String _cleanCardNumber(String v) => v.replaceAll(' ', '').trim();
 
   Future<void> _handleSubmit() async {
+    final l10n = context.l10n;
+
     if (!_formKey.currentState!.validate()) return;
 
     if (_selectedBank == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(l10n.pleaseSelectBank),
           backgroundColor: AppColors.error,
         ),
@@ -62,10 +64,9 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
 
     final success = await accountProvider.addAccount(
       bankName: _selectedBank!,
-      cardHolderName:
-          _cardHolderController.text.trim(), // ✅ accountName => cardHolderName
-      cardNumber: cardNumber, // ✅ iban => cardNumber
-      description: _descriptionController.text.trim(), // ✅ description eklendi
+      cardHolderName: _cardHolderController.text.trim(),
+      cardNumber: cardNumber,
+      description: _descriptionController.text.trim(),
       balance: balance,
     );
 
@@ -73,7 +74,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(l10n.accountAddedSuccess),
           backgroundColor: AppColors.success,
         ),
@@ -189,9 +190,9 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   prefixIcon: const Icon(Icons.credit_card),
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
-                  counterText: '', // ✅ 0/16 yazısını kaldırır
+                  counterText: '',
                 ),
-                maxLength: 19, // 16 hane + 3 boşluk
+                maxLength: 19,
                 validator: (value) {
                   final v = _cleanCardNumber(value ?? '');
                   if (v.isEmpty) return l10n.translate('field_required');
@@ -200,7 +201,7 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                   }
                   return null;
                 },
-                onChanged: (_) => setState(() {}), // preview refresh
+                onChanged: (_) => setState(() {}),
               ),
 
               const SizedBox(height: _fieldGap),
@@ -228,7 +229,6 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
 
               const SizedBox(height: _fieldGap),
 
-              // açıklama (description)
               _buildLabel(l10n.description),
               const SizedBox(height: 8),
               TextFormField(
@@ -264,11 +264,6 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                 ],
                 decoration: InputDecoration(
                   hintText: l10n.balanceHint,
-
-                  // ❌ Sabit dolar iconunu kaldır
-                  // prefixIcon: const Icon(Icons.attach_money),
-
-                  // ✅ Dinamik currency sembolü
                   prefix: isPrefix
                       ? Padding(
                           padding: const EdgeInsets.only(left: 12, right: 8),
@@ -281,7 +276,6 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                           ),
                         )
                       : null,
-
                   suffix: isPrefix
                       ? null
                       : Padding(
@@ -294,15 +288,15 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
                             ),
                           ),
                         ),
-
                   filled: true,
                   fillColor: isDark ? AppColors.cardDark : Colors.white,
                 ),
               ),
               const SizedBox(height: _fieldGap),
+
               // önizleme kartı
               if (_selectedBank != null) ...[
-                  Text(
+                Text(
                   l10n.preview,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
@@ -377,6 +371,8 @@ class _AddAccountScreenState extends State<AddAccountScreen> {
   }
 
   Widget _buildPreviewCard() {
+    final l10n = context.l10n;
+
     final maskedCard = _cardNumberController.text.isEmpty
         ? '**** **** **** ****'
         : _cardNumberController.text;
@@ -478,7 +474,7 @@ class _DotDecimalTextInputFormatter extends TextInputFormatter {
   }
 }
 
-/// ✅ Kart numarası: sadece rakam + 4'lü gruplama, imleç stabil
+// kart numarası formatı : 4'lü gruplama
 class _CardNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(

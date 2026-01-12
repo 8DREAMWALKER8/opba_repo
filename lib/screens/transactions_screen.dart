@@ -36,14 +36,8 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
     Future.microtask(() async {
       final accountProvider = context.read<AccountProvider>();
       final authProvider = context.read<AuthProvider>();
-      // 1) Accounts'ı çek
       await accountProvider.fetchAccounts(authProvider.user?.currency);
 
-      // 2) İlk account id
-      final accounts = accountProvider.accounts;
-      final firstAccountId = accounts.isNotEmpty ? accounts.first.id : null;
-
-      // 3) Transactions'ı ilk account'a göre çek
       await context.read<TransactionProvider>().fetchTransactions(
             currency: authProvider.user?.currency,
           );
@@ -85,8 +79,6 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
                 final authProvider = context.read<AuthProvider>();
                 txProvider.fetchTransactions(
                     accountId: id, currency: authProvider.user?.currency);
-                // İstersen seçilen account'a göre tx filtreleme:
-                // context.read<TransactionProvider>().fetchTransactions(accountId: id);
               },
             ),
           ),
@@ -99,7 +91,6 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
               height: 50,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  debugPrint(_isAllSelected.toString());
                   if (_isAllSelected) {
                     _showSelectAccountSnack(context);
                     return;
@@ -167,7 +158,7 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
     );
   }
 
-  // add transaction dialog
+  // transaction ekle mesajı
   void _showAddTransactionDialog(BuildContext context) {
     if (_selectedAccountId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -188,7 +179,7 @@ class _ListTransactionScreenState extends State<ListTransactionScreen> {
     );
   }
 
-  // edit transaction dialog (sub?)
+  // edit transaction dialog
   void _showEditTransactionDialog(BuildContext context, Transaction tx) {
     showDialog(
       context: context,
@@ -231,7 +222,7 @@ class _EditTransactionDialogState extends State<_EditTransactionDialog> {
 
     _selectedDate = widget.transaction.date;
 
-    _selectedType = widget.transaction.type; // ✅ mevcut type
+    _selectedType = widget.transaction.type;
   }
 
   @override
@@ -266,19 +257,16 @@ class _EditTransactionDialogState extends State<_EditTransactionDialog> {
 
     setState(() => _isSubmitting = true);
 
-    // ✅ Güncellenmiş transaction (copyWith varsa kullan)
     final updatedTx = widget.transaction.copyWith(
       amount: newAmount,
       description: newDesc,
       category: _selectedCategory!,
-      currency: appProvider.currency, // istersen değiştirme
-      date: _selectedDate, // occurredAt güncellenecekse
-      type: _selectedType, // ✅ Debit/Credit buradan
+      currency: appProvider.currency,
+      date: _selectedDate,
+      type: _selectedType,
     );
 
-    // ✅ Provider’da update fonksiyonun yoksa şimdilik false dönebilir
-    // Örnek: await txProvider.updateTransaction(updatedTx);
-    final ok = await txProvider.updateTransaction(updatedTx); // bunu yazacağız
+    final ok = await txProvider.updateTransaction(updatedTx);
 
     if (!mounted) return;
 
@@ -336,9 +324,7 @@ class _EditTransactionDialogState extends State<_EditTransactionDialog> {
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
-                  // sadece 0-9 ve nokta
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-                  // tek nokta + 2 decimal
                   _DotDecimalTextInputFormatter(decimalRange: 2),
                 ],
                 decoration: InputDecoration(
@@ -354,7 +340,6 @@ class _EditTransactionDialogState extends State<_EditTransactionDialog> {
                 decoration: InputDecoration(labelText: l10n.description),
               ),
               const SizedBox(height: 16),
-              // ✅ Date picker
               _InkDateField(
                 label: 'Date',
                 value: _selectedDate,
@@ -374,7 +359,6 @@ class _EditTransactionDialogState extends State<_EditTransactionDialog> {
                       },
               ),
               const SizedBox(height: 16),
-
               DropdownButtonFormField<TransactionType>(
                 value: _selectedType,
                 decoration: const InputDecoration(
@@ -420,12 +404,9 @@ class _EditTransactionDialogState extends State<_EditTransactionDialog> {
   }
 }
 
-// ===========================
-// ACCOUNT SELECTOR (SADECE DESCRIPTION)
-// ===========================
 class _AccountSelector extends StatelessWidget {
   final bool isDark;
-  final List<dynamic> accounts; // İstersen List<Account> yap
+  final List<dynamic> accounts;
   final String? selectedAccountId;
   final ValueChanged<String?> onChanged;
 
@@ -443,6 +424,8 @@ class _AccountSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     if (isLoading == true) {
       return _boxed(
         child: const Padding(
@@ -474,15 +457,14 @@ class _AccountSelector extends StatelessWidget {
       child: DropdownButtonFormField<String>(
         value: selectedAccountId,
         isExpanded: true,
-        decoration: const InputDecoration(
-          labelText: 'Account',
+        decoration: InputDecoration(
+          labelText: l10n.account,
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         ),
         items: [
-          // ✅ ALL (Tümü)
           const DropdownMenuItem<String>(
-            value: null, // <-- All seçilince selectedAccountId null olacak
+            value: null,
             child: Text(
               'All',
               maxLines: 1,
@@ -490,8 +472,6 @@ class _AccountSelector extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
           ),
-
-          // ✅ Accounts
           ...accounts.map((a) {
             final id = a.id?.toString() ?? '';
             final desc = (a.description ?? '').toString().trim();
@@ -530,9 +510,6 @@ class _AccountSelector extends StatelessWidget {
   }
 }
 
-// ===========================
-// TRANSACTION TILE (EDIT + DELETE)
-// ===========================
 class _TransactionTile extends StatelessWidget {
   final Transaction transaction;
   final VoidCallback onEdit;
@@ -577,9 +554,8 @@ class _TransactionTile extends StatelessWidget {
         ],
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center, // ✅ icon ortalama
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // LEFT ICON (3 satırın ortasında)
           Container(
             width: 40,
             height: 40,
@@ -593,16 +569,12 @@ class _TransactionTile extends StatelessWidget {
               size: 20,
             ),
           ),
-
           const SizedBox(width: 12),
-
-          // TEXTS (3 satır)
           Expanded(
             child: Column(
-              mainAxisSize: MainAxisSize.min, // ✅ Row içinde gereksiz uzamasın
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 1) Category
                 Text(
                   transaction.category.name,
                   maxLines: 1,
@@ -610,8 +582,6 @@ class _TransactionTile extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 2),
-
-                // 2) Description
                 Text(
                   (transaction.description ?? '').trim().isEmpty
                       ? '—'
@@ -626,8 +596,6 @@ class _TransactionTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-
-                // 3) Date
                 Text(
                   _formatDate(transaction.date),
                   maxLines: 1,
@@ -642,10 +610,7 @@ class _TransactionTile extends StatelessWidget {
               ],
             ),
           ),
-
           const SizedBox(width: 12),
-
-          // RIGHT SIDE (amount + edit/delete) -> sende zaten var, aynen bırak
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -664,7 +629,7 @@ class _TransactionTile extends StatelessWidget {
                 children: [
                   _IconPillButton(
                     icon: Icons.edit,
-                    tooltip: 'Edit',
+                    tooltip: l10n.edit,
                     onTap: actionsEnabled ? onEdit : onDisabledTap,
                     isDark: isDark,
                     disabled: !actionsEnabled,
@@ -751,7 +716,7 @@ class _IconPillButton extends StatelessWidget {
       message: tooltip,
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
-        onTap: onTap, // ✅ gerçekten pasif
+        onTap: onTap,
         child: Container(
           width: 34,
           height: 34,
@@ -783,7 +748,7 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
   late final TextEditingController descriptionController;
   bool _isSubmitting = false;
   DateTime _selectedDate = DateTime.now();
-  TransactionType _selectedType = TransactionType.expense; // default: Debit
+  TransactionType _selectedType = TransactionType.expense;
 
   @override
   void initState() {
@@ -833,7 +798,7 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
         description: desc,
         amount: amount,
         currency: appProvider.currency,
-        type: _selectedType, // ✅ Debit/Credit buradan,
+        type: _selectedType,
         category: selectedCategory!,
         date: _selectedDate,
         isRecurring: false,
@@ -916,7 +881,6 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
                 maxLines: 1,
               ),
               const SizedBox(height: 16),
-              // ✅ Date picker
               _InkDateField(
                 label: 'Date',
                 value: _selectedDate,
@@ -936,7 +900,6 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
                       },
               ),
               const SizedBox(height: 16),
-
               DropdownButtonFormField<TransactionType>(
                 value: _selectedType,
                 decoration: const InputDecoration(
@@ -995,10 +958,8 @@ class _DotDecimalTextInputFormatter extends TextInputFormatter {
 
     if (text.isEmpty) return newValue;
 
-    // 1) Birden fazla nokta olmasın
     if ('.'.allMatches(text).length > 1) return oldValue;
 
-    // 2) Decimal basamak sınırı
     final parts = text.split('.');
     if (parts.length == 2 && parts[1].length > decimalRange) {
       return oldValue;

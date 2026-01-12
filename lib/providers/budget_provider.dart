@@ -24,7 +24,6 @@ class BudgetProvider extends ChangeNotifier {
   String get selectedPeriodLabel =>
       '${_selectedYear}-${_selectedMonth.toString().padLeft(2, '0')}';
 
-  // ✅ Burada her türlü inputu int’e çevirip garanti altına alıyoruz
   void setSelectedPeriod({required dynamic year, required dynamic month}) {
     final y = (year is int) ? year : int.tryParse(year.toString());
     final m = (month is int) ? month : int.tryParse(month.toString());
@@ -52,8 +51,7 @@ class BudgetProvider extends ChangeNotifier {
     final y = year ?? _selectedYear;
     final m = month ?? _selectedMonth;
 
-    // currency paramı verilmediyse uygulama ayarından al
-    // (AppProvider yoksa burayı AuthProvider'a göre değiştir)
+    // currency parametresi verilmediyse uygulama ayarından al
     final cur = (currency?.trim().isNotEmpty == true)
         ? currency!.trim().toUpperCase()
         : 'TRY';
@@ -145,7 +143,6 @@ class BudgetProvider extends ChangeNotifier {
         else
           _budgets.add(created);
       } else {
-        // create sonrası item dönmüyorsa: tekrar çek
         await fetchBudgets(year: year, month: month);
       }
 
@@ -174,7 +171,6 @@ class BudgetProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    // UI optimistik silme yapacak; burada sadece API + refetch
     try {
       final resp = await _api.deleteBudget(budgetId);
 
@@ -187,7 +183,6 @@ class BudgetProvider extends ChangeNotifier {
         return false;
       }
 
-      // mevcut seçili dönemi koruyarak tekrar çek
       await fetchBudgets(
         year: year ?? _selectedYear,
         month: month ?? _selectedMonth,

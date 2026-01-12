@@ -11,7 +11,6 @@ class AuthProvider extends ChangeNotifier {
   AuthStatus _status = AuthStatus.initial;
   User? _user;
   String? _token;
-  String? _tempUserId;
   String? _securityQuestion;
   String? _error;
 
@@ -108,7 +107,6 @@ class AuthProvider extends ChangeNotifier {
         return false;
       }
 
-      debugPrint('login result => $result');
       final userId = (result['userId'] ?? '').toString();
       final securityQuestionId =
           (result['securityQuestionId'] ?? '').toString();
@@ -125,7 +123,6 @@ class AuthProvider extends ChangeNotifier {
           key: 'security_question_id', value: securityQuestionId);
 
       _securityQuestion = securityQuestionTextById(securityQuestionId);
-      _tempUserId = null;
 
       _status = AuthStatus.unauthenticated;
       notifyListeners();
@@ -195,14 +192,12 @@ class AuthProvider extends ChangeNotifier {
       }
 
       final userJson = meRes['user'];
-      debugPrint('ME RESPONSE: ' + userJson.toString());
       if (userJson is! Map<String, dynamic>) {
         _error = 'Kullanıcı verisi beklenmeyen formatta.';
         _status = AuthStatus.unauthenticated;
         notifyListeners();
         return false;
       }
-      debugPrint('USER JSON: ' + userJson.toString());
       _user = User.fromJson(userJson);
 
       final userId = (userJson['_id'] ?? userJson['id'])?.toString();
@@ -247,7 +242,6 @@ class AuthProvider extends ChangeNotifier {
         'securityQuestionId': securityQuestionId,
         'securityAnswer': securityAnswer,
       });
-      debugPrint('REGISTER PAYLOAD => $securityQuestionId');
       final ok = result is Map && result['ok'] == true;
       final message = result is Map ? (result['message'] ?? '').toString() : '';
       final userId = result is Map ? result['userId']?.toString() : null;
@@ -278,7 +272,6 @@ class AuthProvider extends ChangeNotifier {
     await _storage.deleteAll();
     _user = null;
     _token = null;
-    _tempUserId = null;
     _securityQuestion = null;
     _status = AuthStatus.unauthenticated;
     notifyListeners();
@@ -332,12 +325,6 @@ class AuthProvider extends ChangeNotifier {
 
       final userJson = result['user'];
       if (userJson is Map) {
-        // User modelinde fromJson varsa onu kullan
-        // _user = User.fromJson(Map<String, dynamic>.from(userJson));
-
-        // fromJson yoksa minimum alanlarla set et:
-
-        debugPrint('Profile update json: ' + userJson.toString());
         final m = Map<String, dynamic>.from(userJson);
         _user = _user!.copyWith(
             username: (m['username'] ?? _user!.username).toString(),
@@ -354,7 +341,6 @@ class AuthProvider extends ChangeNotifier {
                         .toString()) ??
                 _user!.securityQuestion);
 
-        // (opsiyonel) storage user_id güncelle
         final userId = (m['_id'] ?? m['id'])?.toString();
         if (userId != null && userId.isNotEmpty) {
           await _storage.write(key: 'user_id', value: userId);
@@ -365,8 +351,6 @@ class AuthProvider extends ChangeNotifier {
         }
       }
 
-      // Backend bu endpointte language/currency/theme güncellemiyor.
-      // Onlar için PATCH /me/settings kullanman gerekir.
       _status = AuthStatus.authenticated;
       notifyListeners();
       return true;

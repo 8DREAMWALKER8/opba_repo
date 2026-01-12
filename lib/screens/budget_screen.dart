@@ -48,9 +48,11 @@ class _BudgetScreenState extends State<BudgetScreen> {
   }
 
   Future<void> _handleSetBudget() async {
+    final l10n = context.l10n;
+
     if (_selectedCategory == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(l10n.pleaseSelectCategory),
           backgroundColor: AppColors.error,
         ),
@@ -61,7 +63,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
     final limit = double.tryParse(_limitController.text);
     if (limit == null || limit <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(l10n.pleaseEnterValidLimit),
           backgroundColor: AppColors.error,
         ),
@@ -88,7 +90,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
     if (success && mounted) {
       budgetProvider.fetchBudgets(currency: currency);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(l10n.budgetSavedSuccess),
           backgroundColor: AppColors.success,
         ),
@@ -161,7 +163,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       color: AppColors.textSecondaryLight.withOpacity(0.5),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
+                    Text(
                       l10n.noBudgetSet,
                       style: TextStyle(color: AppColors.textSecondaryLight),
                     ),
@@ -427,8 +429,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
     required String currency,
   }) {
     final provider = context.read<BudgetProvider>();
+    final l10n = context.l10n;
 
-    // id yoksa swipe kapat (backend id yoksa silme yapamaz)
     final canDelete = (budget.id != null && budget.id!.isNotEmpty);
 
     if (!canDelete) {
@@ -467,14 +469,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
         ),
       ),
 
-      // ✅ Onay dialog’u
+      // onay penceresi
       confirmDismiss: (_) async {
         return await showDialog<bool>(
               context: context,
               builder: (ctx) => AlertDialog(
                 title: Text(l10n.deleteBudgetTitle),
-                content:
-                    Text(l10n.deleteBudgetConfirm),
+                content: Text(l10n.deleteBudgetConfirm),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(ctx, false),
@@ -494,17 +495,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
             false;
       },
 
-      // ✅ UI’dan silindiği an burası çalışır
+      // UI güncellemesi
       onDismissed: (_) async {
         final auth = context.read<AuthProvider>();
         final cur = (auth.user?.currency ?? 'TRY').toUpperCase();
-
-        // UI optimistik: listeden zaten düştü; başarısız olursa geri ekleyeceğiz
         final removed = budget;
         final removedIndex =
             provider.budgets.indexWhere((b) => b.id == budget.id);
 
-        // (Provider listesi Dismissible ile otomatik düşmez; biz elle düşürelim)
         provider.budgets.removeWhere((b) => b.id == budget.id);
         provider.notifyListeners();
 
@@ -572,138 +570,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
           ),
         ),
       ],
-    );
-  }
-}
-
-void _showPeriodPicker(BuildContext context) {
-  final provider = context.read<BudgetProvider>();
-
-  int year = provider.selectedYear;
-  int month = provider.selectedMonth;
-
-  showModalBottomSheet(
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-    ),
-    builder: (ctx) {
-      return StatefulBuilder(
-        builder: (ctx, setState) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.calendar_month),
-                    const SizedBox(width: 8),
-                    const Text(
-                      l10n.selectPeriod,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => Navigator.pop(ctx),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DropdownButtonFormField<int>(
-                        value: month,
-                        decoration: InputDecoration(labelText: l10n.monthLabel),
-                        items: List.generate(12, (i) => i + 1)
-                            .map((m) => DropdownMenuItem(
-                                  value: m,
-                                  child: Text(m.toString().padLeft(2, '0')),
-                                ))
-                            .toList(),
-                        onChanged: (v) => setState(() => month = v ?? month),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: DropdownButtonFormField<int>(
-                        value: year,
-                        decoration: InputDecoration(labelText: l10n.yearLabel),
-                        items:
-                            List.generate(8, (i) => DateTime.now().year - 3 + i)
-                                .map((y) => DropdownMenuItem(
-                                      value: y,
-                                      child: Text('$y'),
-                                    ))
-                                .toList(),
-                        onChanged: (v) => setState(() => year = v ?? year),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final auth = context.read<AuthProvider>();
-                      provider.setSelectedPeriod(year: year, month: month);
-                      await provider.fetchBudgets(
-                        year: year,
-                        month: month,
-                        currency: (auth.user?.currency ?? 'TRY').toUpperCase(),
-                      );
-                      if (ctx.mounted) Navigator.pop(ctx);
-                    },
-                    child: Text(l10n.apply),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
-class _PeriodPickerRow extends StatelessWidget {
-  final bool isDark;
-  final String
-      label; // artık gösterilmeyecek ama picker çalışsın diye kalabilir
-  final VoidCallback onPick;
-
-  const _PeriodPickerRow({
-    required this.isDark,
-    required this.label,
-    required this.onPick,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPick,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.cardDark : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.primaryBlue.withOpacity(0.18)),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.calendar_month, color: AppColors.primaryBlue),
-            const Spacer(),
-            const Icon(Icons.keyboard_arrow_down),
-          ],
-        ),
-      ),
     );
   }
 }

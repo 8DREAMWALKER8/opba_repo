@@ -47,8 +47,8 @@ class InterestRateItem {
 }
 
 class InterestRateChartPoint {
-  final String label; // bankName
-  final double value; // monthlyRatePercent
+  final String label;
+  final double value;
   final int termMonths;
 
   InterestRateChartPoint({

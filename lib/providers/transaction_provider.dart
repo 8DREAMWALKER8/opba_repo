@@ -77,7 +77,6 @@ class TransactionProvider extends ChangeNotifier {
       final body =
           await api.getTransactions(accountId: accountId, currency: currency);
 
-      // ✅ backend: { ok:true, transactions:[...] }
       final rawList = (body is Map && body['transactions'] is List)
           ? body['transactions'] as List
           : <dynamic>[];
@@ -87,7 +86,7 @@ class TransactionProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } on ApiException catch (e) {
-      _error = e.message; // backend message
+      _error = e.message;
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -113,35 +112,26 @@ class TransactionProvider extends ChangeNotifier {
         return false;
       }
 
-      // ✅ userId'yi transaction'a ekle
       transaction = transaction.setUserId(userId);
 
-      // ✅ Create payload (backend’in beklediği format)
       final payload = <String, dynamic>{
         'accountId': transaction.accountId,
-        'type': transaction
-            .type.name, // backend "expense"/"income" bekliyorsa uygun
-        'category':
-            transaction.category.name, // backend string bekliyorsa uygun
+        'type': transaction.type.name,
+        'category': transaction.category.name,
         'amount': transaction.amount,
         'currency': transaction.currency,
         'description': (transaction.description ?? '').trim(),
         'occurredAt': transaction.date.toIso8601String(),
-
-        // Opsiyonel alanlar (backend kabul ediyorsa)
         if ((transaction.merchant ?? '').trim().isNotEmpty)
           'merchant': transaction.merchant!.trim(),
         'isRecurring': transaction.isRecurring,
       };
 
-      // ✅ API çağrısı (senin yazdığın method)
       final createdMap = await api.createTransaction(payload);
 
-      // ✅ response -> model
       final createdTx =
           Transaction.fromJson(Map<String, dynamic>.from(createdMap));
 
-      // ✅ listeye ekle (en üste)
       _transactions.insert(0, createdTx);
 
       _isLoading = false;
@@ -150,7 +140,6 @@ class TransactionProvider extends ChangeNotifier {
     } on ApiException catch (e) {
       _error = e.message;
       _isLoading = false;
-      debugPrint('add transaction API Exception: ${e.message}');
       notifyListeners();
       return false;
     } catch (e) {
@@ -177,7 +166,6 @@ class TransactionProvider extends ChangeNotifier {
         return false;
       }
 
-      // ✅ Güvenlik: userId server’dan geliyor, yine de local modelde set kalsın
       transaction = transaction.setUserId(userId);
 
       final txId = (transaction.id ?? '').trim();
@@ -188,9 +176,6 @@ class TransactionProvider extends ChangeNotifier {
         return false;
       }
 
-      // ✅ PATCH payload (backend route'un beklediği alanlar)
-      // PATCH mantığı: sadece değiştirdiğin alanları göndermek ideal
-      // ama şimdilik create ile aynı alanları göndermek de çalışır.
       final payload = <String, dynamic>{
         'accountId': transaction.accountId,
         'type': transaction.type.name,
@@ -201,19 +186,15 @@ class TransactionProvider extends ChangeNotifier {
         'occurredAt': transaction.date.toIso8601String(),
       };
 
-      // ✅ API çağrısı
       final updatedMap = await api.patchTransaction(txId, payload);
 
-      // ✅ response -> model
       final updatedTx =
           Transaction.fromJson(Map<String, dynamic>.from(updatedMap));
 
-      // ✅ local list'te güncelle
       final index = _transactions.indexWhere((t) => t.id == updatedTx.id);
       if (index != -1) {
         _transactions[index] = updatedTx;
       } else {
-        // bulunamazsa en üste ekle (fallback)
         _transactions.insert(0, updatedTx);
       }
 
@@ -248,10 +229,8 @@ class TransactionProvider extends ChangeNotifier {
         return false;
       }
 
-      // ✅ API call
       await api.deleteTransaction(id);
 
-      // ✅ local list’ten çıkar
       _transactions.removeWhere((t) => (t.id ?? '').toString() == id);
 
       _isLoading = false;

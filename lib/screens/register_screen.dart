@@ -216,17 +216,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 : const Color(0xFFF1F5F9),
                           ),
                           inputFormatters: [
-                            // Sadece rakamları kabul et (harf/özel karakter yazılınca eklemez, var olanı silmez)
+                            // sadece rakamları kabul et
                             FilteringTextInputFormatter.digitsOnly,
-                            // Maksimum 10 hane
+                            // maksimum 10 hane
                             LengthLimitingTextInputFormatter(10),
                           ],
                           validator: (value) {
                             final v = (value ?? '').trim();
-                            if (v.isEmpty)
-                              return l10n.translate('field_required');
+                            if (v.isEmpty) return l10n.fieldRequired;
                             if (v.length != 10)
-                              return l10n.translate('phone_must_be_10_digits');
+                              return l10n.phoneNumberMustBe10Digits;
                             return null;
                           },
                         ),
@@ -257,7 +256,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return l10n.translate('field_required');
+                              return l10n.fieldRequired;
                             }
                             if (value.length < 6) {
                               return l10n.translate('password_too_short');

@@ -68,7 +68,6 @@ extension TransactionCategoryExtension on TransactionCategory {
     }
   }
 
-  // uygulama dili neyse ona göre kategori adını döndürür
   String localizedName(AppLocalizations l10n) {
     switch (this) {
       case TransactionCategory.market:

@@ -63,7 +63,6 @@ class LoanProvider extends ChangeNotifier {
 
   LoanRateItem? get bestRate {
     if (_rates.isEmpty) return null;
-    // sort=asc ile çekersen zaten ilk en iyi olur
     _rates.sort((a, b) => a.monthlyRatePercent.compareTo(b.monthlyRatePercent));
     return _rates.first;
   }

@@ -37,7 +37,6 @@ function makeBudgetsController({ getBudgetsUC, setBudgetLimitUC, deleteBudgetUC 
 
       const limitAmountRaw = req.body.limitAmount ?? req.body.limit;
       const limitAmount = limitAmountRaw !== undefined ? Number(limitAmountRaw) : undefined;
-console.log(limitAmount);
       const currency = req.body.currency; 
 
       try {

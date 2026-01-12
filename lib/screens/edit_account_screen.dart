@@ -27,6 +27,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
   late final TextEditingController _cardHolderController;
   late final TextEditingController _descriptionController;
   late final TextEditingController _balanceController;
+  AppLocalizations get l10n => context.l10n;
 
   String? _selectedBank;
   bool _isLoading = false;
@@ -72,7 +73,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
     if (_selectedBank == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(l10n.pleaseSelectBank),
           backgroundColor: AppColors.error,
         ),
@@ -104,7 +105,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
     if (ok) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(l10n.accountUpdatedSuccess),
           backgroundColor: AppColors.success,
         ),
@@ -112,7 +113,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(l10n.accountUpdateFailed),
           backgroundColor: AppColors.error,
         ),
@@ -121,11 +122,11 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
   }
 
   Future<void> _handleDelete() async {
-    // ✅ AuthProvider’a bağla (oturum kontrolü)
+    // oturum kontrolü
     final auth = context.read<AuthProvider>();
     if (auth.user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(l10n.sessionNotFound),
           backgroundColor: AppColors.error,
         ),
@@ -172,7 +173,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
     if (ok) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(l10n.accountDeleted),
           backgroundColor: AppColors.success,
         ),
@@ -196,12 +197,11 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
     final auth = context.watch<AuthProvider>();
     final userCurrency =
-        (auth.user?.currency ?? widget.account.currency ?? 'TRY').toUpperCase();
+        (auth.user?.currency ?? widget.account.currency).toUpperCase();
     final symbol = _currencySymbol(userCurrency);
     final isPrefix =
         userCurrency == 'USD' || userCurrency == 'EUR' || userCurrency == 'GBP';
 
-    // ✅ dropdown value fix: items listesinde yoksa null
     final selected = (_selectedBank ?? '').trim();
     final bankNames =
         Bank.turkishBanks.map((b) => b.name.trim()).toSet().toList()..sort();
@@ -236,7 +236,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Banka
+              // banka
               _buildLabel(l10n.bankSelect),
               const SizedBox(height: 8),
               Container(
@@ -275,7 +275,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
               const SizedBox(height: _gap),
 
-              // Kart Numarası
+              // kart Numarası
               _buildLabel(l10n.cardNumber),
               const SizedBox(height: 8),
               TextFormField(
@@ -303,7 +303,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
               const SizedBox(height: _gap),
 
-              // Kart Sahibi
+              // kart Sahibi
               _buildLabel(l10n.cardHolder),
               const SizedBox(height: 8),
               TextFormField(
@@ -317,7 +317,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return l10n.translate('field_required');
+                    return l10n.fieldRequired;
                   }
                   return null;
                 },
@@ -326,7 +326,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
               const SizedBox(height: _gap),
 
-              // Description
+              // description
               _buildLabel(l10n.description),
               const SizedBox(height: 8),
               TextFormField(
@@ -343,7 +343,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
               const SizedBox(height: _gap),
 
-              // Balance
+              // balance
               _buildLabel(l10n.balance),
               const SizedBox(height: 8),
               TextFormField(
@@ -371,7 +371,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
               const SizedBox(height: 24),
 
-              // Save
+              // save
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -407,7 +407,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
 
               const SizedBox(height: 12),
 
-              // ✅ Delete (red)
+              // silme işlemi
               SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -420,7 +420,7 @@ class _EditAccountScreenState extends State<EditAccountScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     l10n.deleteAccountTitle,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),

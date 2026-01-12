@@ -38,7 +38,6 @@ class _ExpensesScreenState extends State<ExpensesScreen>
     Future.microtask(() async {
       final authProvider = context.read<AuthProvider>();
 
-      // 3) Transactions'ı ilk account'a göre çek
       await context.read<TransactionProvider>().fetchTransactions(
             currency: authProvider.user?.currency,
           );
@@ -102,7 +101,6 @@ class _ExpensesScreenState extends State<ExpensesScreen>
             ),
             onPressed: () {
               Navigator.pushNamed(context, '/settings').then((_) async {
-                // geri dönüldüğünde bu ekranı yenile
                 final authProvider = context.read<AuthProvider>();
 
                 await context.read<TransactionProvider>().fetchTransactions(
@@ -156,7 +154,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    l10n.translate('this_month'),
+                    l10n.thisMonth,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.7),
                       fontSize: 12,
@@ -287,7 +285,7 @@ class _ExpensesScreenState extends State<ExpensesScreen>
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
+                child: Text(
                   l10n.budgetManagement,
                   style: TextStyle(
                     fontSize: 16,

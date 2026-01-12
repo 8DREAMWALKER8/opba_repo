@@ -396,7 +396,7 @@ class SettingsScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 6),
 
-              // Mevcut Şifre
+              // mevcut Şifre
               TextField(
                 controller: currentPasswordController,
                 obscureText: obscureCurrent,
@@ -445,7 +445,7 @@ class SettingsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 14),
 
-              // Yeni Şifre Tekrar
+              // yeni şifre tekrar
               TextField(
                 controller: confirmPasswordController,
                 obscureText: obscureConfirm,
@@ -469,18 +469,16 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
 
-              // ✅ Kurallar sadece hata sonrası gösterilsin
+              // hatalı giriş kuralları
               if (showPasswordRules && passwordRuleErrors.isNotEmpty) ...[
                 const SizedBox(height: 14),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    // ignore: deprecated_member_use
                     color: AppColors.error.withOpacity(isDark ? 0.12 : 0.08),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      // ignore: deprecated_member_use
                       color: AppColors.error.withOpacity(isDark ? 0.35 : 0.25),
                     ),
                   ),
@@ -533,7 +531,6 @@ class SettingsScreen extends StatelessWidget {
                 final next = newPasswordController.text.trim();
                 final confirm = confirmPasswordController.text.trim();
 
-                // reset: her denemede eski hataları temizle
                 setState(() {
                   showPasswordRules = false;
                   passwordRuleErrors = [];
@@ -542,14 +539,14 @@ class SettingsScreen extends StatelessWidget {
                 if (next != confirm) {
                   setState(() {
                     showPasswordRules = true;
-                    passwordRuleErrors = ['Yeni şifreler eşleşmiyor.'];
+                    passwordRuleErrors = [l10n.newPasswordsNotMatch];
                   });
                   return;
                 }
 
                 if (current.isEmpty || next.isEmpty || confirm.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
+                    SnackBar(
                       content: Text(l10n.fillAllFields),
                       backgroundColor: AppColors.error,
                     ),
@@ -557,7 +554,6 @@ class SettingsScreen extends StatelessWidget {
                   return;
                 }
 
-                // ✅ Kurallar: sadece başarısızsa göster
                 final errors = validatePassword(next);
                 if (errors.isNotEmpty) {
                   setState(() {
@@ -577,7 +573,6 @@ class SettingsScreen extends StatelessWidget {
                   return;
                 }
 
-                // Burada backend çağrısı:
                 final authProvider = context.read<AuthProvider>();
                 final ok = await authProvider.updateProfile(
                   currentPassword: current,
@@ -622,10 +617,6 @@ class SettingsScreen extends StatelessWidget {
 
     final authProvider = context.read<AuthProvider>();
 
-    // Eğer sorular daha önce çekilmediyse burada da garanti altına al
-    // (authProvider.initSecurityQuestions varsa)
-    // Future.microtask(() => authProvider.initSecurityQuestions(lang: 'tr'));
-
     final currentAnswerController = TextEditingController();
     final newAnswerController = TextEditingController();
 
@@ -640,9 +631,8 @@ class SettingsScreen extends StatelessWidget {
         builder: (context, setState) {
           final questions = context.watch<AuthProvider>().securityQuestions;
 
-          // Mevcut soru metnini bul
+          // mevcut soru metnini bul
           final currentQuestionId = authProvider.user?.securityQuestionId;
-          debugPrint('Current question ID: $currentQuestionId');
           final currentQuestionText = (currentQuestionId == null)
               ? null
               : questions
@@ -721,7 +711,7 @@ class SettingsScreen extends StatelessWidget {
 
                   const SizedBox(height: 14),
 
-                  // Mevcut cevap
+                  // mevcut cevap
                   TextField(
                     controller: currentAnswerController,
                     obscureText: obscureCurrent,
@@ -749,7 +739,7 @@ class SettingsScreen extends StatelessWidget {
 
                   const SizedBox(height: 18),
 
-                  // Yeni soru seçimi
+                  // yeni soru seçimi
                   Text(
                     l10n.newSecurityQuestion,
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -788,7 +778,7 @@ class SettingsScreen extends StatelessWidget {
 
                   const SizedBox(height: 14),
 
-                  // Yeni cevap
+                  // yeni cevap
                   TextField(
                     controller: newAnswerController,
                     obscureText: obscureNew,
@@ -827,10 +817,9 @@ class SettingsScreen extends StatelessWidget {
                   final newAnswer = newAnswerController.text.trim();
                   final newQid = selectedNewQuestionId;
 
-                  // ✅ Zorunluluk kontrolleri
                   if (currentQuestionId == null || currentQuestionId.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
+                      SnackBar(
                         content: Text(l10n.securityQuestionNotFound),
                         backgroundColor: AppColors.error,
                       ),
@@ -843,7 +832,7 @@ class SettingsScreen extends StatelessWidget {
                       newQid.isEmpty ||
                       newAnswer.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
+                      SnackBar(
                         content: Text(l10n.fillAllFields),
                         backgroundColor: AppColors.error,
                       ),
@@ -851,12 +840,10 @@ class SettingsScreen extends StatelessWidget {
                     return;
                   }
 
-                  // İstersen aynı soruyu seçmeyi engelle:
                   if (newQid == currentQuestionId) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content:
-                            Text(l10n.nsqMustBeDifferent),
+                      SnackBar(
+                        content: Text(l10n.nsqMustBeDifferent),
                         backgroundColor: AppColors.error,
                       ),
                     );
@@ -905,7 +892,6 @@ class SettingsScreen extends StatelessWidget {
 
   void _showEditProfileDialog(BuildContext context, AuthProvider authProvider) {
     final l10n = context.l10n;
-    String? _localError;
     final fullNameController =
         TextEditingController(text: authProvider.user?.username);
     final emailController =
@@ -971,7 +957,7 @@ class SettingsScreen extends StatelessWidget {
 
               if (success) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                     content: Text(l10n.profileUpdatedSuccess),
                     backgroundColor: AppColors.success,
                   ),
@@ -998,6 +984,8 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showSecurityDialog(BuildContext context) {
+    final l10n = context.l10n;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -1008,15 +996,16 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               leading:
                   const Icon(Icons.lock_outline, color: AppColors.primaryBlue),
-              title: const Text('Şifre Değiştir'),
+              title: Text(l10n.changePassword),
               onTap: () {
-                Navigator.pop(context); // security dialog kapanır
+                Navigator.pop(context);
+                // security dialog kapanır
                 _showChangePasswordDialog(context);
               },
             ),
             ListTile(
               leading: const Icon(Icons.security, color: AppColors.primaryBlue),
-              title: const Text('Güvenlik Sorusu'),
+              title: Text(l10n.securityQuestion),
               onTap: () {
                 Navigator.pop(context);
                 _showChangeSecurityQuestionDialog(context);
@@ -1047,9 +1036,7 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.languageTurkish),
               value: 'tr',
-              // ignore: deprecated_member_use
               groupValue: appProvider.language,
-              // ignore: deprecated_member_use
               onChanged: (value) async {
                 debugPrint('Selected language: $value');
                 await authProvider.updateProfile(language: value!);
@@ -1060,13 +1047,10 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.languageEnglish),
               value: 'en',
-              // ignore: deprecated_member_use
               groupValue: appProvider.language,
-              // ignore: deprecated_member_use
               onChanged: (value) async {
-                debugPrint('Selected language: $value');
                 await authProvider.updateProfile(language: value!);
-                appProvider.setLanguage(value!);
+                appProvider.setLanguage(value);
                 Navigator.pop(context);
               },
             ),
@@ -1090,9 +1074,7 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.currencyTryLabel),
               value: 'TRY',
-              // ignore: deprecated_member_use
               groupValue: appProvider.currency,
-              // ignore: deprecated_member_use
               onChanged: (value) async {
                 await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
@@ -1102,9 +1084,7 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.currencyUsdLabel),
               value: 'USD',
-              // ignore: deprecated_member_use
               groupValue: appProvider.currency,
-              // ignore: deprecated_member_use
               onChanged: (value) async {
                 await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
@@ -1114,9 +1094,7 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.currencyEurLabel),
               value: 'EUR',
-              // ignore: deprecated_member_use
               groupValue: appProvider.currency,
-              // ignore: deprecated_member_use
               onChanged: (value) async {
                 await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
@@ -1126,9 +1104,7 @@ class SettingsScreen extends StatelessWidget {
             RadioListTile<String>(
               title: Text(l10n.currencyGbpLabel),
               value: 'GBP',
-              // ignore: deprecated_member_use
               groupValue: appProvider.currency,
-              // ignore: deprecated_member_use
               onChanged: (value) async {
                 await authProvider.updateProfile(currency: value!);
                 appProvider.setCurrency(value!);
@@ -1147,7 +1123,7 @@ class SettingsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
             Icon(Icons.account_balance, color: AppColors.primaryBlue),
             SizedBox(width: 8),

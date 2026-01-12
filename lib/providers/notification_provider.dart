@@ -25,12 +25,10 @@ class NotificationProvider extends ChangeNotifier {
   bool get isLoading => _loading;
   String? get error => _error;
 
-  // Home'a 1 kez gelince çağır
   void startPolling({Duration interval = const Duration(seconds: 15)}) {
     if (_polling) return;
     _polling = true;
 
-    // ilk tick hemen çalışsın
     _tick();
 
     _timer?.cancel();
@@ -51,7 +49,7 @@ class NotificationProvider extends ChangeNotifier {
 
   Future<void> _tick() async {
     try {
-      // App görünür değilse popup gösterme
+      // app görünür değilse popup gösterme
       if (WidgetsBinding.instance.lifecycleState != AppLifecycleState.resumed) {
         return;
       }
@@ -62,13 +60,12 @@ class NotificationProvider extends ChangeNotifier {
       if (_items.isEmpty) return;
 
       final newest = _items.first;
-      // popup göster (context yoksa sessiz geç)
+      // popup göster
       await _showPopupFor(newest);
 
       // popup gösterdikten sonra okundu işaretle
       await markAsRead(newest.id);
     } catch (e) {
-      // polling sırasında app'i düşürme
       _error = e.toString();
       notifyListeners();
     }
@@ -133,20 +130,16 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   Future<void> _showPopupFor(AppNotification n) async {
-    // En güvenilir context: overlay context
     final nav = _navigatorKey.currentState;
     final ctx = nav?.overlay?.context;
 
     if (ctx == null) {
-      debugPrint('[NOTIF] popup skipped: overlay context is null');
       return;
     }
 
-    // Aynı anda 2 dialog açmayı engelle
     if (_isDialogOpen) return;
     _isDialogOpen = true;
 
-    // Dialog açmayı frame sonrasına al (Timer -> UI senkronu)
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         await showDialog(
@@ -154,8 +147,8 @@ class NotificationProvider extends ChangeNotifier {
           useRootNavigator: true,
           barrierDismissible: true,
           builder: (_) => AlertDialog(
-            title: Text(n.title ?? 'Bildirim'),
-            content: Text(n.message ?? ''),
+            title: Text(n.title),
+            content: Text(n.message),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(ctx, rootNavigator: true).pop(),

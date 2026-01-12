@@ -59,7 +59,6 @@ class GetMyTransactions {
       category,
       accountId,
     });
-    console.log('currency in GetMyTransactions usecase:', currency);
     if (!currency) return items;
 
     const target = String(currency).toUpperCase();

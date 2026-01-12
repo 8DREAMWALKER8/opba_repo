@@ -38,7 +38,6 @@ class Budget {
   }
 
   factory Budget.fromJson(Map<String, dynamic> json) {
-    // Backend farklı isimlerle dönebilir diye toleranslı okuyoruz:
     final rawCategory = (json['category'] ?? json['categoryName'])?.toString();
 
     return Budget(
@@ -59,14 +58,10 @@ class Budget {
     );
   }
 
-  /// Backend’e gönderirken standartlaştırılmış payload üret
-  /// Not: Backend’in beklediği key’ler farklıysa burada değiştirmen yeterli.
   Map<String, dynamic> toCreatePayload() {
     return {
-      'category':
-          category.name, // backend 'market', 'bills'... bekliyorsa doğru
+      'category': category.name,
       'limitAmount': limitAmount,
-      // bazı backend’ler month’u kendi hesaplar; yine de gönderiyoruz
       'month': month,
     };
   }
@@ -110,17 +105,12 @@ class Budget {
     );
   }
 
-  // -----------------------
-  // Helpers
-  // -----------------------
-
   static double _toDouble(dynamic v) {
     if (v == null) return 0.0;
     if (v is num) return v.toDouble();
     return double.tryParse(v.toString()) ?? 0.0;
   }
 
-  /// Kategori parse: EN/TR ve farklı yazımlar desteklenir
   static TransactionCategory parseCategory(String? category) {
     final c = (category ?? '').trim().toLowerCase();
     if (c.isEmpty) return TransactionCategory.other;

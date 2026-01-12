@@ -23,8 +23,8 @@ class LoanCalcInput {
 }
 
 class LoanCalcRateInfo {
-  final double monthlyRate; // 0.03162
-  final double monthlyRatePercent; // 3.162
+  final double monthlyRate;
+  final double monthlyRatePercent;
   final double? annualEffectiveRate;
   final String? asOfMonth;
   final String? source;

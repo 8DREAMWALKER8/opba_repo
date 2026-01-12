@@ -29,7 +29,6 @@ import 'screens/settings_screen.dart';
 import 'screens/privacy_screen.dart';
 import 'screens/transactions_screen.dart';
 
-// Global navigatorKey: Notification popup’ı ekran bağımsız göstermek için
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
@@ -54,11 +53,9 @@ class OpbaApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => AccountProvider()),
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
-
-        // Tek ApiService instance
         Provider<ApiService>(create: (_) => ApiService()),
 
-        // Notifications
+        // notifications
         ChangeNotifierProvider(
           create: (ctx) => NotificationProvider(
             api: ctx.read<ApiService>(),
@@ -66,12 +63,12 @@ class OpbaApp extends StatelessWidget {
           ),
         ),
 
-        // Budgets
+        // budgets
         ChangeNotifierProvider<BudgetProvider>(
           create: (ctx) => BudgetProvider(ctx.read<ApiService>()),
         ),
 
-        // Loans (aynı ApiService instance kullan)
+        // loans
         ChangeNotifierProvider(
           create: (ctx) =>
               LoanProvider(ctx.read<ApiService>())..fetchRates(currency: 'TRY'),

@@ -30,10 +30,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
 
-    // initState içinde context erişimi için microtask patterni
     Future.microtask(() async {
       final auth = context.read<AuthProvider>();
-      await auth.initSecurityQuestions(lang: 'tr'); // veya dil seçimine göre
+      await auth.initSecurityQuestions(lang: 'tr');
     });
   }
 

@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:opba_app/models/account_model.dart';
-import 'package:opba_app/models/interest_rate_model.dart';
 import 'package:opba_app/models/loan_rate_model.dart';
 
 class ApiService {
@@ -36,9 +34,8 @@ class ApiService {
       );
       return _handleResponse(response);
     } on ApiException {
-      rethrow; // server hatasıysa olduğu gibi yukarı fırlat
+      rethrow;
     } catch (e) {
-      // burada gerçek network/parsing vb kalır
       throw Exception('Network error');
     }
   }
@@ -54,10 +51,8 @@ class ApiService {
       );
       return _handleResponse(response);
     } on ApiException {
-      debugPrint('ApiException in POST $endpoint');
-      rethrow; // server hatasıysa olduğu gibi yukarı fırlat
+      rethrow;
     } catch (e) {
-      // burada gerçek network/parsing vb kalır
       throw Exception('Network error');
     }
   }
@@ -73,9 +68,8 @@ class ApiService {
       );
       return _handleResponse(response);
     } on ApiException {
-      rethrow; // server hatasıysa olduğu gibi yukarı fırlat
+      rethrow;
     } catch (e) {
-      // burada gerçek network/parsing vb kalır
       throw Exception('Network error');
     }
   }
@@ -91,9 +85,8 @@ class ApiService {
       );
       return _handleResponse(response);
     } on ApiException {
-      rethrow; // server hatasıysa olduğu gibi yukarı fırlat
+      rethrow;
     } catch (e) {
-      // burada gerçek network/parsing vb kalır
       throw Exception('Network error');
     }
   }
@@ -108,9 +101,8 @@ class ApiService {
       );
       return _handleResponse(response);
     } on ApiException {
-      rethrow; // server hatasıysa olduğu gibi yukarı fırlat
+      rethrow;
     } catch (e) {
-      // burada gerçek network/parsing vb kalır
       throw Exception('Network error');
     }
   }
@@ -127,7 +119,6 @@ class ApiService {
       return body;
     }
 
-    // Backend: { ok:false, error:"..." } veya { ok:false, message:"..." } vb.
     String message;
 
     if (body is Map) {
@@ -140,8 +131,6 @@ class ApiService {
       message = (response.body.isNotEmpty ? response.body : null) ??
           (response.reasonPhrase ?? 'Server error');
     }
-    debugPrint(
-        'API Error ${response.statusCode}: $message'); // Hata mesajını konsola yazdır
     throw ApiException(message, statusCode: response.statusCode);
   }
 
@@ -174,7 +163,6 @@ class ApiService {
     return get('/users/security-questions?lang=$lang');
   }
 
-  /// PATCH /accounts/:id  (update)
   Future<Map<String, dynamic>> patchAccount(
     String id,
     Map<String, dynamic> data,
@@ -195,7 +183,6 @@ class ApiService {
           ? '/accounts?currency=$currency'
           : '/accounts',
     );
-    debugPrint('account response ' + resp.toString());
     if (resp is Map && resp['ok'] == true) {
       return (resp['accounts'] as List?) ?? [];
     }
@@ -246,7 +233,6 @@ class ApiService {
 
   // işlem endpoint'leri
   Future<dynamic> getTransactions({String? accountId, String? currency}) async {
-    debugPrint('currency in ApiService getTransactions: $currency');
     final endpoint = accountId != null
         ? '/transactions?currency=${currency ?? ''}&accountId=$accountId'
         : '/transactions?currency=${currency ?? ''}';
@@ -257,10 +243,6 @@ class ApiService {
     return get('/transactions/summary');
   }
 
-  // =========================
-// Interest Rates
-// GET /api/interest-rates?loan_type=...&currency=...&term_months=...&bank_name=...&sort=asc|desc
-// =========================
   Future<Map<String, dynamic>> getInterestRates({
     String? loanType,
     String? currency,
@@ -290,19 +272,16 @@ class ApiService {
       queryParameters: query.isEmpty ? null : query,
     );
 
-    // ApiService içindeki _getHeaders() kullanmak için doğrudan get() yerine küçük bir override:
     final headers = await _getHeaders();
     final response = await http.get(uri, headers: headers);
     final resp = _handleResponse(response);
     if (resp is Map && resp['ok'] == true) {
-      debugPrint(response.body);
       return Map<String, dynamic>.from(resp);
     }
 
     throw ApiException('INTEREST_RATES_ERROR', statusCode: 400);
   }
 
-  // GET /interest-rates/banks/:bankName/terms?loan_type=...&currency=...
   Future<Map<String, dynamic>> getBankTerms(
     String bankName, {
     String loanType = 'consumer',
@@ -319,10 +298,6 @@ class ApiService {
     throw ApiException('TERMS_NOT_FOUND', statusCode: 404);
   }
 
-  // =========================
-  // Loan Calc
-  // POST /loan/calc
-  // =========================
   Future<Map<String, dynamic>> calcLoan({
     required String bankName,
     String loanType = 'consumer',
@@ -344,7 +319,6 @@ class ApiService {
     throw ApiException('CALC_ERROR', statusCode: 400);
   }
 
-  // İstersen model ile çağırmak için helper:
   Future<Map<String, dynamic>> calcLoanFromInput(LoanCalcInput input) {
     return calcLoan(
       bankName: input.bankName,
@@ -354,12 +328,6 @@ class ApiService {
       principal: input.principal,
     );
   }
-
-  /// =========================
-// Budgets
-// GET /budgets?year=YYYY&month=MM
-// POST /budgets  { category, limitAmount, year, month }
-// =========================
 
   Future<dynamic> getBudgets({int? year, int? month, String? currency}) async {
     final qp = <String>[];
@@ -383,7 +351,6 @@ class ApiService {
     return delete('/budgets/$budgetId');
   }
 
-  // kredi endpoint'leri
   Future<dynamic> getLoanRates() async {
     return get('/loans/rates');
   }
@@ -392,7 +359,6 @@ class ApiService {
     return get('/loans/compare');
   }
 
-  // currency endpoint'leri
   Future<dynamic> getCurrencyRates() async {
     return get('/currency/rates');
   }
@@ -429,7 +395,6 @@ class ApiService {
       String? theme}) async {
     final body = <String, dynamic>{};
 
-    // Backend PATCH /me/profile => username/email/phone
     if (fullName != null && fullName.trim().isNotEmpty) {
       body['username'] = fullName.trim();
     }
@@ -465,11 +430,9 @@ class ApiService {
     }
 
     if (body.isEmpty) {
-      // Hiç alan gönderilmezse backend'e gereksiz istek atmayalım
       return {'ok': true, 'message': 'No changes'};
     }
 
-    debugPrint('Patching profile with body: $body');
     return patch('/users/me/update', body);
   }
 

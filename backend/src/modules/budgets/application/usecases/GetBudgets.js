@@ -95,14 +95,11 @@ class GetBudgets {
           fxRateRepo: this.fxRateRepo,
         });
 
-        console.log('limit amount : ' + b.limit);
         const limitConverted = await this._convertAmountFx({
           amount: b.limit,
           sourceCurrency: budgetCurrency || "TRY",
           targetCurrency,
         });
-
-        console.log('source currency : ' + budgetCurrency + ' target currency : ' + targetCurrency);
 
         return {
           ...b,
